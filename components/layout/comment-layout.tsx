@@ -76,7 +76,7 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
               <div className="flex items-center gap-2 px-2 py-1 bg-gray-50 rounded-md border">
                 <Palette className="h-3 w-3 text-gray-500" />
                 <span className="text-xs font-medium text-gray-600">Style:</span>
-                <Select value={config.variant || "compact"} onValueChange={handleVariantChange}>
+                <Select value={config.variant || "card"} onValueChange={handleVariantChange}>
                   <SelectTrigger className="w-28 h-6 text-xs border-0 bg-transparent p-0">
                     <SelectValue />
                   </SelectTrigger>
