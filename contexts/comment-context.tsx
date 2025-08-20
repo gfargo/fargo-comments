@@ -476,6 +476,7 @@ export function CommentProvider({
   }, [adapter])
 
   const updateConfig = useCallback((newConfig: Partial<CommentConfig>) => {
+    console.log('updating config!!', newConfig)
     setCurrentConfig((prev) => ({
       ...prev,
       ...newConfig,
