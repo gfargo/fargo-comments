@@ -49,6 +49,8 @@ interface CommentContextType {
   // User management
   setCurrentUser: (user: User) => void
   refreshData: () => Promise<void>
+
+  clearAllStorage: () => Promise<void>
 }
 
 // Initial state
@@ -400,6 +402,17 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
     }
   }, [adapter])
 
+  const clearAllStorage = useCallback(async () => {
+    try {
+      await adapter.clearAllStorage()
+      dispatch({ type: "LOAD_COMMENTS", payload: [] })
+      console.log("[v0] Storage cleared successfully")
+    } catch (error) {
+      console.error("[v0] Error clearing storage:", error)
+      dispatch({ type: "SET_ERROR", payload: "Failed to clear storage" })
+    }
+  }, [adapter])
+
   const contextValue: CommentContextType = {
     state,
     currentUser,
@@ -413,6 +426,7 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
     getRepliesForComment,
     setCurrentUser,
     refreshData,
+    clearAllStorage,
   }
 
   return <CommentContext.Provider value={contextValue}>{children}</CommentContext.Provider>
