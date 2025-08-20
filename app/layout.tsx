@@ -6,9 +6,9 @@ import { CommentProvider } from "@/contexts/comment-context"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "Okayd Comments",
+  description: "",
+  generator: "",
 }
 
 const defaultUser = {
