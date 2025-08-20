@@ -42,7 +42,7 @@ export function NotionVariant({
 
   return (
     <div
-      className={`p-3 hover:bg-gray-25 transition-colors duration-150 rounded-lg ${isReply ? "ml-6 border-l-2 border-l-orange-300 pl-4 bg-orange-50/30" : ""}`}
+      className={`gp-3 hover:bg-gray-25 transition-colors duration-150 rounded-lg ${isReply ? "ml-6 border-l-2 border-l-orange-300 pl-4 bg-orange-50/30" : ""}`}
     >
       <div className="flex gap-3">
         <Avatar className="h-7 w-7 flex-shrink-0">
