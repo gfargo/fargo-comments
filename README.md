@@ -45,7 +45,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 ├── app/                          # Next.js App Router pages
 │   ├── page.tsx                 # Main demo page
 │   ├── composer/                # Lexical composer examples
@@ -80,7 +80,7 @@ This repository contains several specialized README files for different aspects 
 │   └── comment-utils.ts        # Utility functions
 └── types/
     └── comments.ts             # TypeScript type definitions
-\`\`\`
+```
 
 ## 🎣 Custom Hooks
 
@@ -125,7 +125,7 @@ The system provides several specialized React hooks for different aspects of com
 - npm/yarn/pnpm
 
 ### Quick Start
-\`\`\`bash
+```bash
 # Clone the repository
 git clone <repository-url>
 cd okayd-comments
@@ -135,7 +135,7 @@ npm install
 
 # Run development server
 npm run dev
-\`\`\`
+```
 
 ### Environment Setup
 No environment variables required for the default localStorage setup. For database integration, configure your storage adapter accordingly.
@@ -143,14 +143,14 @@ No environment variables required for the default localStorage setup. For databa
 ## 💾 Storage Adapters
 
 ### Local Storage (Default)
-\`\`\`typescript
+```typescript
 import { LocalStorageAdapter } from '@/lib/adapters'
 
 const adapter = new LocalStorageAdapter()
-\`\`\`
+```
 
 ### Server Actions (Next.js)
-\`\`\`typescript
+```typescript
 import { ServerActionAdapter } from '@/lib/adapters'
 
 const adapter = new ServerActionAdapter({
@@ -159,10 +159,10 @@ const adapter = new ServerActionAdapter({
   deleteComment: deleteCommentAction,
   // ... other actions
 })
-\`\`\`
+```
 
 ### Tanstack Query
-\`\`\`typescript
+```typescript
 import { useTanstackQueryAdapter } from '@/lib/adapters'
 
 function MyComponent() {
@@ -173,22 +173,22 @@ function MyComponent() {
   
   return <CommentProvider storageAdapter={adapter}>...</CommentProvider>
 }
-\`\`\`
+```
 
 ### API Integration
-\`\`\`typescript
+```typescript
 import { ApiAdapter } from '@/lib/adapters'
 
 const adapter = new ApiAdapter({
   baseUrl: 'https://api.example.com',
   headers: { Authorization: 'Bearer token' }
 })
-\`\`\`
+```
 
 ## 🎯 Usage Examples
 
 ### Basic Comment List
-\`\`\`tsx
+```tsx
 import { CommentList } from '@/components/comments/comment-list'
 import { CommentProvider } from '@/contexts/comment-context'
 
@@ -209,7 +209,7 @@ function MyApp() {
     </CommentProvider>
   )
 }
-\`\`\`
+```
 
 ### Rich Text Features
 The Lexical editor automatically handles:
@@ -220,7 +220,7 @@ The Lexical editor automatically handles:
 - **Mentions**: Type `@` to mention users or `#` to tag items
 
 ### Custom Storage Adapter
-\`\`\`tsx
+```tsx
 import { CommentProvider } from '@/contexts/comment-context'
 import { ServerActionAdapter } from '@/lib/adapters'
 
@@ -239,10 +239,10 @@ function App() {
     </CommentProvider>
   )
 }
-\`\`\`
+```
 
 ### Lexical Composer Standalone
-\`\`\`tsx
+```tsx
 import { LexicalCommentComposer } from '@/components/lexical/lexical-comment-composer'
 
 function MyComposer() {
@@ -257,12 +257,12 @@ function MyComposer() {
     />
   )
 }
-\`\`\`
+```
 
 ## 🔌 API Reference
 
 ### CommentList Props
-\`\`\`typescript
+```typescript
 interface CommentListProps {
   comments: Comment[]
   currentUser: User
@@ -279,10 +279,10 @@ interface CommentListProps {
   onDelete: (commentId: string) => void
   // ... other event handlers
 }
-\`\`\`
+```
 
 ### Storage Adapter Interface
-\`\`\`typescript
+```typescript
 interface CommentStorageAdapter {
   // Core CRUD operations
   getComments(): Promise<Comment[]>
@@ -297,24 +297,24 @@ interface CommentStorageAdapter {
   getCommentsBySource(sourceId: string, sourceType: string): Promise<Comment[]>
   clearAllStorage(): Promise<void>
 }
-\`\`\`
+```
 
 ## 🎨 Theming & Customization
 
 ### CSS Custom Properties
 The system uses CSS custom properties for theming:
-\`\`\`css
+```css
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   /* ... more properties */
 }
-\`\`\`
+```
 
 ### Variant-Specific Styling
 Each variant has its own styling utilities in `components/lexical/utils/style-utils.ts`:
-\`\`\`typescript
+```typescript
 export function getContainerStyles(variant: CommentVariant): string {
   switch (variant) {
     case 'timeline':
@@ -324,7 +324,7 @@ export function getContainerStyles(variant: CommentVariant): string {
     // ... other variants
   }
 }
-\`\`\`
+```
 
 ## 🧪 Testing & Development
 
@@ -343,11 +343,11 @@ export function getContainerStyles(variant: CommentVariant): string {
 For production deployment with database integration, see the [Database Schema Guide](README-SCHEMA.md) for complete setup instructions.
 
 ### Environment Variables
-\`\`\`env
+```env
 DATABASE_URL="postgresql://..."
 NEXT_PUBLIC_SUPABASE_URL="https://..."
 NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
-\`\`\`
+```
 
 ## 🏢 About Okayd
 
