@@ -24,10 +24,28 @@ interface CommentState {
   error: string | null
 }
 
+// Configuration interfaces for editor features
+interface EditorFeatures {
+  lists?: boolean
+  checkLists?: boolean
+  autoLink?: boolean
+  mentions?: boolean
+  emoji?: boolean
+  autoList?: boolean
+}
+
+interface CommentConfig {
+  theme?: "light" | "dark" | "auto"
+  editorFeatures?: EditorFeatures
+  placeholder?: string
+  variant?: "default" | "compact" | "inline"
+}
+
 // Context interface
 interface CommentContextType {
   state: CommentState
   currentUser: User | null
+  config: CommentConfig
 
   addComment: (
     content: string,
@@ -50,6 +68,9 @@ interface CommentContextType {
   setCurrentUser: (user: User) => void
   refreshData: () => Promise<void>
 
+  // Configuration management
+  updateConfig: (newConfig: Partial<CommentConfig>) => void
+
   clearAllStorage: () => Promise<void>
 }
 
@@ -58,6 +79,21 @@ const initialState: CommentState = {
   comments: [],
   loading: false,
   error: null,
+}
+
+// Default configuration
+const defaultConfig: CommentConfig = {
+  theme: "auto",
+  editorFeatures: {
+    lists: true,
+    checkLists: true,
+    autoLink: true,
+    mentions: true,
+    emoji: true,
+    autoList: true,
+  },
+  placeholder: "Add a comment...",
+  variant: "default",
 }
 
 // Comment reducer
@@ -151,14 +187,29 @@ interface CommentProviderProps {
   initialUser?: User
   storageAdapter?: CommentStorageAdapter
   initialComments?: Comment[]
+  config?: CommentConfig
 }
 
-export function CommentProvider({ children, initialUser, storageAdapter, initialComments }: CommentProviderProps) {
+export function CommentProvider({
+  children,
+  initialUser,
+  storageAdapter,
+  initialComments,
+  config,
+}: CommentProviderProps) {
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialState,
     comments: initialComments || [],
   })
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
+  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>({
+    ...defaultConfig,
+    ...config,
+    editorFeatures: {
+      ...defaultConfig.editorFeatures,
+      ...config?.editorFeatures,
+    },
+  })
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
 
@@ -413,9 +464,21 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
     }
   }, [adapter])
 
+  const updateConfig = useCallback((newConfig: Partial<CommentConfig>) => {
+    setCurrentConfig((prev) => ({
+      ...prev,
+      ...newConfig,
+      editorFeatures: {
+        ...prev.editorFeatures,
+        ...newConfig.editorFeatures,
+      },
+    }))
+  }, [])
+
   const contextValue: CommentContextType = {
     state,
     currentUser,
+    config: currentConfig,
     addComment,
     updateComment,
     deleteComment,
@@ -426,6 +489,7 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
     getRepliesForComment,
     setCurrentUser,
     refreshData,
+    updateConfig,
     clearAllStorage,
   }
 
