@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
+const defaultUser = {
+  id: "default-user",
+  name: "Sarah Johnson",
+  email: "sarah@example.com",
+  avatar: "/placeholder.svg?height=32&width=32",
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans antialiased">
         <QueryProvider>
-          <CommentProvider>
+          <CommentProvider initialUser={defaultUser}>
             <MentionProvider>{children}</MentionProvider>
           </CommentProvider>
         </QueryProvider>
