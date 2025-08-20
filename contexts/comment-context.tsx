@@ -107,6 +107,37 @@ const defaultConfig: CommentConfig = {
   variant: "compact",
 }
 
+const CONFIG_STORAGE_KEY = "okayd-comments-config"
+
+const loadConfigFromStorage = (): CommentConfig => {
+  try {
+    const stored = localStorage.getItem(CONFIG_STORAGE_KEY)
+    if (stored) {
+      const parsedConfig = JSON.parse(stored)
+      return {
+        ...defaultConfig,
+        ...parsedConfig,
+        editorFeatures: {
+          ...defaultConfig.editorFeatures,
+          ...parsedConfig.editorFeatures,
+        },
+      }
+    }
+  } catch (error) {
+    console.error("[v0] Error loading config from storage:", error)
+  }
+  return defaultConfig
+}
+
+const saveConfigToStorage = (config: CommentConfig) => {
+  try {
+    localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config))
+    console.log("[v0] Config saved to localStorage:", config)
+  } catch (error) {
+    console.error("[v0] Error saving config to storage:", error)
+  }
+}
+
 // Comment reducer
 function commentReducer(state: CommentState, action: CommentAction): CommentState {
   switch (action.type) {
@@ -213,13 +244,17 @@ export function CommentProvider({
     comments: initialComments || [],
   })
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
-  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>({
-    ...defaultConfig,
-    ...config,
-    editorFeatures: {
-      ...defaultConfig.editorFeatures,
-      ...config?.editorFeatures,
-    },
+
+  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>(() => {
+    const storedConfig = loadConfigFromStorage()
+    return {
+      ...storedConfig,
+      ...config,
+      editorFeatures: {
+        ...storedConfig.editorFeatures,
+        ...config?.editorFeatures,
+      },
+    }
   })
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
@@ -476,15 +511,20 @@ export function CommentProvider({
   }, [adapter])
 
   const updateConfig = useCallback((newConfig: Partial<CommentConfig>) => {
-    console.log('updating config!!', newConfig)
-    setCurrentConfig((prev) => ({
-      ...prev,
-      ...newConfig,
-      editorFeatures: {
-        ...prev.editorFeatures,
-        ...newConfig.editorFeatures,
-      },
-    }))
+    console.log("[v0] updating config!!", newConfig)
+    setCurrentConfig((prev) => {
+      const updatedConfig = {
+        ...prev,
+        ...newConfig,
+        editorFeatures: {
+          ...prev.editorFeatures,
+          ...newConfig.editorFeatures,
+        },
+      }
+      saveConfigToStorage(updatedConfig)
+      console.log("[v0] Config updated and persisted:", updatedConfig)
+      return updatedConfig
+    })
   }, [])
 
   const contextValue: CommentContextType = {
