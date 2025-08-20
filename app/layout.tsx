@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryProvider } from "@/components/providers/query-provider"
 import { MentionProvider } from "@/contexts/mention-context"
 import { CommentProvider } from "@/contexts/comment-context"
 import "./globals.css"
@@ -11,15 +11,6 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10, // 10 minutes
-    },
-  },
-})
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
-        <QueryClientProvider client={queryClient}>
+        <QueryProvider>
           <CommentProvider>
             <MentionProvider>{children}</MentionProvider>
           </CommentProvider>
-        </QueryClientProvider>
+        </QueryProvider>
       </body>
     </html>
   )
