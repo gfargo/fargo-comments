@@ -1,7 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { MentionProvider } from "@/contexts/mention-context"
 import { CommentProvider } from "@/contexts/comment-context"
@@ -28,16 +26,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
-      </head>
+    <html lang="en">
       <body className="font-sans antialiased">
         <QueryClientProvider client={queryClient}>
           <CommentProvider>
