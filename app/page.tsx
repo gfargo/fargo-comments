@@ -226,9 +226,7 @@ export default function CommentSystemDemo() {
       }
       description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
     >
-      <CommentProvider initialUser={currentUser}>
         <MainPageContent />
-      </CommentProvider>
     </CommentLayout>
   )
 }
