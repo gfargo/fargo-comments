@@ -57,7 +57,7 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
   }
 
   const handleVariantChange = (variant: CommentVariant) => {
-  console.log({variant})
+    console.log(variant})
     updateConfig({ variant })
   }
 
