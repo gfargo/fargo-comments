@@ -69,10 +69,83 @@ const adapter = new ServerActionAdapter({
 
 **Features:**
 - Leverages Next.js server actions
-- Dynamic imports for server-side functions
 - Type-safe server-side operations
 - Perfect for Next.js app router applications
-- Requires corresponding server action implementations
+- **Requires implementation of server action files**
+
+**⚠️ Implementation Required:**
+This adapter is a template that requires you to create your own server action files. You need to implement the following files in your project:
+
+**`app/actions/comments.ts`**
+\`\`\`typescript
+'use server'
+
+import type { Comment, CommentThread, User } from '@/types/comments'
+
+export async function getCommentsAction(): Promise<Comment[]> {
+  // Your database query logic here
+  // Example: return await db.comments.findMany()
+}
+
+export async function addCommentAction(comment: Comment): Promise<void> {
+  // Your database insert logic here
+  // Example: await db.comments.create({ data: comment })
+}
+
+export async function updateCommentAction(commentId: string, updates: Partial<Comment>): Promise<void> {
+  // Your database update logic here
+  // Example: await db.comments.update({ where: { id: commentId }, data: updates })
+}
+
+export async function deleteCommentAction(commentId: string): Promise<void> {
+  // Your database delete logic here
+  // Example: await db.comments.delete({ where: { id: commentId } })
+}
+
+export async function addLexicalCommentAction(
+  content: string,
+  editorState: string,
+  author: User,
+  mentions: any[],
+  tags: any[],
+  sourceId?: string,
+  sourceType?: string,
+  parentId?: string,
+): Promise<Comment> {
+  // Your comment creation logic here with Lexical editor state
+  // Example: return await db.comments.create({ data: { content, editorState, authorId: author.id, sourceId, sourceType, parentId } })
+}
+
+export async function getCommentsBySourceAction(sourceId: string, sourceType: string): Promise<Comment[]> {
+  // Your filtered query logic here
+  // Example: return await db.comments.findMany({ where: { sourceId, sourceType } })
+}
+
+// ... implement other required actions
+\`\`\`
+
+**`app/actions/users.ts`**
+\`\`\`typescript
+'use server'
+
+import type { User } from '@/types/comments'
+
+export async function getUsersAction(): Promise<User[]> {
+  // Your user query logic here
+  // Example: return await db.users.findMany()
+}
+
+export async function saveUsersAction(users: User[]): Promise<void> {
+  // Your user save logic here
+  // Example: await db.users.createMany({ data: users })
+}
+\`\`\`
+
+**Database Integration Examples:**
+- **Prisma**: `await prisma.comments.findMany()`
+- **Drizzle**: `await db.select().from(comments)`
+- **Supabase**: `await supabase.from('comments').select('*')`
+- **Direct SQL**: Your custom database queries
 
 ### 4. TanstackQueryAdapter
 **File:** `tanstack-query-adapter.ts`  
