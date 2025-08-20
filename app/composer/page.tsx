@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CommentLayout, useCommentVariant } from "@/components/layout/comment-layout"
+import { CommentLayout } from "@/components/layout/comment-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Edit3, User, Hash, FileText, BookOpen, Tag } from "lucide-react"
@@ -11,9 +11,9 @@ import { currentUser } from "@/lib/constants/comment-data"
 import { useComments } from "@/contexts/comment-context"
 
 function ComposerPageContent() {
-  const { selectedVariant } = useCommentVariant()
+  const { config, addComment } = useComments()
+  const selectedVariant = config.variant || "compact"
   const [recentComments, setRecentComments] = useState<any[]>([])
-  const { addComment } = useComments()
 
   const handleAddComment = async (content: string, mentions: any[], tags: any[]) => {
     console.log("[v0] New comment:", { content, mentions, tags })

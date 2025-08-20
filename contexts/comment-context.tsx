@@ -35,7 +35,6 @@ interface EditorFeatures {
 }
 
 interface CommentConfig {
-  theme?: "light" | "dark" | "auto"
   editorFeatures?: EditorFeatures
   placeholder?: string
   variant?:
@@ -96,7 +95,6 @@ const initialState: CommentState = {
 
 // Default configuration
 const defaultConfig: CommentConfig = {
-  theme: "auto",
   editorFeatures: {
     lists: true,
     checkLists: true,

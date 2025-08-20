@@ -1,7 +1,7 @@
 "use client"
 import { CommentList } from "@/components/comments/comment-list"
 import { CommentDrawer } from "@/components/comments/comment-drawer"
-import { CommentLayout, useCommentVariant } from "@/components/layout/comment-layout"
+import { CommentLayout } from "@/components/layout/comment-layout"
 import { CommentProvider, useComments } from "@/contexts/comment-context"
 import { useCommentActions } from "@/hooks/use-comment-actions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,8 +12,8 @@ import Image from "next/image"
 import { mockComments, currentUser } from "@/lib/constants/comment-data"
 
 function LiveCommentDemo() {
-  const { selectedVariant } = useCommentVariant()
-  const { getCommentsBySource, getRepliesForComment } = useComments()
+  const { config, getCommentsBySource, getRepliesForComment } = useComments()
+  const selectedVariant = config.variant || "compact"
   const { handleAddComment, handleUpdateComment, handleDeleteComment, handleReply } = useCommentActions()
 
   const sourceId = "test-source-id"
@@ -69,7 +69,8 @@ function LiveCommentDemo() {
 }
 
 function MainPageContent() {
-  const { selectedVariant } = useCommentVariant()
+  const { config } = useComments()
+  const selectedVariant = config.variant || "compact"
 
   return (
     <div className="space-y-6">
