@@ -128,7 +128,7 @@ The system provides several specialized React hooks for different aspects of com
 
 ### Quick Start
 
-\`\`\`bash
+```bash
 # Clone the repository
 git clone <repository-url>
 cd okayd-comments
@@ -138,7 +138,7 @@ npm install
 
 # Run development server
 npm run dev
-\`\`\`
+```
 
 ### Environment Setup
 
@@ -148,15 +148,15 @@ No environment variables required for the default localStorage setup. For databa
 
 ### Local Storage (Default)
 
-\`\`\`typescript
+```typescript
 import { LocalStorageAdapter } from '@/lib/adapters'
 
 const adapter = new LocalStorageAdapter()
-\`\`\`
+```
 
 ### Server Actions (Next.js)
 
-\`\`\`typescript
+```typescript
 import { ServerActionAdapter } from '@/lib/adapters'
 
 const adapter = new ServerActionAdapter({
@@ -165,7 +165,7 @@ const adapter = new ServerActionAdapter({
   deleteComment: deleteCommentAction,
   // ... other actions
 })
-\`\`\`
+```
 
 ### Tanstack Query
 
