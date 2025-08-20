@@ -45,7 +45,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-\`\`\`
+```plaintext
 ├── app/                          # Next.js App Router pages
 │   ├── page.tsx                 # Main demo page
 │   ├── composer/                # Lexical composer examples
@@ -80,26 +80,30 @@ This repository contains several specialized README files for different aspects 
 │   └── comment-utils.ts        # Utility functions
 └── types/
     └── comments.ts             # TypeScript type definitions
-\`\`\`
+````
 
 ## 🎣 Custom Hooks
 
 The system provides several specialized React hooks for different aspects of comment management:
 
 ### Core Comment Hooks
-- **`useCommentActions`** - Comprehensive comment interaction management including CRUD operations, reactions, replies, and UI state management with error handling
-- **`useCommentsFromSource`** - Retrieves and manages comments filtered by specific source ID and type, with statistics and loading states
 
-### Utility Hooks  
-- **`useMobile`** - Mobile device detection using responsive breakpoints (< 768px) with real-time viewport updates
-- **`useToast`** - Complete toast notification system with queuing, timeouts, and imperative API for user feedback
+* **`useCommentActions`** - Comprehensive comment interaction management including CRUD operations, reactions, replies, and UI state management with error handling
+* **`useCommentsFromSource`** - Retrieves and manages comments filtered by specific source ID and type, with statistics and loading states
+
+### Utility Hooks
+
+* **`useMobile`** - Mobile device detection using responsive breakpoints (< 768px) with real-time viewport updates
+* **`useToast`** - Complete toast notification system with queuing, timeouts, and imperative API for user feedback
 
 ### Legacy Hooks
-- **`useAuditComments`** - *(Deprecated)* Audit-specific comment management, replaced by the more generic `useCommentsFromSource`
+
+* **`useAuditComments`** - *(Deprecated)* Audit-specific comment management, replaced by the more generic `useCommentsFromSource`
 
 ## 🎨 Design Variants
 
 ### Available Variants
+
 1. **Card** - Clean card-based design with shadows
 2. **Thread** - Nested conversation threads
 3. **Bubble** - Chat bubble interface
@@ -114,18 +118,21 @@ The system provides several specialized React hooks for different aspects of com
 12. **Compact** - Space-efficient compact layout
 
 ### Variant-Specific Features
-- **Adaptive Styling**: Each variant has unique color schemes, spacing, and typography
-- **Context-Aware UI**: Buttons, composers, and interactions adapt to variant style
-- **Responsive Behavior**: Variants optimize for different screen sizes
+
+* **Adaptive Styling**: Each variant has unique color schemes, spacing, and typography
+* **Context-Aware UI**: Buttons, composers, and interactions adapt to variant style
+* **Responsive Behavior**: Variants optimize for different screen sizes
 
 ## 🔧 Installation & Setup
 
 ### Prerequisites
-- Node.js 18+ 
-- npm/yarn/pnpm
+
+* Node.js 18+
+* npm/yarn/pnpm
 
 ### Quick Start
-\`\`\`bash
+
+```bash
 # Clone the repository
 git clone <repository-url>
 cd okayd-comments
@@ -135,22 +142,25 @@ npm install
 
 # Run development server
 npm run dev
-\`\`\`
+```
 
 ### Environment Setup
+
 No environment variables required for the default localStorage setup. For database integration, configure your storage adapter accordingly.
 
 ## 💾 Storage Adapters
 
 ### Local Storage (Default)
-\`\`\`typescript
+
+```typescript
 import { LocalStorageAdapter } from '@/lib/adapters'
 
 const adapter = new LocalStorageAdapter()
-\`\`\`
+```
 
 ### Server Actions (Next.js)
-\`\`\`typescript
+
+```typescript
 import { ServerActionAdapter } from '@/lib/adapters'
 
 const adapter = new ServerActionAdapter({
@@ -159,10 +169,11 @@ const adapter = new ServerActionAdapter({
   deleteComment: deleteCommentAction,
   // ... other actions
 })
-\`\`\`
+```
 
 ### Tanstack Query
-\`\`\`typescript
+
+```typescript
 import { useTanstackQueryAdapter } from '@/lib/adapters'
 
 function MyComponent() {
@@ -173,22 +184,24 @@ function MyComponent() {
   
   return <CommentProvider storageAdapter={adapter}>...</CommentProvider>
 }
-\`\`\`
+```
 
 ### API Integration
-\`\`\`typescript
+
+```typescript
 import { ApiAdapter } from '@/lib/adapters'
 
 const adapter = new ApiAdapter({
   baseUrl: 'https://api.example.com',
   headers: { Authorization: 'Bearer token' }
 })
-\`\`\`
+```
 
 ## 🎯 Usage Examples
 
 ### Basic Comment List
-\`\`\`tsx
+
+```tsx
 import { CommentList } from '@/components/comments/comment-list'
 import { CommentProvider } from '@/contexts/comment-context'
 
@@ -209,18 +222,21 @@ function MyApp() {
     </CommentProvider>
   )
 }
-\`\`\`
+```
 
 ### Rich Text Features
+
 The Lexical editor automatically handles:
-- **URLs**: `https://example.com` becomes a clickable link
-- **Email addresses**: `user@example.com` becomes a mailto link  
-- **Lists**: Type `- ` or `1. ` to create lists
-- **Emojis**: Type `:laugh` to search and insert emojis
-- **Mentions**: Type `@` to mention users or `#` to tag items
+
+* **URLs**: `https://example.com` becomes a clickable link
+* **Email addresses**: `user@example.com` becomes a mailto link
+* **Lists**: Type `- ` or `1. ` to create lists
+* **Emojis**: Type `:laugh` to search and insert emojis
+* **Mentions**: Type `@` to mention users or `#` to tag items
 
 ### Custom Storage Adapter
-\`\`\`tsx
+
+```tsx
 import { CommentProvider } from '@/contexts/comment-context'
 import { ServerActionAdapter } from '@/lib/adapters'
 
@@ -239,10 +255,11 @@ function App() {
     </CommentProvider>
   )
 }
-\`\`\`
+```
 
 ### Lexical Composer Standalone
-\`\`\`tsx
+
+```tsx
 import { LexicalCommentComposer } from '@/components/lexical/lexical-comment-composer'
 
 function MyComposer() {
@@ -257,12 +274,13 @@ function MyComposer() {
     />
   )
 }
-\`\`\`
+```
 
 ## 🔌 API Reference
 
 ### CommentList Props
-\`\`\`typescript
+
+```typescript
 interface CommentListProps {
   comments: Comment[]
   currentUser: User
@@ -279,10 +297,11 @@ interface CommentListProps {
   onDelete: (commentId: string) => void
   // ... other event handlers
 }
-\`\`\`
+```
 
 ### Storage Adapter Interface
-\`\`\`typescript
+
+```typescript
 interface CommentStorageAdapter {
   // Core CRUD operations
   getComments(): Promise<Comment[]>
@@ -297,24 +316,28 @@ interface CommentStorageAdapter {
   getCommentsBySource(sourceId: string, sourceType: string): Promise<Comment[]>
   clearAllStorage(): Promise<void>
 }
-\`\`\`
+```
 
 ## 🎨 Theming & Customization
 
 ### CSS Custom Properties
+
 The system uses CSS custom properties for theming:
-\`\`\`css
+
+```css
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   /* ... more properties */
 }
-\`\`\`
+```
 
 ### Variant-Specific Styling
+
 Each variant has its own styling utilities in `components/lexical/utils/style-utils.ts`:
-\`\`\`typescript
+
+```typescript
 export function getContainerStyles(variant: CommentVariant): string {
   switch (variant) {
     case 'timeline':
@@ -324,30 +347,33 @@ export function getContainerStyles(variant: CommentVariant): string {
     // ... other variants
   }
 }
-\`\`\`
+```
 
 ## 🧪 Testing & Development
 
 ### Demo Pages
-- `/` - Main demo with live comment system
-- `/composer` - Lexical composer examples
-- `/threads` - Thread visualization demos
+
+* `/` - Main demo with live comment system
+* `/composer` - Lexical composer examples
+* `/threads` - Thread visualization demos
 
 ### Development Tools
-- **Clear Data Button**: Reset localStorage during development
-- **Variant Selector**: Switch between design variants in real-time
-- **Debug Logging**: Console logging for development insights
+
+* **Clear Data Button**: Reset localStorage during development
+* **Variant Selector**: Switch between design variants in real-time
+* **Debug Logging**: Console logging for development insights
 
 ## 🚀 Production Deployment
 
 For production deployment with database integration, see the [Database Schema Guide](README-SCHEMA.md) for complete setup instructions.
 
 ### Environment Variables
-\`\`\`env
+
+```env
 DATABASE_URL="postgresql://..."
 NEXT_PUBLIC_SUPABASE_URL="https://..."
 NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
-\`\`\`
+```
 
 ## 🏢 About Okayd
 
@@ -369,11 +395,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgments
 
-- **Meta Lexical** - Rich text editing framework
-- **shadcn/ui** - UI component library
-- **Tailwind CSS** - Utility-first CSS framework
-- **Tanstack Query** - Data fetching and caching
-- **Next.js** - React framework
+* **Meta Lexical** - Rich text editing framework
+* **shadcn/ui** - UI component library
+* **Tailwind CSS** - Utility-first CSS framework
+* **Tanstack Query** - Data fetching and caching
+* **Next.js** - React framework
 
 ---
 
