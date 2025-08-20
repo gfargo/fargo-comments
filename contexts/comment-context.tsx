@@ -105,7 +105,7 @@ const defaultConfig: CommentConfig = {
     emoji: true,
     autoList: true,
   },
-  placeholder: "Add a comment...",
+  placeholder: "Add a comment ... supports @mentions, #tags, :emojis:, lists, links and more!",
   variant: "compact",
 }
 
