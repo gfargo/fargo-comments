@@ -107,8 +107,6 @@ const defaultConfig: CommentConfig = {
   variant: "compact",
 }
 
-const CONFIG_STORAGE_KEY = "okayd-comments-config"
-
 // Comment reducer
 function commentReducer(state: CommentState, action: CommentAction): CommentState {
   switch (action.type) {
@@ -215,16 +213,13 @@ export function CommentProvider({
     comments: initialComments || [],
   })
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
-
-  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>(() => {
-    return {
-      ...defaultConfig,
-      ...config,
-      editorFeatures: {
-        ...defaultConfig.editorFeatures,
-        ...config?.editorFeatures,
-      },
-    }
+  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>({
+    ...defaultConfig,
+    ...config,
+    editorFeatures: {
+      ...defaultConfig.editorFeatures,
+      ...config?.editorFeatures,
+    },
   })
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
@@ -481,19 +476,15 @@ export function CommentProvider({
   }, [adapter])
 
   const updateConfig = useCallback((newConfig: Partial<CommentConfig>) => {
-    console.log("[v0] updating config!!", newConfig)
-    setCurrentConfig((prev) => {
-      const updatedConfig = {
-        ...prev,
-        ...newConfig,
-        editorFeatures: {
-          ...prev.editorFeatures,
-          ...newConfig.editorFeatures,
-        },
-      }
-      console.log("[v0] Config updated:", updatedConfig)
-      return updatedConfig
-    })
+    console.log('updating config!!', newConfig)
+    setCurrentConfig((prev) => ({
+      ...prev,
+      ...newConfig,
+      editorFeatures: {
+        ...prev.editorFeatures,
+        ...newConfig.editorFeatures,
+      },
+    }))
   }, [])
 
   const contextValue: CommentContextType = {

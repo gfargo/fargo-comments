@@ -217,6 +217,7 @@ function MainPageContent() {
 
 export default function CommentSystemDemo() {
   return (
+        <CommentProvider initialUser={currentUser}>
     <CommentLayout
       title={
         <div className="flex items-baseline gap-2">
@@ -226,7 +227,10 @@ export default function CommentSystemDemo() {
       }
       description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
     >
+
         <MainPageContent />
+      
     </CommentLayout>
+    </CommentProvider>
   )
 }
