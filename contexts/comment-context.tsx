@@ -93,7 +93,7 @@ const defaultConfig: CommentConfig = {
     autoList: true,
   },
   placeholder: "Add a comment...",
-  variant: "default",
+  variant: "compact",
 }
 
 // Comment reducer
