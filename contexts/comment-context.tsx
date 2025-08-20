@@ -38,7 +38,20 @@ interface CommentConfig {
   theme?: "light" | "dark" | "auto"
   editorFeatures?: EditorFeatures
   placeholder?: string
-  variant?: "default" | "compact" | "inline"
+  variant?:
+    | "card"
+    | "bubble"
+    | "timeline"
+    | "compact"
+    | "plain"
+    | "social"
+    | "professional"
+    | "clean"
+    | "thread"
+    | "github"
+    | "email"
+    | "notion"
+    | "mobile"
 }
 
 // Context interface
