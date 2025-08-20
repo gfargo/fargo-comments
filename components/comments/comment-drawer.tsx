@@ -1,0 +1,111 @@
+"use client"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { MessageSquare } from "lucide-react"
+import { CommentList } from "./comment-list"
+import { useComments } from "@/contexts/comment-context"
+import { useCommentActions } from "@/hooks/use-comment-actions"
+
+interface CommentDrawerProps {
+  auditItemId?: string
+  variant?:
+    | "card"
+    | "bubble"
+    | "timeline"
+    | "compact"
+    | "social"
+    | "professional"
+    | "clean"
+    | "github"
+    | "email"
+    | "notion"
+    | "mobile"
+    | "thread"
+  enableSearch?: boolean
+  enableSorting?: boolean
+  enableComposer?: boolean
+  enableFiltering?: boolean
+  title?: string
+  triggerLabel?: string
+  width?: string
+}
+
+export function CommentDrawer({
+  auditItemId,
+  variant = "card",
+  enableSearch = true,
+  enableSorting = true,
+  enableComposer = true,
+  enableFiltering = true,
+  title = "Audit Comments",
+  triggerLabel = "All Comments",
+  width = "700px",
+}: CommentDrawerProps) {
+  const { state, currentUser, getCommentsByAuditItem, getRepliesForComment } = useComments()
+  const {
+    handleAddComment,
+    handleUpdateComment,
+    handleDeleteComment,
+    handleLike,
+    handleShare,
+    handleForward,
+    handleApprove,
+    handleReact,
+  } = useCommentActions()
+
+  const comments = auditItemId ? getCommentsByAuditItem(auditItemId) : state.comments
+  const allComments = state.comments // For replies lookup
+
+  console.log("[v0] CommentDrawer - auditItemId:", auditItemId)
+  console.log("[v0] CommentDrawer - comments found:", comments.length)
+  console.log("[v0] CommentDrawer - currentUser:", currentUser?.name)
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" className="gap-2 bg-transparent">
+          <MessageSquare className="h-4 w-4" />
+          {triggerLabel}
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="p-0" style={{ width, maxWidth: "none" }}>
+        <div className="flex flex-col h-screen max-h-screen pt-4">
+          <SheetHeader className="p-6 border-b flex-shrink-0 sr-only">
+            <SheetTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              {title}
+              <Badge variant="outline" className="ml-2 text-xs">
+                {variant.charAt(0).toUpperCase() + variant.slice(1)} Style
+              </Badge>
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="flex-1 overflow-y-auto min-h-0">
+            <div className="p-6">
+              <CommentList
+                comments={comments}
+                currentUser={currentUser!}
+                auditItemId={auditItemId}
+                variant={variant}
+                enableSearch={enableSearch}
+                enableSorting={enableSorting}
+                showAddForm={enableComposer}
+                onAddComment={(content, editorState) => handleAddComment(content, editorState, auditItemId)}
+                onEdit={handleUpdateComment}
+                onDelete={handleDeleteComment}
+                onLike={handleLike}
+                onShare={handleShare}
+                onForward={handleForward}
+                onApprove={handleApprove}
+                onReact={handleReact}
+                getRepliesForComment={getRepliesForComment}
+                className="border-none shadow-none p-0"
+              />
+            </div>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}

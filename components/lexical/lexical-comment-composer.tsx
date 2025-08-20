@@ -1,0 +1,250 @@
+"use client"
+
+import { forwardRef, useEffect, useState } from "react"
+import { LexicalComposer } from "@lexical/react/LexicalComposer"
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
+import { ContentEditable } from "@lexical/react/LexicalContentEditable"
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
+import { ListPlugin } from "@lexical/react/LexicalListPlugin"
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin"
+import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin"
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
+import { $getRoot, $createParagraphNode, $createTextNode } from "lexical"
+import {
+  BeautifulMentionsPlugin,
+  type BeautifulMentionsMenuProps,
+  type BeautifulMentionsMenuItemProps,
+} from "lexical-beautiful-mentions"
+import { Button } from "@/components/ui/button"
+import { Send, User, Hash, FileText, BookOpen, Tag } from "lucide-react"
+import { AutoListPlugin } from "./plugins/auto-list-plugin"
+import { EmojiPlugin } from "./plugins/emoji-plugin"
+import {
+  getContainerStyles,
+  getContentEditableStyles,
+  getPlaceholderPosition,
+  getButtonConfig,
+  type CommentVariant,
+} from "./utils/style-utils"
+import { useMentions } from "@/contexts/mention-context"
+import { lexicalTheme, lexicalNodes, MATCHERS } from "./config/lexical-config"
+
+const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(({ open, loading, ...props }, ref) => (
+  <ul
+    className="absolute z-50 mt-1 max-h-60 w-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+    {...props}
+    ref={ref}
+  />
+))
+
+const CustomMenuItem = forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>(
+  ({ selected, item, ...props }, ref) => {
+    const getIcon = () => {
+      if (item.trigger === "@") return <User className="w-4 h-4 text-blue-600" />
+      if (item.trigger === "#") {
+        if (item.value.startsWith("question")) return <FileText className="w-4 h-4 text-green-600" />
+        if (item.value.startsWith("rule")) return <BookOpen className="w-4 h-4 text-purple-600" />
+        if (item.value.startsWith("section")) return <Hash className="w-4 h-4 text-orange-600" />
+        return <Tag className="w-4 h-4 text-gray-600" />
+      }
+      return null
+    }
+
+    return (
+      <li
+        className={`relative cursor-pointer select-none py-2 px-3 ${
+          selected ? "bg-blue-50 text-blue-900" : "text-gray-900"
+        } hover:bg-gray-50`}
+        {...props}
+        ref={ref}
+      >
+        <div className="flex items-center gap-3">
+          {getIcon()}
+          <div className="flex-1 min-w-0">
+            <div className="font-medium truncate">{item.value}</div>
+            {item.data?.email && <div className="text-sm text-gray-500 truncate">{item.data.email}</div>}
+            {item.data?.description && <div className="text-sm text-gray-500 truncate">{item.data.description}</div>}
+          </div>
+        </div>
+      </li>
+    )
+  },
+)
+
+function ContentExtractor({
+  onContentChange,
+  onEditorStateChange,
+  initialContent,
+  initialEditorState,
+}: {
+  onContentChange: (content: string) => void
+  onEditorStateChange: (editorState: string) => void
+  initialContent?: string
+  initialEditorState?: string
+}) {
+  const [editor] = useLexicalComposerContext()
+
+  useEffect(() => {
+    if (initialEditorState && initialEditorState.trim()) {
+      editor.update(() => {
+        try {
+          const editorState = editor.parseEditorState(initialEditorState)
+          editor.setEditorState(editorState)
+        } catch (error) {
+          console.error("[v0] Failed to parse editor state:", error)
+          if (initialContent && initialContent.trim()) {
+            const root = $getRoot()
+            root.clear()
+            const paragraph = $createParagraphNode()
+            const textNode = $createTextNode(initialContent)
+            paragraph.append(textNode)
+            root.append(paragraph)
+          }
+        }
+      })
+    } else if (initialContent && initialContent.trim()) {
+      editor.update(() => {
+        const root = $getRoot()
+        root.clear()
+        const paragraph = $createParagraphNode()
+        const textNode = $createTextNode(initialContent)
+        paragraph.append(textNode)
+        root.append(paragraph)
+      })
+    }
+  }, [editor, initialContent, initialEditorState])
+
+  useEffect(() => {
+    const removeListener = editor.registerUpdateListener(({ editorState }) => {
+      editorState.read(() => {
+        const root = $getRoot()
+        const textContent = root.getTextContent()
+        onContentChange(textContent)
+      })
+
+      const editorStateJSON = JSON.stringify(editorState.toJSON())
+      onEditorStateChange(editorStateJSON)
+    })
+
+    return removeListener
+  }, [editor, onContentChange, onEditorStateChange])
+
+  return null
+}
+
+interface LexicalCommentComposerProps {
+  variant?: CommentVariant
+  placeholder?: string
+  onSubmit?: (content: string, editorState: string, mentions: any[], tags: any[]) => void
+  className?: string
+  initialContent?: string
+  initialEditorState?: string
+}
+
+export function LexicalCommentComposer({
+  variant = "default",
+  placeholder = "Add a comment...",
+  onSubmit,
+  className = "",
+  initialContent = "",
+  initialEditorState = "",
+}: LexicalCommentComposerProps) {
+  const [currentContent, setCurrentContent] = useState("")
+  const [currentEditorState, setCurrentEditorState] = useState("")
+  const { mentionItems, loading: mentionLoading, error: mentionError } = useMentions()
+
+  useEffect(() => {
+    if (initialContent || initialEditorState) {
+      setCurrentContent(initialContent)
+      setCurrentEditorState(initialEditorState)
+    }
+  }, [initialContent, initialEditorState])
+
+  const initialConfig = {
+    namespace: "CommentEditor",
+    theme: lexicalTheme,
+    nodes: lexicalNodes,
+    onError: (error: Error) => {
+      console.error("Lexical error:", error)
+    },
+  }
+
+  const handleSubmit = () => {
+    if (onSubmit && currentContent.trim()) {
+      onSubmit(currentContent.trim(), currentEditorState, [], [])
+
+      if (!initialContent && !initialEditorState) {
+        setCurrentContent("")
+        setCurrentEditorState("")
+      }
+    }
+  }
+
+  const buttonConfig = getButtonConfig(variant)
+
+  return (
+    <div className={`relative ${getContainerStyles(variant)} ${className}`}>
+      <LexicalComposer initialConfig={initialConfig}>
+        <div className="relative">
+          <RichTextPlugin
+            contentEditable={
+              <ContentEditable
+                className={getContentEditableStyles(variant)}
+                aria-placeholder={placeholder}
+                placeholder={
+                  <div
+                    className={`absolute ${getPlaceholderPosition(variant)} text-gray-400 pointer-events-none select-none`}
+                  >
+                    {placeholder}
+                  </div>
+                }
+              />
+            }
+            placeholder={null}
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <HistoryPlugin />
+          <ListPlugin />
+          <CheckListPlugin />
+          {!mentionLoading && !mentionError && (
+            <BeautifulMentionsPlugin
+              items={mentionItems}
+              menuComponent={CustomMenu}
+              menuItemComponent={CustomMenuItem}
+            />
+          )}
+          <ContentExtractor
+            onContentChange={setCurrentContent}
+            onEditorStateChange={setCurrentEditorState}
+            initialContent={initialContent}
+            initialEditorState={initialEditorState}
+          />
+        </div>
+        {variant !== "inline" && (
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+            <div className="text-xs text-gray-500">
+              Use @ to mention users, # to reference resources, - for bullets, 1. for numbers. URLs auto-link.
+              {mentionLoading && " (Loading mentions...)"}
+              {mentionError && " (Mention loading failed)"}
+            </div>
+            <Button
+              onClick={handleSubmit}
+              size={buttonConfig.size}
+              className={`flex items-center gap-2 ${buttonConfig.className || ""}`}
+              disabled={!currentContent.trim()}
+            >
+              {buttonConfig.showIcon && <Send className="w-4 h-4" />}
+              {buttonConfig.showText && buttonConfig.text}
+            </Button>
+          </div>
+        )}
+        <AutoListPlugin />
+        <AutoLinkPlugin matchers={MATCHERS} />
+        <EmojiPlugin />
+      </LexicalComposer>
+    </div>
+  )
+}
+
+export default LexicalCommentComposer
