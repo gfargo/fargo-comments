@@ -109,35 +109,6 @@ const defaultConfig: CommentConfig = {
 
 const CONFIG_STORAGE_KEY = "okayd-comments-config"
 
-const loadConfigFromStorage = (): CommentConfig => {
-  try {
-    const stored = localStorage.getItem(CONFIG_STORAGE_KEY)
-    if (stored) {
-      const parsedConfig = JSON.parse(stored)
-      return {
-        ...defaultConfig,
-        ...parsedConfig,
-        editorFeatures: {
-          ...defaultConfig.editorFeatures,
-          ...parsedConfig.editorFeatures,
-        },
-      }
-    }
-  } catch (error) {
-    console.error("[v0] Error loading config from storage:", error)
-  }
-  return defaultConfig
-}
-
-const saveConfigToStorage = (config: CommentConfig) => {
-  try {
-    localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config))
-    console.log("[v0] Config saved to localStorage:", config)
-  } catch (error) {
-    console.error("[v0] Error saving config to storage:", error)
-  }
-}
-
 // Comment reducer
 function commentReducer(state: CommentState, action: CommentAction): CommentState {
   switch (action.type) {
@@ -246,12 +217,11 @@ export function CommentProvider({
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
 
   const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>(() => {
-    const storedConfig = loadConfigFromStorage()
     return {
-      ...storedConfig,
+      ...defaultConfig,
       ...config,
       editorFeatures: {
-        ...storedConfig.editorFeatures,
+        ...defaultConfig.editorFeatures,
         ...config?.editorFeatures,
       },
     }
@@ -521,8 +491,7 @@ export function CommentProvider({
           ...newConfig.editorFeatures,
         },
       }
-      saveConfigToStorage(updatedConfig)
-      console.log("[v0] Config updated and persisted:", updatedConfig)
+      console.log("[v0] Config updated:", updatedConfig)
       return updatedConfig
     })
   }, [])
