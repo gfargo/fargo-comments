@@ -96,10 +96,6 @@ The system provides several specialized React hooks for different aspects of com
 * **`useMobile`** - Mobile device detection using responsive breakpoints (< 768px) with real-time viewport updates
 * **`useToast`** - Complete toast notification system with queuing, timeouts, and imperative API for user feedback
 
-### Legacy Hooks
-
-* **`useAuditComments`** - *(Deprecated)* Audit-specific comment management, replaced by the more generic `useCommentsFromSource`
-
 ## 🎨 Design Variants
 
 ### Available Variants
