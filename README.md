@@ -45,7 +45,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-\`\`\`plaintext
+```plaintext
 ├── app/                          # Next.js App Router pages
 │   ├── page.tsx                 # Main demo page
 │   ├── composer/                # Lexical composer examples
@@ -80,7 +80,7 @@ This repository contains several specialized README files for different aspects 
 │   └── comment-utils.ts        # Utility functions
 └── types/
     └── comments.ts             # TypeScript type definitions
-\`\`\``
+```
 
 ## 🎣 Custom Hooks
 
