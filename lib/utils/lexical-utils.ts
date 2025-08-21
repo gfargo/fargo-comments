@@ -1,17 +1,13 @@
 export interface ExtractedMention {
-  id: string
-  name: string
-  email?: string
-  trigger: "@" | "#"
-  data?: any
+  trigger: "@"
+  value: string
+  data: any
 }
 
 export interface ExtractedTag {
-  id: string
-  label: string
-  description?: string
-  trigger: "@" | "#"
-  data?: any
+  trigger: "#"
+  value: string
+  data: any
 }
 
 export function extractMentionsAndTags(editorState: string): {
@@ -26,25 +22,15 @@ export function extractMentionsAndTags(editorState: string): {
     function traverseNodes(node: any) {
       if (node.type === "custom-beautifulMention") {
         const extracted = {
-          id: node.data?.id || `${node.trigger}-${node.value}`,
           trigger: node.trigger,
+          value: node.value,
           data: node.data || {},
         }
 
         if (node.trigger === "@") {
-          mentions.push({
-            ...extracted,
-            name: node.value,
-            email: node.data?.email,
-            trigger: "@",
-          })
+          mentions.push(extracted as ExtractedMention)
         } else if (node.trigger === "#") {
-          tags.push({
-            ...extracted,
-            label: node.value,
-            description: node.data?.description,
-            trigger: "#",
-          })
+          tags.push(extracted as ExtractedTag)
         }
       }
 
