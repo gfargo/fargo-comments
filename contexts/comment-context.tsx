@@ -9,6 +9,14 @@ import { commentReducer, initialCommentState, type CommentState } from "@/lib/re
 import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/lib/comment-events"
 import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
 import { extractMentionsAndTags } from "@/lib/utils/lexical-utils"
+import type {
+  CommentHooks,
+  CommentHookRegistry,
+  CommentHookContext,
+  AddCommentHookData,
+  UpdateCommentHookData,
+  CommentHookData,
+} from "@/types/comment-hooks"
 
 const commentEvents = new CommentEventEmitter()
 
@@ -24,12 +32,12 @@ export function useCommentEvent<T extends keyof CommentEventMap>(
   }, deps)
 }
 
-// Context interface
 interface CommentContextType {
   state: CommentState
   currentUser: User | null
   config: CommentConfig
   events: CommentEventEmitter
+  hooks: CommentHookRegistry
 
   addComment: (
     content: string,
@@ -61,13 +69,13 @@ interface CommentContextType {
 // Create context
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
 
-// Provider component
 interface CommentProviderProps {
   children: React.ReactNode
   initialUser?: User
   storageAdapter?: CommentStorageAdapter
   initialComments?: Comment[]
   config?: CommentConfig
+  hooks?: Partial<CommentHooks>
 }
 
 export function CommentProvider({
@@ -76,6 +84,7 @@ export function CommentProvider({
   storageAdapter,
   initialComments,
   config,
+  hooks: initialHooks,
 }: CommentProviderProps) {
   const [state, dispatch] = useReducer(commentReducer, {
     ...initialCommentState,
@@ -85,6 +94,71 @@ export function CommentProvider({
   const { config: currentConfig, updateConfig } = useCommentConfig(config)
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
+
+  const [registeredHooks, setRegisteredHooks] = React.useState<CommentHooks>(() => {
+    const hooks: CommentHooks = {}
+    if (initialHooks) {
+      Object.entries(initialHooks).forEach(([key, callbacks]) => {
+        if (callbacks) {
+          hooks[key as keyof CommentHooks] = Array.isArray(callbacks) ? callbacks : [callbacks]
+        }
+      })
+    }
+    return hooks
+  })
+
+  const hookRegistry: CommentHookRegistry = useMemo(
+    () => ({
+      registerHook: (hookName, callback) => {
+        setRegisteredHooks((prev) => ({
+          ...prev,
+          [hookName]: [...(prev[hookName] || []), callback],
+        }))
+        return () => {
+          setRegisteredHooks((prev) => ({
+            ...prev,
+            [hookName]: (prev[hookName] || []).filter((cb) => cb !== callback),
+          }))
+        }
+      },
+      unregisterHook: (hookName, callback) => {
+        setRegisteredHooks((prev) => ({
+          ...prev,
+          [hookName]: (prev[hookName] || []).filter((cb) => cb !== callback),
+        }))
+      },
+      executeHooks: async (hookName, data, context) => {
+        const hooks = registeredHooks[hookName] || []
+        let result = data
+
+        for (const hook of hooks) {
+          try {
+            const hookResult = await hook(result, context)
+            if (hookResult && typeof hookResult === "object") {
+              result = { ...result, ...hookResult }
+            }
+          } catch (error) {
+            console.error(`[v0] Hook ${hookName} failed:`, error)
+            commentEvents.emit("error", {
+              error: `Hook ${hookName} failed: ${error}`,
+              action: "hook",
+            })
+          }
+        }
+
+        return result
+      },
+    }),
+    [registeredHooks],
+  )
+
+  const createHookContext = useCallback((): CommentHookContext => {
+    return {
+      currentUser,
+      config: currentConfig,
+      existingComments: state.comments,
+    }
+  }, [currentUser, currentConfig, state.comments])
 
   useEffect(() => {
     if (initialComments) {
@@ -147,21 +221,46 @@ export function CommentProvider({
         const { mentions, tags } = extractMentionsAndTags(editorState)
         console.log("[v0] Extracted mentions:", mentions, "tags:", tags)
 
-        const newComment = await adapter.addLexicalComment(
+        const hookData: AddCommentHookData = {
           content,
           editorState,
-          currentUser,
           mentions,
           tags,
-          finalSourceId,
-          finalSourceType,
-          finalParentId,
+          sourceId: finalSourceId,
+          sourceType: finalSourceType,
+          parentId: finalParentId,
+          user: currentUser,
+        }
+
+        const processedData = await hookRegistry.executeHooks("beforeAddComment", hookData, createHookContext())
+
+        const newComment = await adapter.addLexicalComment(
+          processedData.content,
+          processedData.editorState,
+          processedData.user,
+          processedData.mentions,
+          processedData.tags,
+          processedData.sourceId,
+          processedData.sourceType,
+          processedData.parentId,
         )
 
         console.log("[v0] New comment created:", newComment)
 
-        dispatch({ type: "ADD_COMMENT", payload: newComment })
-        commentEvents.emit("comment:added", { comment: newComment, user: currentUser })
+        const commentHookData: CommentHookData = { comment: newComment }
+        const processedComment = await hookRegistry.executeHooks(
+          "beforeSaveComment",
+          commentHookData,
+          createHookContext(),
+        )
+
+        const finalComment = { ...newComment, ...processedComment }
+
+        dispatch({ type: "ADD_COMMENT", payload: finalComment })
+        commentEvents.emit("comment:added", { comment: finalComment, user: currentUser })
+
+        await hookRegistry.executeHooks("afterAddComment", { comment: finalComment }, createHookContext())
+        await hookRegistry.executeHooks("afterSaveComment", { comment: finalComment }, createHookContext())
 
         console.log("[v0] Comment added to state")
       } catch (error) {
@@ -171,7 +270,7 @@ export function CommentProvider({
         commentEvents.emit("error", { error: errorMessage, action: "add" })
       }
     },
-    [currentUser, state.comments, adapter],
+    [currentUser, state.comments, adapter, hookRegistry, createHookContext],
   )
 
   const updateComment = useCallback(
@@ -191,30 +290,61 @@ export function CommentProvider({
         }
 
         const existingComment = state.comments.find((c) => c.id === commentId)
-        const previousContent = existingComment?.content || ""
+        if (!existingComment) return
+
+        const previousContent = existingComment.content || ""
 
         const { mentions, tags } = extractMentionsAndTags(editorState)
         console.log("[v0] Extracted mentions for update:", mentions, "tags:", tags)
 
-        const updates = {
+        const hookData: UpdateCommentHookData = {
+          commentId,
           content,
           editorState,
-          isEdited: true,
           mentions,
           tags,
+          existingComment,
+        }
+
+        const processedData = await hookRegistry.executeHooks("beforeUpdateComment", hookData, createHookContext())
+
+        const updates = {
+          content: processedData.content,
+          editorState: processedData.editorState,
+          isEdited: true,
+          mentions: processedData.mentions,
+          tags: processedData.tags,
         }
 
         dispatch({ type: "UPDATE_COMMENT", payload: { id: commentId, updates } })
 
-        await adapter.updateCommentWithEditorState(commentId, content, editorState, mentions, tags)
+        await adapter.updateCommentWithEditorState(
+          commentId,
+          processedData.content,
+          processedData.editorState,
+          processedData.mentions,
+          processedData.tags,
+        )
 
-        if (existingComment) {
-          commentEvents.emit("comment:updated", {
-            comment: { ...existingComment, ...updates },
-            previousContent,
-            user: currentUser,
-          })
-        }
+        const updatedComment = { ...existingComment, ...updates }
+
+        const commentHookData: CommentHookData = { comment: updatedComment }
+        const processedComment = await hookRegistry.executeHooks(
+          "beforeSaveComment",
+          commentHookData,
+          createHookContext(),
+        )
+
+        const finalComment = { ...updatedComment, ...processedComment }
+
+        commentEvents.emit("comment:updated", {
+          comment: finalComment,
+          previousContent,
+          user: currentUser,
+        })
+
+        await hookRegistry.executeHooks("afterUpdateComment", { comment: finalComment }, createHookContext())
+        await hookRegistry.executeHooks("afterSaveComment", { comment: finalComment }, createHookContext())
 
         console.log("[v0] Comment updated in storage successfully")
       } catch (error) {
@@ -224,7 +354,7 @@ export function CommentProvider({
         commentEvents.emit("error", { error: errorMessage, action: "update" })
       }
     },
-    [adapter, currentUser, state.comments],
+    [adapter, currentUser, state.comments, hookRegistry, createHookContext],
   )
 
   const deleteComment = useCallback(
@@ -402,6 +532,7 @@ export function CommentProvider({
     currentUser,
     config: currentConfig,
     events: commentEvents,
+    hooks: hookRegistry, // Added hook registry to context
     addComment,
     updateComment,
     deleteComment,
