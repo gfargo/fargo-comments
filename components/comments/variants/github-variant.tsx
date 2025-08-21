@@ -34,7 +34,7 @@ export function GitHubVariant({
 }: GitHubVariantProps) {
   const styles = {
     container: "border border-gray-300 rounded-md bg-white",
-    replyContainer: "ml-8 mt-2 border-l-4 border-gray-300 pl-4 bg-gray-50",
+    replyContainer: "ml-8 mt-2 border-l-4 border-gray-300 bg-gray-50",
     content: "relative",
     header: "bg-gray-50 border-b border-gray-300 px-4 py-2 rounded-t-md",
     body: "p-4",
