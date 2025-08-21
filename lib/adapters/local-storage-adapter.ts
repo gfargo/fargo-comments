@@ -86,8 +86,8 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
       createdAt: new Date(),
       updatedAt: new Date(),
       isEdited: false,
-      mentions: finalMentions.map((m) => m.value || m.name || m),
-      tags: finalTags.map((t) => t.value || t.label || t),
+      mentions: finalMentions,
+      tags: finalTags,
       reactions: [],
       status: "active",
     }
@@ -115,8 +115,8 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
         ...comments[index],
         content,
         editorState,
-        mentions: finalMentions.map((m) => m.value || m.name || m),
-        tags: finalTags.map((t) => t.value || t.label || t),
+        mentions: finalMentions,
+        tags: finalTags,
         updatedAt: new Date(),
         isEdited: true,
       }
