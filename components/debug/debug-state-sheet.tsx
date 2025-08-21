@@ -82,9 +82,9 @@ export function DebugStateSheet() {
             <div className="space-y-2">
               <h4 className="text-sm font-medium">Quick Stats</h4>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{comments.length} Comments</Badge>
-                <Badge variant="secondary">{users.length} Users</Badge>
-                <Badge variant="secondary">Variant: {config.variant}</Badge>
+                <Badge variant="secondary">{comments?.length ?? 0} Comments</Badge>
+                <Badge variant="secondary">{users?.length ?? 0} Users</Badge>
+                <Badge variant="secondary">Variant: {config?.variant ?? "default"}</Badge>
                 <Badge variant={loading ? "destructive" : "default"}>{loading ? "Loading" : "Ready"}</Badge>
               </div>
             </div>
