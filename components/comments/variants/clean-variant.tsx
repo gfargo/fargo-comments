@@ -126,7 +126,7 @@ export function CleanVariant({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-2"
+                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-2 h-7"
                   onClick={onDelete}
                 >
                   Delete
