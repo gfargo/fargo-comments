@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ThumbsUp, Reply, Edit, Trash2, ExternalLink } from "lucide-react"
+import { ThumbsUp, Reply, Edit, Trash2, ExternalLink, CircleX } from "lucide-react"
 import type { Comment, User as UserType } from "@/types/comments"
 import { formatTimeAgo } from "@/lib/comment-utils"
 import { LexicalCommentComposer } from "@/components/lexical/lexical-comment-composer"
@@ -128,7 +128,7 @@ export function GitHubVariant({
               Editing
             </Badge>
             <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => setIsEditing(false)}>
-              Cancel
+              <CircleX className="h-4 w-4" />
             </Button>
           </>
           ) : null}
