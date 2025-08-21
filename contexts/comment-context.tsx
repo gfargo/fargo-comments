@@ -6,7 +6,7 @@ import type { CommentStorageAdapter } from "@/lib/adapters"
 import { LocalStorageAdapter } from "@/lib/adapters"
 import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
-import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/utils/comment-events"
+import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/lib/comment-events"
 import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
 
 const commentEvents = new CommentEventEmitter()
