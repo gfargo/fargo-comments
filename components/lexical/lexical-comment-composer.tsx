@@ -17,7 +17,8 @@ import {
   type BeautifulMentionsMenuItemProps,
 } from "lexical-beautiful-mentions"
 import { Button } from "@/components/ui/button"
-import { Send, User, Hash, FileText, BookOpen, Tag } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Send, User, Hash, FileText, BookOpen, Tag, HelpCircle } from "lucide-react"
 import { AutoListPlugin } from "./plugins/auto-list-plugin"
 import { EmojiPlugin } from "./plugins/emoji-plugin"
 import {
@@ -223,16 +224,38 @@ export function LexicalCommentComposer({
         </div>
         {effectiveVariant !== "inline" && (
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-            <div className="text-xs text-gray-500">
-              {features.mentions !== false && "Use @ to mention users, "}
-              {features.mentions !== false && "# to reference resources, "}
-              {features.lists !== false && "- for bullets, "}
-              {features.lists !== false && "1. for numbers. "}
-              {features.autoLink !== false && "URLs auto-link. "}
-              {features.emoji !== false && "Type : for emojis."}
-              {mentionLoading && " (Loading mentions...)"}
-              {mentionError && " (Mention loading failed)"}
-            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-auto p-1 text-gray-500 hover:text-gray-700">
+                    <HelpCircle className="w-4 h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start" className="max-w-xs">
+                  <div className="text-sm">
+                    <p className="font-medium mb-2">Editor Features:</p>
+                    <ul className="space-y-1 text-xs">
+                      {features.mentions !== false && (
+                        <>
+                          <li>• Use @ to mention users</li>
+                          <li>• Use # to reference resources</li>
+                        </>
+                      )}
+                      {features.lists !== false && (
+                        <>
+                          <li>• Use - for bullet lists</li>
+                          <li>• Use 1. for numbered lists</li>
+                        </>
+                      )}
+                      {features.autoLink !== false && <li>• URLs auto-link</li>}
+                      {features.emoji !== false && <li>• Type : for emojis</li>}
+                    </ul>
+                    {mentionLoading && <p className="text-xs text-amber-600 mt-2">Loading mentions...</p>}
+                    {mentionError && <p className="text-xs text-red-600 mt-2">Mention loading failed</p>}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               onClick={handleSubmit}
               size={buttonConfig.size}
