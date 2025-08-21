@@ -141,7 +141,7 @@ export function GitHubVariant({
         {isEditing ? (
           <div className="space-y-2">
             <LexicalCommentComposer
-              variant="inline"
+              variant="compact"
               placeholder="Edit your comment..."
               onSubmit={handleEditSubmit}
               className="border border-gray-300 rounded-md"
