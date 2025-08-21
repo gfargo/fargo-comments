@@ -281,6 +281,7 @@ export function CommentList({
                   variant={variant}
                   showInlineEdit={false}
                   replies={commentReplies}
+                  isReplyingTo={replyingTo === comment.id}
                   onEdit={finalHandlers.onEdit}
                   onDelete={finalHandlers.onDelete}
                   onReply={handleStartReply}

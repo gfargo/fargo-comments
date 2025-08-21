@@ -36,6 +36,7 @@ export interface CommentVariationProps {
   variant: CommentVariant
   showInlineEdit?: boolean
   replies?: Comment[]
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: (commentId: string) => void
   onReply?: (commentId: string) => void
@@ -53,6 +54,7 @@ export function CommentVariation({
   variant,
   showInlineEdit,
   replies = [],
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
