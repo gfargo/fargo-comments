@@ -8,11 +8,11 @@ import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
 import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/lib/comment-events"
 import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
+import { useCommentContextHooks } from "@/hooks/use-comment-context-hooks"
 import { extractMentionsAndTags } from "@/lib/utils/lexical-utils"
 import type {
   CommentHooks,
   CommentHookRegistry,
-  CommentHookContext,
   AddCommentHookData,
   UpdateCommentHookData,
   CommentHookData,
@@ -95,70 +95,13 @@ export function CommentProvider({
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
 
-  const [registeredHooks, setRegisteredHooks] = React.useState<CommentHooks>(() => {
-    const hooks: CommentHooks = {}
-    if (initialHooks) {
-      Object.entries(initialHooks).forEach(([key, callbacks]) => {
-        if (callbacks) {
-          hooks[key as keyof CommentHooks] = Array.isArray(callbacks) ? callbacks : [callbacks]
-        }
-      })
-    }
-    return hooks
+  const { hookRegistry, createHookContext } = useCommentContextHooks({
+    initialHooks,
+    currentUser,
+    config: currentConfig,
+    state,
+    events: commentEvents,
   })
-
-  const hookRegistry: CommentHookRegistry = useMemo(
-    () => ({
-      registerHook: (hookName, callback) => {
-        setRegisteredHooks((prev) => ({
-          ...prev,
-          [hookName]: [...(prev[hookName] || []), callback],
-        }))
-        return () => {
-          setRegisteredHooks((prev) => ({
-            ...prev,
-            [hookName]: (prev[hookName] || []).filter((cb) => cb !== callback),
-          }))
-        }
-      },
-      unregisterHook: (hookName, callback) => {
-        setRegisteredHooks((prev) => ({
-          ...prev,
-          [hookName]: (prev[hookName] || []).filter((cb) => cb !== callback),
-        }))
-      },
-      executeHooks: async (hookName, data, context) => {
-        const hooks = registeredHooks[hookName] || []
-        let result = data
-
-        for (const hook of hooks) {
-          try {
-            const hookResult = await hook(result, context)
-            if (hookResult && typeof hookResult === "object") {
-              result = { ...result, ...hookResult }
-            }
-          } catch (error) {
-            console.error(`[v0] Hook ${hookName} failed:`, error)
-            commentEvents.emit("error", {
-              error: `Hook ${hookName} failed: ${error}`,
-              action: "hook",
-            })
-          }
-        }
-
-        return result
-      },
-    }),
-    [registeredHooks],
-  )
-
-  const createHookContext = useCallback((): CommentHookContext => {
-    return {
-      currentUser,
-      config: currentConfig,
-      existingComments: state.comments,
-    }
-  }, [currentUser, currentConfig, state.comments])
 
   useEffect(() => {
     if (initialComments) {
@@ -532,7 +475,7 @@ export function CommentProvider({
     currentUser,
     config: currentConfig,
     events: commentEvents,
-    hooks: hookRegistry, // Added hook registry to context
+    hooks: hookRegistry,
     addComment,
     updateComment,
     deleteComment,
