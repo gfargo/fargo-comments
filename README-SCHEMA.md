@@ -67,10 +67,10 @@ model Comment {
   isEdited     Boolean  @default(false)
   status       CommentStatus @default(ACTIVE)
   
-  // Rich content
-  mentions     Json     @default("[]") // Array of mentioned users/tags
-  tags         Json     @default("[]") // Array of tags
-  reactions    Json     @default("[]") // Array of reactions
+  // Rich content - JSON structure examples below
+  mentions     Json     @default("[]") // Array of flattened mention objects
+  tags         Json     @default("[]") // Array of flattened tag objects  
+  reactions    Json     @default("[]") // Array of reaction objects
   
   // Source reference (optional)
   sourceReference Json?
@@ -425,6 +425,77 @@ CREATE POLICY "Users can edit own comments" ON comments
 - **Prisma Pulse** - Real-time database events
 - **Prisma Accelerate** - Connection pooling and caching
 - **Database monitoring** - Query performance tracking
+
+## 📋 JSON Field Structures
+
+### Mentions Array Format
+\`\`\`json
+{
+  "mentions": [
+    {
+      "id": "user-1",
+      "value": "John Smith",
+      "email": "john.smith@company.com"
+    },
+    {
+      "id": "user-2", 
+      "value": "Jane Doe",
+      "email": "jane.doe@company.com",
+      "role": "admin"
+    }
+  ]
+}
+\`\`\`
+
+### Tags Array Format
+\`\`\`json
+{
+  "tags": [
+    {
+      "id": "q-1-3-1",
+      "value": "question1.3.1", 
+      "description": "Net weight declaration requirements"
+    },
+    {
+      "id": "r-3-1-3",
+      "value": "rule3.1.3",
+      "description": "FDA labeling compliance rule",
+      "url": "/rules/3.1.3"
+    }
+  ]
+}
+\`\`\`
+
+### Reactions Array Format
+\`\`\`json
+{
+  "reactions": [
+    {
+      "type": "like",
+      "userId": "user-1",
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "type": "heart",
+      "userId": "user-2", 
+      "createdAt": "2024-01-15T11:15:00Z"
+    }
+  ]
+}
+\`\`\`
+
+### Source Reference Format
+\`\`\`json
+{
+  "sourceReference": {
+    "type": "document",
+    "id": "doc-123",
+    "section": "3.1.2",
+    "title": "Labeling Requirements",
+    "url": "/documents/doc-123#section-3.1.2"
+  }
+}
+\`\`\`
 
 ---
 
