@@ -13,6 +13,7 @@ import { mockComments, currentUser } from "@/lib/constants/comment-data"
 
 function LiveCommentDemo() {
   const { config, getCommentsBySource, getRepliesForComment } = useComments()
+  console.log("livedemo config variant::: ", config.variant)
   const selectedVariant = config.variant || "compact"
   const { handleAddComment, handleUpdateComment, handleDeleteComment, handleReply } = useCommentActions()
 

@@ -57,6 +57,10 @@ export function CommentDrawer({
   const comments = auditItemId ? getCommentsByAuditItem(auditItemId) : state.comments
   const allComments = state.comments // For replies lookup
 
+  console.log("[v0] CommentDrawer - auditItemId:", auditItemId)
+  console.log("[v0] CommentDrawer - comments found:", comments.length)
+  console.log("[v0] CommentDrawer - currentUser:", currentUser?.name)
+
   return (
     <Sheet>
       <SheetTrigger asChild>
