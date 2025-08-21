@@ -59,7 +59,7 @@ export function DebugStateSheet() {
           Debug State
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[600px] sm:w-[800px] flex flex-grow">
+      <SheetContent className="w-[600px] sm:w-[800px] flex flex-grow max-w-fu">
         <SheetHeader>
           <div className="flex items-center justify-between">
             <div>
