@@ -200,8 +200,8 @@ export function CommentProvider({
           content,
           editorState,
           isEdited: true,
-          mentions: mentions.map((m) => m.name || m),
-          tags: tags.map((t) => t.label || t),
+          mentions,
+          tags,
         }
 
         dispatch({ type: "UPDATE_COMMENT", payload: { id: commentId, updates } })
