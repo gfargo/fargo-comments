@@ -6,7 +6,7 @@ import type { CommentStorageAdapter } from "@/lib/adapters"
 import { LocalStorageAdapter } from "@/lib/adapters"
 import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
-import { commentEvents, type CommentEventEmitter } from "@/lib/events/comment-events"
+import { commentEvents, type CommentEventEmitter } from "@/lib/events/comment-events.ts"
 import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
 
 // Context interface
@@ -393,4 +393,4 @@ export function useComments() {
   return context
 }
 
-export { useCommentEvent } from "@/lib/events/comment-events"
+export { useCommentEvent } from "@/lib/events/comment-events.ts"
