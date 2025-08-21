@@ -14,10 +14,6 @@ export function DebugStateSheet() {
   const [copied, setCopied] = useState(false)
   const { state, currentUser, config } = useComments()
 
-  console.log("[v0] Debug Sheet - state.comments:", state.comments)
-  console.log("[v0] Debug Sheet - state.loading:", state.loading)
-  console.log("[v0] Debug Sheet - state.error:", state.error)
-
   const debugData = {
     comments: state.comments,
     commentsCount: state.comments?.length || 0,
