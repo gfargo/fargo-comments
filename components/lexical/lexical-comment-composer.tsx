@@ -44,6 +44,7 @@ const CustomMenuItem = forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>
     const getIcon = () => {
       if (item.trigger === "@") return <User className="w-4 h-4 text-blue-600" />
       if (item.trigger === "#") {
+        if (!item.value) return <Tag className="w-4 h-4 text-gray-600" />
         if (item.value.startsWith("question")) return <FileText className="w-4 h-4 text-green-600" />
         if (item.value.startsWith("rule")) return <BookOpen className="w-4 h-4 text-purple-600" />
         if (item.value.startsWith("section")) return <Hash className="w-4 h-4 text-orange-600" />
