@@ -88,19 +88,19 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h1 className="text-xl font-bold text-gray-900">{title || "Flexible Comment System"}</h1>
               {description && <p className="text-gray-600 mt-1 text-sm">{description}</p>}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {/* Variant Selector */}
               <div className="flex items-center gap-2 px-2 py-1 bg-gray-50 rounded-md border">
                 <Palette className="h-3 w-3 text-gray-500" />
-                <span className="text-xs font-medium text-gray-600">Style:</span>
+                <span className="text-xs font-medium text-gray-600 hidden sm:inline">Style:</span>
                 <Select value={config.variant || "card"} onValueChange={handleVariantChange}>
-                  <SelectTrigger className="w-28 h-6 text-xs border-0 bg-transparent p-0">
+                  <SelectTrigger className="w-24 sm:w-28 h-6 text-xs border-0 bg-transparent p-0">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -121,10 +121,11 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
                 variant="outline"
                 size="sm"
                 onClick={handleClearStorageClick}
-                className="h-8 px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
+                className="h-8 px-2 sm:px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
               >
                 <Trash2 className="h-3 w-3 mr-1" />
-                Clear Data
+                <span className="hidden sm:inline">Clear Data</span>
+                <span className="sm:hidden">Clear</span>
               </Button>
             </div>
           </div>
@@ -132,7 +133,7 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-6">{children}</div>
+      <div className="max-w-7xl mx-auto p-4 sm:p-6">{children}</div>
 
       {/* Confirmation Dialog for Clear Storage Action */}
       <AlertDialog open={showClearConfirmation} onOpenChange={setShowClearConfirmation}>
