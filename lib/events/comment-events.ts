@@ -7,52 +7,51 @@ import type { Comment, CommentReaction, User } from "@/types/comments"
 // Event types that can be emitted
 export interface CommentEventMap {
   "comment:added": { comment: Comment; user: User }
-  "comment:updated": { comment: Comment; previousContent: string; user: User }
+  "comment:updated": { comment: Comment; updates: Partial<Comment>; user: User }
   "comment:deleted": { commentId: string; user: User }
   "reaction:added": { commentId: string; reaction: CommentReaction; user: User }
   "reaction:removed": { commentId: string; reactionId: string; user: User }
   "comments:loaded": { comments: Comment[] }
-  "comments:cleared": { user: User }
   error: { error: string; action?: string }
 }
 
-// Event listener type
-export type CommentEventListener<T extends keyof CommentEventMap> = (data: CommentEventMap[T]) => void
+export type CommentEventType = keyof CommentEventMap
+export type CommentEventHandler<T extends CommentEventType> = (data: CommentEventMap[T]) => void
 
-// Event emitter class for comment system
+// Simple event emitter for comment events
 export class CommentEventEmitter {
-  private listeners: Map<keyof CommentEventMap, Set<CommentEventListener<any>>> = new Map()
+  private listeners: Map<CommentEventType, Set<CommentEventHandler<any>>> = new Map()
 
   // Subscribe to an event
-  on<T extends keyof CommentEventMap>(event: T, listener: CommentEventListener<T>): () => void {
+  on<T extends CommentEventType>(event: T, handler: CommentEventHandler<T>): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set())
     }
 
-    this.listeners.get(event)!.add(listener)
+    this.listeners.get(event)!.add(handler)
 
     // Return unsubscribe function
     return () => {
-      this.listeners.get(event)?.delete(listener)
+      this.listeners.get(event)?.delete(handler)
     }
   }
 
   // Emit an event
-  emit<T extends keyof CommentEventMap>(event: T, data: CommentEventMap[T]): void {
-    const eventListeners = this.listeners.get(event)
-    if (eventListeners) {
-      eventListeners.forEach((listener) => {
+  emit<T extends CommentEventType>(event: T, data: CommentEventMap[T]): void {
+    const handlers = this.listeners.get(event)
+    if (handlers) {
+      handlers.forEach((handler) => {
         try {
-          listener(data)
+          handler(data)
         } catch (error) {
-          console.error(`Error in comment event listener for ${event}:`, error)
+          console.error(`Error in comment event handler for ${event}:`, error)
         }
       })
     }
   }
 
   // Remove all listeners for an event
-  off<T extends keyof CommentEventMap>(event: T): void {
+  off(event: CommentEventType): void {
     this.listeners.delete(event)
   }
 
@@ -62,22 +61,22 @@ export class CommentEventEmitter {
   }
 
   // Get listener count for debugging
-  getListenerCount<T extends keyof CommentEventMap>(event: T): number {
+  listenerCount(event: CommentEventType): number {
     return this.listeners.get(event)?.size || 0
   }
 }
 
-// Create a singleton instance for the comment system
+// Global event emitter instance
 export const commentEvents = new CommentEventEmitter()
 
-// Helper hook for subscribing to events in React components
-export function useCommentEvent<T extends keyof CommentEventMap>(
+// Hook for subscribing to comment events in React components
+export function useCommentEvents<T extends CommentEventType>(
   event: T,
-  listener: CommentEventListener<T>,
+  handler: CommentEventHandler<T>,
   deps: React.DependencyList = [],
 ): void {
   React.useEffect(() => {
-    const unsubscribe = commentEvents.on(event, listener)
+    const unsubscribe = commentEvents.on(event, handler)
     return unsubscribe
   }, deps)
 }
