@@ -127,7 +127,7 @@ export function GitHubVariant({
             <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
               Editing
             </Badge>
-            <Button variant="ghost" size="sm" className={styles.actionButton + ' rounded-full h-8 w-8 cursor-pointer'} onClick={() => setIsEditing(false)}>
+            <Button variant="ghost" size="sm" className={styles.actionButton + ' rounded-full h-7 w-7 cursor-pointer'} onClick={() => setIsEditing(false)}>
               <CircleX className="h-4 w-4" />
             </Button>
           </>
@@ -141,7 +141,7 @@ export function GitHubVariant({
         {isEditing ? (
           <div className="space-y-2">
             <LexicalCommentComposer
-              variant="default"
+              variant="github"
               placeholder="Edit your comment..."
               onSubmit={handleEditSubmit}
               className="border border-gray-300 rounded-md"
