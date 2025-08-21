@@ -1,8 +1,19 @@
 "use client"
 
 import type React from "react"
+import { useState } from "react"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Palette, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useComments } from "@/contexts/comment-context"
@@ -28,24 +39,25 @@ interface CommentLayoutProps {
   description?: string
 }
 
+const variantOptions = [
+  { value: "card", label: "Card" },
+  { value: "bubble", label: "Bubble" },
+  { value: "timeline", label: "Timeline" },
+  { value: "compact", label: "Compact" },
+  { value: "social", label: "Social" },
+  { value: "professional", label: "Professional" },
+  { value: "clean", label: "Clean" },
+  { value: "thread", label: "Thread" },
+  { value: "github", label: "GitHub" },
+  { value: "email", label: "Email" },
+  { value: "notion", label: "Notion" },
+  { value: "mobile", label: "Mobile" },
+]
+
 export function CommentLayout({ children, title, description }: CommentLayoutProps) {
   const { toast } = useToast()
   const { clearAllStorage, config, updateConfig } = useComments()
-
-  const variantOptions = [
-    { value: "card", label: "Card Style" },
-    { value: "bubble", label: "Chat Bubble" },
-    { value: "timeline", label: "Timeline" },
-    { value: "compact", label: "Compact" },
-    { value: "social", label: "Social Media" },
-    { value: "professional", label: "Professional" },
-    { value: "clean", label: "Clean" },
-    { value: "thread", label: "Thread" },
-    { value: "github", label: "GitHub" },
-    { value: "email", label: "Email" },
-    { value: "notion", label: "Notion" },
-    { value: "mobile", label: "Mobile" },
-  ]
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false)
 
   const handleClearStorage = async () => {
     await clearAllStorage()
@@ -54,6 +66,15 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
       description: "All comments, users, and audit data have been cleared.",
     })
     window.location.reload()
+  }
+
+  const handleClearStorageClick = () => {
+    setShowClearConfirmation(true)
+  }
+
+  const handleConfirmedClear = async () => {
+    setShowClearConfirmation(false)
+    await handleClearStorage()
   }
 
   const handleVariantChange = (variant: CommentVariant) => {
@@ -95,7 +116,7 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleClearStorage}
+                onClick={handleClearStorageClick}
                 className="h-8 px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
               >
                 <Trash2 className="h-3 w-3 mr-1" />
@@ -108,6 +129,25 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-6">{children}</div>
+
+      {/* Confirmation Dialog for Clear Storage Action */}
+      <AlertDialog open={showClearConfirmation} onOpenChange={setShowClearConfirmation}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear All Data</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete all comments, users, and audit data from local
+              storage.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmedClear} className="bg-red-600 hover:bg-red-700">
+              Clear All Data
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
