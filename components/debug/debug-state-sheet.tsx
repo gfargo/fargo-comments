@@ -12,26 +12,20 @@ import { useToast } from "@/hooks/use-toast"
 export function DebugStateSheet() {
   const { toast } = useToast()
   const [copied, setCopied] = useState(false)
-  const { state, comments, users, currentUser, config, loading, error, statistics, getAllComments, getAllUsers } =
-    useComments()
+  const { state, currentUser, config } = useComments()
 
-  console.log("[v0] Debug Sheet - comments from context:", state.comments)
-  console.log("[v0] Debug Sheet - getAllComments:", getAllComments?.())
-  console.log("[v0] Debug Sheet - getAllUsers:", getAllUsers?.())
-
-  const allComments = getAllComments?.() || []
-  const allUsers = getAllUsers?.() || []
+  console.log("[v0] Debug Sheet - state.comments:", state.comments)
+  console.log("[v0] Debug Sheet - state.loading:", state.loading)
+  console.log("[v0] Debug Sheet - state.error:", state.error)
 
   const debugData = {
-    contextComments: state.comments,
-    allStorageComments: allComments,
-    contextUsers: users,
-    allStorageUsers: allUsers,
+    comments: state.comments,
+    commentsCount: state.comments?.length || 0,
     currentUser,
     config,
-    loading,
-    error,
-    statistics,
+    loading: state.loading,
+    error: state.error,
+    fullState: state,
     timestamp: new Date().toISOString(),
   }
 
@@ -92,11 +86,10 @@ export function DebugStateSheet() {
             <div className="space-y-2">
               <h4 className="text-sm font-medium">Quick Stats</h4>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">Context: {comments?.length ?? 0} Comments</Badge>
-                <Badge variant="secondary">Storage: {allComments?.length ?? 0} Comments</Badge>
-                <Badge variant="secondary">{users?.length ?? 0} Users</Badge>
+                <Badge variant="secondary">{state.comments?.length ?? 0} Comments</Badge>
                 <Badge variant="secondary">Variant: {config?.variant ?? "default"}</Badge>
-                <Badge variant={loading ? "destructive" : "default"}>{loading ? "Loading" : "Ready"}</Badge>
+                <Badge variant={state.loading ? "destructive" : "default"}>{state.loading ? "Loading" : "Ready"}</Badge>
+                {state.error && <Badge variant="destructive">Error</Badge>}
               </div>
             </div>
             <div className="space-y-2">
