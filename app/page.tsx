@@ -223,7 +223,7 @@ export default function CommentSystemDemo() {
           <div className="flex items-baseline gap-2">
             <Image src="/okayd-logo.png" alt="Okayd" width={107} height={32} className="h-8 w-auto" />
             <span className="flex">Comments</span>
-            <MessageCircleHeart className="h-4 w-4" style={{ color: "#006511" }} />
+            <MessageCircleHeart className="h-6 w-6" style={{ color: "#006511" }} />
           </div>
         }
         description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
