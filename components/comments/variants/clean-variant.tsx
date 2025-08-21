@@ -96,7 +96,7 @@ export function CleanVariant({
             </div>
           )}
 
-          <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <Button
               variant="ghost"
               size="sm"
