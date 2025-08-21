@@ -19,7 +19,13 @@ export interface CommentStorageAdapter {
     parentId?: string,
   ): Promise<Comment>
 
-  updateCommentWithEditorState(commentId: string, content: string, editorState: string): Promise<void>
+  updateCommentWithEditorState(
+    commentId: string,
+    content: string,
+    editorState: string,
+    mentions?: any[],
+    tags?: any[],
+  ): Promise<void>
 
   // User operations
   getUsers(): Promise<User[]>

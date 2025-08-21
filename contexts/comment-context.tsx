@@ -8,6 +8,7 @@ import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
 import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/lib/comment-events"
 import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
+import { extractMentionsAndTags } from "@/lib/utils/lexical-utils"
 
 const commentEvents = new CommentEventEmitter()
 
@@ -143,12 +144,15 @@ export function CommentProvider({
           }
         }
 
+        const { mentions, tags } = extractMentionsAndTags(editorState)
+        console.log("[v0] Extracted mentions:", mentions, "tags:", tags)
+
         const newComment = await adapter.addLexicalComment(
           content,
           editorState,
           currentUser,
-          [],
-          [],
+          mentions,
+          tags,
           finalSourceId,
           finalSourceType,
           finalParentId,
@@ -189,11 +193,20 @@ export function CommentProvider({
         const existingComment = state.comments.find((c) => c.id === commentId)
         const previousContent = existingComment?.content || ""
 
-        const updates = { content, editorState, isEdited: true }
+        const { mentions, tags } = extractMentionsAndTags(editorState)
+        console.log("[v0] Extracted mentions for update:", mentions, "tags:", tags)
+
+        const updates = {
+          content,
+          editorState,
+          isEdited: true,
+          mentions: mentions.map((m) => m.name || m),
+          tags: tags.map((t) => t.label || t),
+        }
 
         dispatch({ type: "UPDATE_COMMENT", payload: { id: commentId, updates } })
 
-        await adapter.updateCommentWithEditorState(commentId, content, editorState)
+        await adapter.updateCommentWithEditorState(commentId, content, editorState, mentions, tags)
 
         if (existingComment) {
           commentEvents.emit("comment:updated", {
