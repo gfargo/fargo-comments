@@ -69,15 +69,6 @@ export function DebugStateSheet() {
                   Current state of the comment system including comments, users, config, and metadata.
                 </SheetDescription>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyToClipboard}
-                className="flex items-center gap-2 bg-white hover:bg-gray-50"
-              >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                {copied ? "Copied!" : "Copy JSON"}
-              </Button>
             </div>
           </SheetHeader>
 
@@ -119,7 +110,17 @@ export function DebugStateSheet() {
               </div>
 
               <div className="space-y-3 flex-1 min-h-0">
-                <h4 className="text-sm font-semibold text-gray-900">Full State Object</h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-semibold text-gray-900">Full State Object</h4>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCopyToClipboard}
+                    className="h-6 w-6 p-0 hover:bg-gray-100"
+                  >
+                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                  </Button>
+                </div>
                 <div className="bg-gray-900 rounded-lg border overflow-hidden flex-1 min-h-0">
                   <ScrollArea className="h-[400px] md:h-[500px]">
                     <pre className="text-xs font-mono text-green-400 p-4 whitespace-pre-wrap break-words leading-relaxed">
