@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User } from "@/types/comments"
+import type { Comment, CommentThread, User } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export class ServerActionAdapter implements CommentStorageAdapter {

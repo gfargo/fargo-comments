@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User } from "@/types/comments"
+import type { Comment, CommentThread, User } from "@/lib/types/comments"
 
 export interface CommentStorageAdapter {
   // Comment operations

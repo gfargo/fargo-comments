@@ -1,8 +1,8 @@
 "use client"
 
-import React from "react"
+import React from "react";
 
-import type { Comment, CommentReaction, User } from "@/types/comments"
+import type { Comment, CommentReaction, User } from "@/lib/types/comments";
 
 // Event types that can be emitted
 export interface CommentEventMap {

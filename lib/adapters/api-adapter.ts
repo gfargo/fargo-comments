@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User, LabelAudit } from "@/types/comments"
+import type { Comment, CommentThread, User, LabelAudit } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export class ApiAdapter implements CommentStorageAdapter {

@@ -1,7 +1,7 @@
-import type { Comment, CommentThread, User, LabelAudit } from "@/types/comments"
+import type { Comment, CommentThread, User, LabelAudit } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
-import { generateId } from "@/lib/comment-utils"
-import { extractMentionsAndTags } from "@/lib/utils/lexical-utils"
+import { generateId } from '../utils'
+import { extractMentionsAndTags } from "@/lib/lexical-utils"
 
 export class LocalStorageAdapter implements CommentStorageAdapter {
   private readonly STORAGE_KEYS = {

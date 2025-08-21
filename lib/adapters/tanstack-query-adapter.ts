@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import type { User } from "@/types/comments"
+import type { User } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export function useTanstackQueryAdapter(config: StorageAdapterConfig = {}) {
