@@ -122,9 +122,11 @@ export function GitHubVariant({
           )}
         </div>
         <div className="flex items-center gap-1">
+          {isEditing ? (
           <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
             Editing
           </Badge>
+          ) : null}
           <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
             Approved
           </Badge>
