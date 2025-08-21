@@ -66,9 +66,9 @@ export function CompactVariant({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
+          {isReply && <span className="text-xs text-green-600">↳</span>}
             <span className="text-sm font-medium text-gray-900">{comment.author.name}</span>
             <span className="text-xs text-gray-500">{comment.author.role}</span>
-            {isReply && <span className="text-xs text-green-600">↳</span>}
             <span className="text-xs text-gray-400">2m ago</span>
           </div>
 
