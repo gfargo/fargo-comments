@@ -1,7 +1,5 @@
 "use client"
 
-import React from "react"
-
 import type { Comment, CommentReaction, User } from "@/types/comments"
 
 // Event types that can be emitted
