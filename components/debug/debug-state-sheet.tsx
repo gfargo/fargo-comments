@@ -59,76 +59,75 @@ export function DebugStateSheet() {
           Debug State
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[600px] sm:w-[800px] max-w-[90vw] flex flex-col">
-        <SheetHeader className="pb-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <SheetTitle className="text-lg font-semibold">Debug State Inspector</SheetTitle>
-              <SheetDescription className="mt-2 text-sm text-muted-foreground">
-                Current state of the comment system including comments, users, config, and metadata.
-              </SheetDescription>
+      <SheetContent className="w-[600px] sm:w-[800px] max-w-[90vw] p-0">
+        <div className="flex flex-col h-full">
+          <SheetHeader className="px-6 py-4 border-b bg-gray-50/50">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <SheetTitle className="text-lg">Debug State Inspector</SheetTitle>
+                <SheetDescription className="text-sm text-gray-600">
+                  Current state of the comment system including comments, users, config, and metadata.
+                </SheetDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopyToClipboard}
+                className="flex items-center gap-2 bg-white hover:bg-gray-50"
+              >
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied!" : "Copy JSON"}
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopyToClipboard}
-              className="flex items-center gap-2 shrink-0 bg-transparent"
-            >
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              {copied ? "Copied!" : "Copy JSON"}
-            </Button>
-          </div>
-        </SheetHeader>
+          </SheetHeader>
 
-        <div className="flex-1 space-y-6 overflow-hidden">
-          {/* Quick Stats */}
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-foreground">Quick Stats</h4>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary" className="font-medium">
-                    {state.comments?.length ?? 0} Comments
-                  </Badge>
-                  <Badge variant="outline" className="font-medium">
-                    Variant: {config?.variant ?? "default"}
-                  </Badge>
-                  <Badge variant={state.loading ? "destructive" : "default"} className="font-medium">
-                    {state.loading ? "Loading" : "Ready"}
-                  </Badge>
-                  {state.error && (
-                    <Badge variant="destructive" className="font-medium">
-                      Error
+          <div className="flex-1 overflow-hidden">
+            <div className="p-6 space-y-6 h-full">
+              {/* Quick Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold text-gray-900">Quick Stats</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                      {state.comments?.length ?? 0} Comments
                     </Badge>
-                  )}
+                    <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                      Variant: {config?.variant ?? "default"}
+                    </Badge>
+                    <Badge
+                      variant={state.loading ? "destructive" : "default"}
+                      className={state.loading ? "" : "bg-green-100 text-green-800"}
+                    >
+                      {state.loading ? "Loading" : "Ready"}
+                    </Badge>
+                    {state.error && <Badge variant="destructive">Error</Badge>}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold text-gray-900">Current User</h4>
+                  <div className="text-sm text-gray-600 bg-gray-50 rounded-md p-3">
+                    {currentUser ? (
+                      <div>
+                        <div className="font-medium">{currentUser.name}</div>
+                        <div className="text-xs text-gray-500">{currentUser.email}</div>
+                      </div>
+                    ) : (
+                      "No user authenticated"
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-foreground">Current User</h4>
-                <div className="text-sm text-muted-foreground bg-muted/50 rounded-md p-3">
-                  {currentUser ? (
-                    <div>
-                      <div className="font-medium text-foreground">{currentUser.name}</div>
-                      <div className="text-xs">{currentUser.email}</div>
-                    </div>
-                  ) : (
-                    "No user authenticated"
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="space-y-3 flex-1 flex flex-col min-h-0">
-            <h4 className="text-sm font-semibold text-foreground">Full State Object</h4>
-            <div className="flex-1 rounded-lg border bg-muted/20 overflow-hidden">
-              <ScrollArea className="h-full">
-                <div className="p-4">
-                  <pre className="text-xs font-mono leading-relaxed text-foreground/90 whitespace-pre-wrap break-words">
-                    {JSON.stringify(debugData, null, 2)}
-                  </pre>
+              <div className="space-y-3 flex-1 min-h-0">
+                <h4 className="text-sm font-semibold text-gray-900">Full State Object</h4>
+                <div className="bg-gray-900 rounded-lg border overflow-hidden flex-1 min-h-0">
+                  <ScrollArea className="h-[400px] md:h-[500px]">
+                    <pre className="text-xs font-mono text-green-400 p-4 whitespace-pre-wrap break-words leading-relaxed">
+                      {JSON.stringify(debugData, null, 2)}
+                    </pre>
+                  </ScrollArea>
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           </div>
         </div>
