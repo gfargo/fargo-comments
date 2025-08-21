@@ -59,12 +59,12 @@ export function DebugStateSheet() {
           Debug State
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[600px] sm:w-[800px] flex flex-grow md:max-w-[100%]">
-        <SheetHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <SheetTitle>Debug State Inspector</SheetTitle>
-              <SheetDescription>
+      <SheetContent className="w-[600px] sm:w-[800px] max-w-[90vw] flex flex-col">
+        <SheetHeader className="pb-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <SheetTitle className="text-lg font-semibold">Debug State Inspector</SheetTitle>
+              <SheetDescription className="mt-2 text-sm text-muted-foreground">
                 Current state of the comment system including comments, users, config, and metadata.
               </SheetDescription>
             </div>
@@ -72,7 +72,7 @@ export function DebugStateSheet() {
               variant="outline"
               size="sm"
               onClick={handleCopyToClipboard}
-              className="flex items-center gap-2 bg-transparent"
+              className="flex items-center gap-2 shrink-0 bg-transparent"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               {copied ? "Copied!" : "Copy JSON"}
@@ -80,34 +80,56 @@ export function DebugStateSheet() {
           </div>
         </SheetHeader>
 
-        <div className="mt-6 space-y-4">
+        <div className="flex-1 space-y-6 overflow-hidden">
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Quick Stats</h4>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{state.comments?.length ?? 0} Comments</Badge>
-                <Badge variant="secondary">Variant: {config?.variant ?? "default"}</Badge>
-                <Badge variant={state.loading ? "destructive" : "default"}>{state.loading ? "Loading" : "Ready"}</Badge>
-                {state.error && <Badge variant="destructive">Error</Badge>}
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold text-foreground">Quick Stats</h4>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="font-medium">
+                    {state.comments?.length ?? 0} Comments
+                  </Badge>
+                  <Badge variant="outline" className="font-medium">
+                    Variant: {config?.variant ?? "default"}
+                  </Badge>
+                  <Badge variant={state.loading ? "destructive" : "default"} className="font-medium">
+                    {state.loading ? "Loading" : "Ready"}
+                  </Badge>
+                  {state.error && (
+                    <Badge variant="destructive" className="font-medium">
+                      Error
+                    </Badge>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Current User</h4>
-              <div className="text-sm text-gray-600">
-                {currentUser ? `${currentUser.name} (${currentUser.email})` : "No user"}
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold text-foreground">Current User</h4>
+                <div className="text-sm text-muted-foreground bg-muted/50 rounded-md p-3">
+                  {currentUser ? (
+                    <div>
+                      <div className="font-medium text-foreground">{currentUser.name}</div>
+                      <div className="text-xs">{currentUser.email}</div>
+                    </div>
+                  ) : (
+                    "No user authenticated"
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Full State Dump */}
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium">Full State Object</h4>
-            <ScrollArea className="h-[500px] w-full rounded-md border p-4">
-              <pre className="text-xs font-mono whitespace-pre-wrap break-words">
-                {JSON.stringify(debugData, null, 2)}
-              </pre>
-            </ScrollArea>
+          <div className="space-y-3 flex-1 flex flex-col min-h-0">
+            <h4 className="text-sm font-semibold text-foreground">Full State Object</h4>
+            <div className="flex-1 rounded-lg border bg-muted/20 overflow-hidden">
+              <ScrollArea className="h-full">
+                <div className="p-4">
+                  <pre className="text-xs font-mono leading-relaxed text-foreground/90 whitespace-pre-wrap break-words">
+                    {JSON.stringify(debugData, null, 2)}
+                  </pre>
+                </div>
+              </ScrollArea>
+            </div>
           </div>
         </div>
       </SheetContent>
