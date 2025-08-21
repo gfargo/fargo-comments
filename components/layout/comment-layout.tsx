@@ -18,6 +18,7 @@ import { Palette, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useComments } from "@/contexts/comment-context"
 import { useToast } from "@/hooks/use-toast"
+import { DebugStateSheet } from "@/components/debug/debug-state-sheet"
 
 type CommentVariant =
   | "card"
@@ -111,6 +112,9 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Debug State Sheet Button */}
+              <DebugStateSheet />
 
               {/* Clear Storage Button */}
               <Button
