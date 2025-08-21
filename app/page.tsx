@@ -217,20 +217,19 @@ function MainPageContent() {
 
 export default function CommentSystemDemo() {
   return (
-        <CommentProvider initialUser={currentUser}>
-    <CommentLayout
-      title={
-        <div className="flex items-baseline gap-2">
-          <Image src="/okayd-logo.png" alt="Okayd" width={107} height={32} className="h-8 w-auto" />
-          <span className="flex">Comments</span>
-        </div>
-      }
-      description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
-    >
+    <CommentProvider initialUser={currentUser}>
+      <CommentLayout
+        title={
+          <div className="flex items-baseline gap-2">
+            <Image src="/okayd-logo.png" alt="Okayd" width={107} height={32} className="h-8 w-auto" />
+            <span className="flex">Comments</span>
+          </div>
+        }
+        description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
+      >
 
         <MainPageContent />
-      
-    </CommentLayout>
+      </CommentLayout>
     </CommentProvider>
   )
 }
