@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+
 import type { Comment, CommentReaction, User } from "@/types/comments"
 
 // Event types that can be emitted
@@ -11,13 +12,14 @@ export interface CommentEventMap {
   "reaction:added": { commentId: string; reaction: CommentReaction; user: User }
   "reaction:removed": { commentId: string; reactionId: string; user: User }
   "comments:loaded": { comments: Comment[] }
-  "error:occurred": { error: string; action: string }
+  "comments:cleared": { user: User }
+  error: { error: string; action?: string }
 }
 
 // Event listener type
 export type CommentEventListener<T extends keyof CommentEventMap> = (data: CommentEventMap[T]) => void
 
-// Simple event emitter for comment events
+// Event emitter class for comment system
 export class CommentEventEmitter {
   private listeners: Map<keyof CommentEventMap, Set<CommentEventListener<any>>> = new Map()
 
@@ -50,7 +52,7 @@ export class CommentEventEmitter {
   }
 
   // Remove all listeners for an event
-  off(event: keyof CommentEventMap): void {
+  off<T extends keyof CommentEventMap>(event: T): void {
     this.listeners.delete(event)
   }
 
@@ -60,15 +62,15 @@ export class CommentEventEmitter {
   }
 
   // Get listener count for debugging
-  getListenerCount(event: keyof CommentEventMap): number {
+  getListenerCount<T extends keyof CommentEventMap>(event: T): number {
     return this.listeners.get(event)?.size || 0
   }
 }
 
-// Global event emitter instance
+// Create a singleton instance for the comment system
 export const commentEvents = new CommentEventEmitter()
 
-// Convenience hook for subscribing to events in React components
+// Helper hook for subscribing to events in React components
 export function useCommentEvent<T extends keyof CommentEventMap>(
   event: T,
   listener: CommentEventListener<T>,

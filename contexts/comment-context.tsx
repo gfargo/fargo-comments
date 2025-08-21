@@ -6,8 +6,36 @@ import type { CommentStorageAdapter } from "@/lib/adapters"
 import { LocalStorageAdapter } from "@/lib/adapters"
 import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
-import { commentEvents, type CommentEventEmitter } from "../lib/events/comment-events"
-import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
+import { commentEvents, type CommentEventEmitter } from "@/lib/events/comment-events"
+
+// Configuration interfaces for editor features
+interface EditorFeatures {
+  lists?: boolean
+  checkLists?: boolean
+  autoLink?: boolean
+  mentions?: boolean
+  emoji?: boolean
+  autoList?: boolean
+}
+
+interface CommentConfig {
+  editorFeatures?: EditorFeatures
+  placeholder?: string
+  variant?:
+    | "card"
+    | "bubble"
+    | "timeline"
+    | "compact"
+    | "plain"
+    | "social"
+    | "professional"
+    | "clean"
+    | "thread"
+    | "github"
+    | "email"
+    | "notion"
+    | "mobile"
+}
 
 // Context interface
 interface CommentContextType {
@@ -43,6 +71,20 @@ interface CommentContextType {
   clearAllStorage: () => Promise<void>
 }
 
+// Default configuration
+const defaultConfig: CommentConfig = {
+  editorFeatures: {
+    lists: true,
+    checkLists: true,
+    autoLink: true,
+    mentions: true,
+    emoji: true,
+    autoList: true,
+  },
+  placeholder: "Add a comment ...",
+  variant: "compact",
+}
+
 // Create context
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
 
@@ -67,7 +109,14 @@ export function CommentProvider({
     comments: initialComments || [],
   })
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
-  const { config: currentConfig, updateConfig } = useCommentConfig(config)
+  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>({
+    ...defaultConfig,
+    ...config,
+    editorFeatures: {
+      ...defaultConfig.editorFeatures,
+      ...config?.editorFeatures,
+    },
+  })
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
 
@@ -95,7 +144,7 @@ export function CommentProvider({
       } catch (error) {
         const errorMessage = "Failed to load comments"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "load_comments" })
+        commentEvents.emit("error", { error: errorMessage, action: "load" })
       }
     }
 
@@ -107,7 +156,7 @@ export function CommentProvider({
       if (!currentUser) {
         const errorMessage = "User must be logged in to comment"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "add_comment" })
+        commentEvents.emit("error", { error: errorMessage, action: "add" })
         return
       }
 
@@ -150,7 +199,7 @@ export function CommentProvider({
         console.error("[v0] Error adding comment:", error)
         const errorMessage = "Failed to add comment"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "add_comment" })
+        commentEvents.emit("error", { error: errorMessage, action: "add" })
       }
     },
     [currentUser, state.comments, adapter],
@@ -181,15 +230,20 @@ export function CommentProvider({
 
         await adapter.updateCommentWithEditorState(commentId, content, editorState)
 
-        const updatedComment = { ...existingComment!, ...updates }
-        commentEvents.emit("comment:updated", { comment: updatedComment, previousContent, user: currentUser })
+        if (existingComment) {
+          commentEvents.emit("comment:updated", {
+            comment: { ...existingComment, ...updates },
+            previousContent,
+            user: currentUser,
+          })
+        }
 
         console.log("[v0] Comment updated in storage successfully")
       } catch (error) {
         console.error("[v0] Error updating comment:", error)
         const errorMessage = "Failed to update comment"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "update_comment" })
+        commentEvents.emit("error", { error: errorMessage, action: "update" })
       }
     },
     [adapter, currentUser, state.comments],
@@ -208,7 +262,7 @@ export function CommentProvider({
       } catch (error) {
         const errorMessage = "Failed to delete comment"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "delete_comment" })
+        commentEvents.emit("error", { error: errorMessage, action: "delete" })
       }
     },
     [adapter, currentUser],
@@ -265,7 +319,7 @@ export function CommentProvider({
       } catch (error) {
         const errorMessage = "Failed to add reaction"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "add_reaction" })
+        commentEvents.emit("error", { error: errorMessage, action: "reaction" })
       }
     },
     [currentUser, state.comments, adapter],
@@ -294,7 +348,7 @@ export function CommentProvider({
       } catch (error) {
         const errorMessage = "Failed to remove reaction"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
-        commentEvents.emit("error:occurred", { error: errorMessage, action: "remove_reaction" })
+        commentEvents.emit("error", { error: errorMessage, action: "reaction" })
       }
     },
     [state.comments, adapter, currentUser],
@@ -345,22 +399,37 @@ export function CommentProvider({
     } catch (error) {
       const errorMessage = "Failed to refresh data"
       dispatch({ type: "SET_ERROR", payload: errorMessage })
-      commentEvents.emit("error:occurred", { error: errorMessage, action: "refresh_data" })
+      commentEvents.emit("error", { error: errorMessage, action: "refresh" })
     }
   }, [adapter])
 
   const clearAllStorage = useCallback(async () => {
+    if (!currentUser) return
+
     try {
       await adapter.clearAllStorage()
       dispatch({ type: "LOAD_COMMENTS", payload: [] })
+      commentEvents.emit("comments:cleared", { user: currentUser })
       console.log("[v0] Storage cleared successfully")
     } catch (error) {
       console.error("[v0] Error clearing storage:", error)
       const errorMessage = "Failed to clear storage"
       dispatch({ type: "SET_ERROR", payload: errorMessage })
-      commentEvents.emit("error:occurred", { error: errorMessage, action: "clear_storage" })
+      commentEvents.emit("error", { error: errorMessage, action: "clear" })
     }
-  }, [adapter])
+  }, [adapter, currentUser])
+
+  const updateConfig = useCallback((newConfig: Partial<CommentConfig>) => {
+    console.log("updating config!!", newConfig)
+    setCurrentConfig((prev) => ({
+      ...prev,
+      ...newConfig,
+      editorFeatures: {
+        ...prev.editorFeatures,
+        ...newConfig.editorFeatures,
+      },
+    }))
+  }, [])
 
   const contextValue: CommentContextType = {
     state,
@@ -393,4 +462,4 @@ export function useComments() {
   return context
 }
 
-export { useCommentEvent } from "@/lib/events/comment-events.ts"
+export { useCommentEvent } from "@/lib/events/comment-events"
