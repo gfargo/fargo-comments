@@ -6,7 +6,7 @@ import { CommentProvider, useComments } from "@/contexts/comment-context"
 import { useCommentActions } from "@/hooks/use-comment-actions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, Edit3, FileText, MessageSquareDot } from "lucide-react"
+import { MessageSquare, Edit3, FileText, MessageSquareDot, MessageCircleHeart } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { mockComments, currentUser } from "@/lib/constants/comment-data"
@@ -223,7 +223,7 @@ export default function CommentSystemDemo() {
           <div className="flex items-baseline gap-2">
             <Image src="/okayd-logo.png" alt="Okayd" width={107} height={32} className="h-8 w-auto" />
             <span className="flex">Comments</span>
-            <MessageSquareDot className="h-5 w-5" style={{ color: "#006511" }} />
+            <MessageCircleHeart className="h-4 w-4" style={{ color: "#006511" }} />
           </div>
         }
         description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
