@@ -6,8 +6,22 @@ import type { CommentStorageAdapter } from "@/lib/adapters"
 import { LocalStorageAdapter } from "@/lib/adapters"
 import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
-import { commentEvents, type CommentEventEmitter } from "@/utils/comment-events"
+import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/utils/comment-events"
 import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
+
+const commentEvents = new CommentEventEmitter()
+
+// Helper hook for subscribing to events in React components
+export function useCommentEvent<T extends keyof CommentEventMap>(
+  event: T,
+  listener: CommentEventListener<T>,
+  deps: React.DependencyList = [],
+): void {
+  React.useEffect(() => {
+    const unsubscribe = commentEvents.on(event, listener)
+    return unsubscribe
+  }, deps)
+}
 
 // Context interface
 interface CommentContextType {
@@ -400,5 +414,3 @@ export function useComments() {
   }
   return context
 }
-
-export { useCommentEvent } from "@/utils/comment-events"
