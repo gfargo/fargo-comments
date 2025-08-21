@@ -100,7 +100,7 @@ export function CleanVariant({
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-1.5"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-2 h-7"
               onClick={onLike}
             >
               Like
@@ -108,7 +108,7 @@ export function CleanVariant({
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-1.5"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-2 h-7"
               onClick={onReply}
             >
               Reply
@@ -118,7 +118,7 @@ export function CleanVariant({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-1.5"
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-2 h-7"
                   onClick={() => setIsEditing(true)}
                 >
                   Edit
@@ -126,7 +126,7 @@ export function CleanVariant({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-1.5"
+                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-2"
                   onClick={onDelete}
                 >
                   Delete
