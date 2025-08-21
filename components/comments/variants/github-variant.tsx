@@ -123,11 +123,16 @@ export function GitHubVariant({
         </div>
         <div className="flex items-center gap-1">
           {isEditing ? (
-          <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
-            Editing
-          </Badge>
+          <>
+            <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
+              Editing
+            </Badge>
+            <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => setIsEditing(false)}>
+              Cancel
+            </Button>
+          </>
           ) : null}
-          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200 hidden">
             Approved
           </Badge>
         </div>
