@@ -33,7 +33,7 @@ export function CleanVariant({
 }: CleanVariantProps) {
   return (
     <div className={`group py-4 ${isReply ? "ml-8 border-l border-l-gray-200 pl-6 bg-gray-50/20" : ""}`}>
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+      <div className="flex items-center gap-3 mb-2 pb-2 border-b border-gray-100">
         <div className="flex items-center gap-2 flex-1">
           {isReply && <span className="text-gray-400 text-sm">↳</span>}
           <span className="font-medium text-gray-900">{comment.author.name}</span>
@@ -68,7 +68,7 @@ export function CleanVariant({
           <LexicalReadOnlyRenderer
             editorState={comment.editorState}
             content={comment.content}
-            className="text-sm text-gray-800 leading-relaxed mb-4"
+            className="text-sm text-gray-800 leading-relaxed mb-2"
           />
 
           {comment.sourceReference && (
