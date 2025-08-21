@@ -127,7 +127,7 @@ export function GitHubVariant({
             <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
               Editing
             </Badge>
-            <Button variant="ghost" size="sm" className={styles.actionButton + ' rounded-full h-7 w-7 cursor-pointer'} onClick={() => setIsEditing(false)}>
+            <Button variant="ghost" size="sm" className={styles.actionButton + ' rounded-full h-7 w-7 cursor-pointer p-2'} onClick={() => setIsEditing(false)}>
               <CircleX className="h-4 w-4" />
             </Button>
           </>
