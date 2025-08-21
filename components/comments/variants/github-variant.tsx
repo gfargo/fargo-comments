@@ -157,10 +157,13 @@ export function GitHubVariant({
               <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => onReact?.("👍")}>
                 <ThumbsUp className="h-3 w-3" />👍 React
               </Button>
+
+
               <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onReply}>
                 <Reply className="h-3 w-3" />
                 Reply
               </Button>
+
               {comment.author.id === currentUser.id && (
                 <>
                   <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => setIsEditing(true)}>
