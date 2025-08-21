@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MessageSquare, Plus, SortAsc, X } from "lucide-react"
 import { useCommentActions } from "@/hooks/use-comment-actions"
+import { useComments } from "@/contexts/comment-context" // Fixed import path to use correct location
 import type { Comment, User } from "@/types/comments"
 import { useState } from "react"
 
@@ -59,6 +60,8 @@ export function CommentList({
   onReact,
   getRepliesForComment,
 }: CommentListProps) {
+  const { config } = useComments() // Import useComments hook to access global config
+
   const {
     handleCommentSubmit,
     handleReplySubmit,
@@ -173,7 +176,7 @@ export function CommentList({
     if (isReply && replyContext) {
       return `@${replyContext.authorName} `
     }
-    return "Share your thoughts... Try @mentions and #tags!"
+    return config.placeholder || "Add a comment..."
   }
 
   return (
@@ -278,6 +281,7 @@ export function CommentList({
                   variant={variant}
                   showInlineEdit={false}
                   replies={commentReplies}
+                  isReplyingTo={replyingTo === comment.id}
                   onEdit={finalHandlers.onEdit}
                   onDelete={finalHandlers.onDelete}
                   onReply={handleStartReply}

@@ -17,7 +17,8 @@ import {
   type BeautifulMentionsMenuItemProps,
 } from "lexical-beautiful-mentions"
 import { Button } from "@/components/ui/button"
-import { Send, User, Hash, FileText, BookOpen, Tag } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Send, User, Hash, FileText, BookOpen, Tag, HelpCircle } from "lucide-react"
 import { AutoListPlugin } from "./plugins/auto-list-plugin"
 import { EmojiPlugin } from "./plugins/emoji-plugin"
 import {
@@ -28,6 +29,7 @@ import {
   type CommentVariant,
 } from "./utils/style-utils"
 import { useMentions } from "@/contexts/mention-context"
+import { useComments } from "@/contexts/comment-context"
 import { lexicalTheme, lexicalNodes, MATCHERS } from "./config/lexical-config"
 
 const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(({ open, loading, ...props }, ref) => (
@@ -43,6 +45,7 @@ const CustomMenuItem = forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>
     const getIcon = () => {
       if (item.trigger === "@") return <User className="w-4 h-4 text-blue-600" />
       if (item.trigger === "#") {
+        if (!item.value) return <Tag className="w-4 h-4 text-gray-600" />
         if (item.value.startsWith("question")) return <FileText className="w-4 h-4 text-green-600" />
         if (item.value.startsWith("rule")) return <BookOpen className="w-4 h-4 text-purple-600" />
         if (item.value.startsWith("section")) return <Hash className="w-4 h-4 text-orange-600" />
@@ -144,7 +147,7 @@ interface LexicalCommentComposerProps {
 
 export function LexicalCommentComposer({
   variant = "default",
-  placeholder = "Add a comment...",
+  placeholder,
   onSubmit,
   className = "",
   initialContent = "",
@@ -152,14 +155,13 @@ export function LexicalCommentComposer({
 }: LexicalCommentComposerProps) {
   const [currentContent, setCurrentContent] = useState("")
   const [currentEditorState, setCurrentEditorState] = useState("")
+  const [showTooltip, setShowTooltip] = useState(false)
   const { mentionItems, loading: mentionLoading, error: mentionError } = useMentions()
+  const { config } = useComments()
 
-  useEffect(() => {
-    if (initialContent || initialEditorState) {
-      setCurrentContent(initialContent)
-      setCurrentEditorState(initialEditorState)
-    }
-  }, [initialContent, initialEditorState])
+  const effectiveVariant = variant || config.variant || "default"
+  const effectivePlaceholder = placeholder || config.placeholder || "Add a comment..."
+  const features = config.editorFeatures || {}
 
   const initialConfig = {
     namespace: "CommentEditor",
@@ -181,22 +183,22 @@ export function LexicalCommentComposer({
     }
   }
 
-  const buttonConfig = getButtonConfig(variant)
+  const buttonConfig = getButtonConfig(effectiveVariant)
 
   return (
-    <div className={`relative ${getContainerStyles(variant)} ${className}`}>
+    <div className={`relative ${getContainerStyles(effectiveVariant)} ${className}`}>
       <LexicalComposer initialConfig={initialConfig}>
         <div className="relative">
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className={getContentEditableStyles(variant)}
-                aria-placeholder={placeholder}
+                className={getContentEditableStyles(effectiveVariant)}
+                aria-placeholder={effectivePlaceholder}
                 placeholder={
                   <div
-                    className={`absolute ${getPlaceholderPosition(variant)} text-gray-400 pointer-events-none select-none`}
+                    className={`absolute ${getPlaceholderPosition(effectiveVariant)} text-gray-400 pointer-events-none select-none`}
                   >
-                    {placeholder}
+                    {effectivePlaceholder}
                   </div>
                 }
               />
@@ -205,9 +207,9 @@ export function LexicalCommentComposer({
             ErrorBoundary={LexicalErrorBoundary}
           />
           <HistoryPlugin />
-          <ListPlugin />
-          <CheckListPlugin />
-          {!mentionLoading && !mentionError && (
+          {features.lists !== false && <ListPlugin />}
+          {features.checkLists !== false && <CheckListPlugin />}
+          {features.mentions !== false && !mentionLoading && !mentionError && (
             <BeautifulMentionsPlugin
               items={mentionItems}
               menuComponent={CustomMenu}
@@ -221,13 +223,50 @@ export function LexicalCommentComposer({
             initialEditorState={initialEditorState}
           />
         </div>
-        {variant !== "inline" && (
+        {effectiveVariant !== "inline" && (
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-            <div className="text-xs text-gray-500">
-              Use @ to mention users, # to reference resources, - for bullets, 1. for numbers. URLs auto-link.
-              {mentionLoading && " (Loading mentions...)"}
-              {mentionError && " (Mention loading failed)"}
-            </div>
+            <TooltipProvider>
+              <Tooltip open={showTooltip} onOpenChange={setShowTooltip}>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-1 text-gray-500 hover:text-gray-700"
+                    onTouchStart={() => setShowTooltip(true)}
+                    onTouchEnd={(e) => {
+                      e.preventDefault()
+                      setTimeout(() => setShowTooltip(false), 3000)
+                    }}
+                    onClick={() => setShowTooltip(!showTooltip)}
+                  >
+                    <HelpCircle className="w-4 h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start" className="max-w-xs">
+                  <div className="text-sm">
+                    <p className="font-medium mb-2">Start typing...</p>
+                    <ul className="space-y-1 text-xs">
+                      {features.mentions !== false && (
+                        <>
+                          <li>• @ to mention users</li>
+                          <li>• # to reference resources</li>
+                        </>
+                      )}
+                      {features.lists !== false && (
+                        <>
+                          <li>• - for bullet lists</li>
+                          <li>• 1. for numbered lists</li>
+                        </>
+                      )}
+                      {features.autoLink !== false && <li>• URLs will auto-link</li>}
+                      {features.emoji !== false && <li>• : for emojis</li>}
+                    </ul>
+                    {mentionLoading && <p className="text-xs text-amber-600 mt-2">Loading mentions...</p>}
+                    {mentionError && <p className="text-xs text-red-600 mt-2">Mention loading failed</p>}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               onClick={handleSubmit}
               size={buttonConfig.size}
@@ -239,9 +278,9 @@ export function LexicalCommentComposer({
             </Button>
           </div>
         )}
-        <AutoListPlugin />
-        <AutoLinkPlugin matchers={MATCHERS} />
-        <EmojiPlugin />
+        {features.autoList !== false && <AutoListPlugin />}
+        {features.autoLink !== false && <AutoLinkPlugin matchers={MATCHERS} />}
+        {features.emoji !== false && <EmojiPlugin />}
       </LexicalComposer>
     </div>
   )

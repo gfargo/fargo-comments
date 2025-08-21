@@ -1,19 +1,19 @@
 "use client"
 import { CommentList } from "@/components/comments/comment-list"
 import { CommentDrawer } from "@/components/comments/comment-drawer"
-import { CommentLayout, useCommentVariant } from "@/components/layout/comment-layout"
+import { CommentLayout } from "@/components/layout/comment-layout"
 import { CommentProvider, useComments } from "@/contexts/comment-context"
 import { useCommentActions } from "@/hooks/use-comment-actions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, Edit3, FileText } from "lucide-react"
+import { MessageSquare, Edit3, FileText, MessageSquareDot } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { mockComments, currentUser } from "@/lib/constants/comment-data"
 
 function LiveCommentDemo() {
-  const { selectedVariant } = useCommentVariant()
-  const { getCommentsBySource, getRepliesForComment } = useComments()
+  const { config, getCommentsBySource, getRepliesForComment } = useComments()
+  const selectedVariant = config.variant || "compact"
   const { handleAddComment, handleUpdateComment, handleDeleteComment, handleReply } = useCommentActions()
 
   const sourceId = "test-source-id"
@@ -69,7 +69,8 @@ function LiveCommentDemo() {
 }
 
 function MainPageContent() {
-  const { selectedVariant } = useCommentVariant()
+  const { config } = useComments()
+  const selectedVariant = config.variant || "compact"
 
   return (
     <div className="space-y-6">
@@ -215,18 +216,19 @@ function MainPageContent() {
 
 export default function CommentSystemDemo() {
   return (
-    <CommentLayout
-      title={
-        <div className="flex items-baseline gap-2">
-          <Image src="/okayd-logo.png" alt="Okayd" width={107} height={32} className="h-8 w-auto" />
-          <span className="flex">Comments</span>
-        </div>
-      }
-      description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
-    >
-      <CommentProvider initialUser={currentUser}>
+    <CommentProvider initialUser={currentUser}>
+      <CommentLayout
+        title={
+          <div className="flex items-baseline gap-2">
+            <Image src="/okayd-logo.png" alt="Okayd" width={107} height={32} className="h-8 w-auto" />
+            <span className="flex">Comments</span>
+            <MessageSquareDot className="h-5 w-5" style={{ color: "#006511" }} />
+          </div>
+        }
+        description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
+      >
         <MainPageContent />
-      </CommentProvider>
-    </CommentLayout>
+      </CommentLayout>
+    </CommentProvider>
   )
 }

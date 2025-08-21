@@ -1,6 +1,7 @@
 import type { Comment, CommentThread, User, LabelAudit } from "@/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 import { generateId } from "@/lib/comment-utils"
+import { extractMentionsAndTags } from "@/lib/utils/lexical-utils"
 
 export class LocalStorageAdapter implements CommentStorageAdapter {
   private readonly STORAGE_KEYS = {
@@ -69,6 +70,10 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     sourceType?: string,
     parentId?: string,
   ): Promise<Comment> {
+    const extracted = extractMentionsAndTags(editorState)
+    const finalMentions = mentions.length > 0 ? mentions : extracted.mentions
+    const finalTags = tags.length > 0 ? tags : extracted.tags
+
     const comment: Comment = {
       id: generateId(),
       content,
@@ -81,8 +86,8 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
       createdAt: new Date(),
       updatedAt: new Date(),
       isEdited: false,
-      mentions: mentions.map((m) => m.value || m.name || m),
-      tags: tags.map((t) => t.value || t.label || t),
+      mentions: finalMentions,
+      tags: finalTags,
       reactions: [],
       status: "active",
     }
@@ -92,14 +97,26 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     return comment
   }
 
-  async updateCommentWithEditorState(commentId: string, content: string, editorState: string): Promise<void> {
+  async updateCommentWithEditorState(
+    commentId: string,
+    content: string,
+    editorState: string,
+    mentions?: any[],
+    tags?: any[],
+  ): Promise<void> {
     const comments = await this.getComments()
     const index = comments.findIndex((c) => c.id === commentId)
     if (index !== -1) {
+      const extracted = extractMentionsAndTags(editorState)
+      const finalMentions = mentions || extracted.mentions
+      const finalTags = tags || extracted.tags
+
       comments[index] = {
         ...comments[index],
         content,
         editorState,
+        mentions: finalMentions,
+        tags: finalTags,
         updatedAt: new Date(),
         isEdited: true,
       }

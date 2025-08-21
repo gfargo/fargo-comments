@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ThumbsUp, Reply, Edit, Trash2, ExternalLink } from "lucide-react"
+import { ThumbsUp, Reply, Edit, Trash2, ExternalLink, CircleX } from "lucide-react"
 import type { Comment, User as UserType } from "@/types/comments"
 import { formatTimeAgo } from "@/lib/comment-utils"
 import { LexicalCommentComposer } from "@/components/lexical/lexical-comment-composer"
@@ -34,7 +34,7 @@ export function GitHubVariant({
 }: GitHubVariantProps) {
   const styles = {
     container: "border border-gray-300 rounded-md bg-white",
-    replyContainer: "ml-8 mt-2 border-l-4 border-gray-300 pl-4 bg-gray-50",
+    replyContainer: "ml-8 mt-2 border-l-4 border-gray-300 bg-gray-50",
     content: "relative",
     header: "bg-gray-50 border-b border-gray-300 px-4 py-2 rounded-t-md",
     body: "p-4",
@@ -122,10 +122,17 @@ export function GitHubVariant({
           )}
         </div>
         <div className="flex items-center gap-1">
-          <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
-            Editing
-          </Badge>
-          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+          {isEditing ? (
+          <>
+            <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700">
+              Editing
+            </Badge>
+            <Button variant="ghost" size="sm" className={styles.actionButton + ' rounded-full h-6 w-6 cursor-pointer p-2'} onClick={() => setIsEditing(false)}>
+              <CircleX className="h-4 w-4" />
+            </Button>
+          </>
+          ) : null}
+          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200 hidden">
             Approved
           </Badge>
         </div>
@@ -134,7 +141,7 @@ export function GitHubVariant({
         {isEditing ? (
           <div className="space-y-2">
             <LexicalCommentComposer
-              variant="default"
+              variant="compact"
               placeholder="Edit your comment..."
               onSubmit={handleEditSubmit}
               className="border border-gray-300 rounded-md"
@@ -150,10 +157,13 @@ export function GitHubVariant({
               <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => onReact?.("👍")}>
                 <ThumbsUp className="h-3 w-3" />👍 React
               </Button>
+
+
               <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onReply}>
                 <Reply className="h-3 w-3" />
                 Reply
               </Button>
+
               {comment.author.id === currentUser.id && (
                 <>
                   <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => setIsEditing(true)}>

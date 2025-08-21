@@ -5,29 +5,39 @@ import type { Comment, CommentThread, User, CommentReaction } from "@/types/comm
 import type { CommentStorageAdapter } from "@/lib/adapters"
 import { LocalStorageAdapter } from "@/lib/adapters"
 import { generateId } from "@/lib/comment-utils"
+import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
+import { CommentEventEmitter, type CommentEventMap, type CommentEventListener } from "@/lib/comment-events"
+import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
+import { useCommentContextHooks } from "@/hooks/use-comment-context-hooks"
+import { extractMentionsAndTags } from "@/lib/utils/lexical-utils"
+import type {
+  CommentHooks,
+  CommentHookRegistry,
+  AddCommentHookData,
+  UpdateCommentHookData,
+  CommentHookData,
+} from "@/types/comment-hooks"
 
-// Action types for comment reducer
-type CommentAction =
-  | { type: "LOAD_COMMENTS"; payload: Comment[] }
-  | { type: "ADD_COMMENT"; payload: Comment }
-  | { type: "UPDATE_COMMENT"; payload: { id: string; updates: Partial<Comment> } }
-  | { type: "DELETE_COMMENT"; payload: string }
-  | { type: "ADD_REACTION"; payload: { commentId: string; reaction: CommentReaction } }
-  | { type: "REMOVE_REACTION"; payload: { commentId: string; reactionId: string } }
-  | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_ERROR"; payload: string | null }
+const commentEvents = new CommentEventEmitter()
 
-// Comment state interface
-interface CommentState {
-  comments: Comment[]
-  loading: boolean
-  error: string | null
+// Helper hook for subscribing to events in React components
+export function useCommentEvent<T extends keyof CommentEventMap>(
+  event: T,
+  listener: CommentEventListener<T>,
+  deps: React.DependencyList = [],
+): void {
+  React.useEffect(() => {
+    const unsubscribe = commentEvents.on(event, listener)
+    return unsubscribe
+  }, deps)
 }
 
-// Context interface
 interface CommentContextType {
   state: CommentState
   currentUser: User | null
+  config: CommentConfig
+  events: CommentEventEmitter
+  hooks: CommentHookRegistry
 
   addComment: (
     content: string,
@@ -49,120 +59,54 @@ interface CommentContextType {
   // User management
   setCurrentUser: (user: User) => void
   refreshData: () => Promise<void>
-}
 
-// Initial state
-const initialState: CommentState = {
-  comments: [],
-  loading: false,
-  error: null,
-}
+  // Configuration management
+  updateConfig: (newConfig: Partial<CommentConfig>) => void
 
-// Comment reducer
-function commentReducer(state: CommentState, action: CommentAction): CommentState {
-  switch (action.type) {
-    case "LOAD_COMMENTS":
-      return {
-        ...state,
-        comments: action.payload,
-        loading: false,
-        error: null,
-      }
-
-    case "ADD_COMMENT":
-      return {
-        ...state,
-        comments: [...state.comments, action.payload],
-        error: null,
-      }
-
-    case "UPDATE_COMMENT":
-      return {
-        ...state,
-        comments: state.comments.map((comment) =>
-          comment.id === action.payload.id
-            ? { ...comment, ...action.payload.updates, isEdited: true, updatedAt: new Date() }
-            : comment,
-        ),
-        error: null,
-      }
-
-    case "DELETE_COMMENT":
-      return {
-        ...state,
-        comments: state.comments.filter((comment) => comment.id !== action.payload),
-        error: null,
-      }
-
-    case "ADD_REACTION":
-      return {
-        ...state,
-        comments: state.comments.map((comment) =>
-          comment.id === action.payload.commentId
-            ? {
-                ...comment,
-                reactions: [...comment.reactions, action.payload.reaction],
-              }
-            : comment,
-        ),
-        error: null,
-      }
-
-    case "REMOVE_REACTION":
-      return {
-        ...state,
-        comments: state.comments.map((comment) =>
-          comment.id === action.payload.commentId
-            ? {
-                ...comment,
-                reactions: comment.reactions.filter((r) => r.id !== action.payload.reactionId),
-              }
-            : comment,
-        ),
-        error: null,
-      }
-
-    case "SET_LOADING":
-      return {
-        ...state,
-        loading: action.payload,
-      }
-
-    case "SET_ERROR":
-      return {
-        ...state,
-        error: action.payload,
-        loading: false,
-      }
-
-    default:
-      return state
-  }
+  clearAllStorage: () => Promise<void>
 }
 
 // Create context
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
 
-// Provider component
 interface CommentProviderProps {
   children: React.ReactNode
   initialUser?: User
   storageAdapter?: CommentStorageAdapter
   initialComments?: Comment[]
+  config?: CommentConfig
+  hooks?: Partial<CommentHooks>
 }
 
-export function CommentProvider({ children, initialUser, storageAdapter, initialComments }: CommentProviderProps) {
+export function CommentProvider({
+  children,
+  initialUser,
+  storageAdapter,
+  initialComments,
+  config,
+  hooks: initialHooks,
+}: CommentProviderProps) {
   const [state, dispatch] = useReducer(commentReducer, {
-    ...initialState,
+    ...initialCommentState,
     comments: initialComments || [],
   })
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
+  const { config: currentConfig, updateConfig } = useCommentConfig(config)
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
+
+  const { hookRegistry, createHookContext } = useCommentContextHooks({
+    initialHooks,
+    currentUser,
+    config: currentConfig,
+    state,
+    events: commentEvents,
+  })
 
   useEffect(() => {
     if (initialComments) {
       console.log("[v0] Using provided initial data, skipping loadData")
+      commentEvents.emit("comments:loaded", { comments: initialComments })
       return
     }
 
@@ -174,13 +118,16 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
 
         if (!initialComments) {
           dispatch({ type: "LOAD_COMMENTS", payload: comments })
+          commentEvents.emit("comments:loaded", { comments })
         }
 
         if (!initialUser && !currentUser && users.length > 0) {
           setCurrentUser(users[0])
         }
       } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: "Failed to load comments" })
+        const errorMessage = "Failed to load comments"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "load" })
       }
     }
 
@@ -190,7 +137,9 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
   const addComment = useCallback(
     async (content: string, editorState: string, sourceId?: string, sourceType?: string, parentId?: string) => {
       if (!currentUser) {
-        dispatch({ type: "SET_ERROR", payload: "User must be logged in to comment" })
+        const errorMessage = "User must be logged in to comment"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "add" })
         return
       }
 
@@ -212,32 +161,65 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
           }
         }
 
-        const newComment = await adapter.addLexicalComment(
+        const { mentions, tags } = extractMentionsAndTags(editorState)
+        console.log("[v0] Extracted mentions:", mentions, "tags:", tags)
+
+        const hookData: AddCommentHookData = {
           content,
           editorState,
-          currentUser,
-          [],
-          [],
-          finalSourceId,
-          finalSourceType,
-          finalParentId,
+          mentions,
+          tags,
+          sourceId: finalSourceId,
+          sourceType: finalSourceType,
+          parentId: finalParentId,
+          user: currentUser,
+        }
+
+        const processedData = await hookRegistry.executeHooks("beforeAddComment", hookData, createHookContext())
+
+        const newComment = await adapter.addLexicalComment(
+          processedData.content,
+          processedData.editorState,
+          processedData.user,
+          processedData.mentions,
+          processedData.tags,
+          processedData.sourceId,
+          processedData.sourceType,
+          processedData.parentId,
         )
 
         console.log("[v0] New comment created:", newComment)
 
-        dispatch({ type: "ADD_COMMENT", payload: newComment })
+        const commentHookData: CommentHookData = { comment: newComment }
+        const processedComment = await hookRegistry.executeHooks(
+          "beforeSaveComment",
+          commentHookData,
+          createHookContext(),
+        )
+
+        const finalComment = { ...newComment, ...processedComment }
+
+        dispatch({ type: "ADD_COMMENT", payload: finalComment })
+        commentEvents.emit("comment:added", { comment: finalComment, user: currentUser })
+
+        await hookRegistry.executeHooks("afterAddComment", { comment: finalComment }, createHookContext())
+        await hookRegistry.executeHooks("afterSaveComment", { comment: finalComment }, createHookContext())
 
         console.log("[v0] Comment added to state")
       } catch (error) {
         console.error("[v0] Error adding comment:", error)
-        dispatch({ type: "SET_ERROR", payload: "Failed to add comment" })
+        const errorMessage = "Failed to add comment"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "add" })
       }
     },
-    [currentUser, state.comments, adapter],
+    [currentUser, state.comments, adapter, hookRegistry, createHookContext],
   )
 
   const updateComment = useCallback(
     async (commentId: string, content: string, editorState: string) => {
+      if (!currentUser) return
+
       try {
         console.log("[v0] updateComment called with:", {
           commentId,
@@ -250,32 +232,91 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
           return
         }
 
-        const updates = { content, editorState, isEdited: true }
+        const existingComment = state.comments.find((c) => c.id === commentId)
+        if (!existingComment) return
+
+        const previousContent = existingComment.content || ""
+
+        const { mentions, tags } = extractMentionsAndTags(editorState)
+        console.log("[v0] Extracted mentions for update:", mentions, "tags:", tags)
+
+        const hookData: UpdateCommentHookData = {
+          commentId,
+          content,
+          editorState,
+          mentions,
+          tags,
+          existingComment,
+        }
+
+        const processedData = await hookRegistry.executeHooks("beforeUpdateComment", hookData, createHookContext())
+
+        const updates = {
+          content: processedData.content,
+          editorState: processedData.editorState,
+          isEdited: true,
+          mentions: processedData.mentions,
+          tags: processedData.tags,
+        }
 
         dispatch({ type: "UPDATE_COMMENT", payload: { id: commentId, updates } })
 
-        await adapter.updateCommentWithEditorState(commentId, content, editorState)
+        await adapter.updateCommentWithEditorState(
+          commentId,
+          processedData.content,
+          processedData.editorState,
+          processedData.mentions,
+          processedData.tags,
+        )
+
+        const updatedComment = { ...existingComment, ...updates }
+
+        const commentHookData: CommentHookData = { comment: updatedComment }
+        const processedComment = await hookRegistry.executeHooks(
+          "beforeSaveComment",
+          commentHookData,
+          createHookContext(),
+        )
+
+        const finalComment = { ...updatedComment, ...processedComment }
+
+        commentEvents.emit("comment:updated", {
+          comment: finalComment,
+          previousContent,
+          user: currentUser,
+        })
+
+        await hookRegistry.executeHooks("afterUpdateComment", { comment: finalComment }, createHookContext())
+        await hookRegistry.executeHooks("afterSaveComment", { comment: finalComment }, createHookContext())
 
         console.log("[v0] Comment updated in storage successfully")
       } catch (error) {
         console.error("[v0] Error updating comment:", error)
-        dispatch({ type: "SET_ERROR", payload: "Failed to update comment" })
+        const errorMessage = "Failed to update comment"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "update" })
       }
     },
-    [adapter],
+    [adapter, currentUser, state.comments, hookRegistry, createHookContext],
   )
 
   const deleteComment = useCallback(
     async (commentId: string) => {
+      if (!currentUser) return
+
       try {
         dispatch({ type: "DELETE_COMMENT", payload: commentId })
 
         await adapter.deleteComment(commentId)
+
+        commentEvents.emit("comment:deleted", { commentId, user: currentUser })
       } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: "Failed to delete comment" })
+        const errorMessage = "Failed to delete comment"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "delete" })
       }
     },
-    [adapter],
+    [adapter, currentUser],
   )
 
   const addReaction = useCallback(
@@ -291,6 +332,7 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
             type: "REMOVE_REACTION",
             payload: { commentId, reactionId: existingReaction.id },
           })
+          commentEvents.emit("reaction:removed", { commentId, reactionId: existingReaction.id, user: currentUser })
         } else {
           const newReaction: CommentReaction = {
             id: generateId(),
@@ -303,6 +345,7 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
             type: "ADD_REACTION",
             payload: { commentId, reaction: newReaction },
           })
+          commentEvents.emit("reaction:added", { commentId, reaction: newReaction, user: currentUser })
         }
 
         const updatedComments = state.comments.map((c) => {
@@ -325,7 +368,9 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
 
         await adapter.saveComments(updatedComments)
       } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: "Failed to add reaction" })
+        const errorMessage = "Failed to add reaction"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "reaction" })
       }
     },
     [currentUser, state.comments, adapter],
@@ -333,6 +378,8 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
 
   const removeReaction = useCallback(
     async (commentId: string, reactionId: string) => {
+      if (!currentUser) return
+
       try {
         dispatch({ type: "REMOVE_REACTION", payload: { commentId, reactionId } })
 
@@ -347,11 +394,15 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
         })
 
         await adapter.saveComments(updatedComments)
+
+        commentEvents.emit("reaction:removed", { commentId, reactionId, user: currentUser })
       } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: "Failed to remove reaction" })
+        const errorMessage = "Failed to remove reaction"
+        dispatch({ type: "SET_ERROR", payload: errorMessage })
+        commentEvents.emit("error", { error: errorMessage, action: "reaction" })
       }
     },
-    [state.comments, adapter],
+    [state.comments, adapter, currentUser],
   )
 
   const getCommentThreads = useCallback(
@@ -395,14 +446,36 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
       const comments = await adapter.getComments()
 
       dispatch({ type: "LOAD_COMMENTS", payload: comments })
+      commentEvents.emit("comments:loaded", { comments })
     } catch (error) {
-      dispatch({ type: "SET_ERROR", payload: "Failed to refresh data" })
+      const errorMessage = "Failed to refresh data"
+      dispatch({ type: "SET_ERROR", payload: errorMessage })
+      commentEvents.emit("error", { error: errorMessage, action: "refresh" })
     }
   }, [adapter])
+
+  const clearAllStorage = useCallback(async () => {
+    if (!currentUser) return
+
+    try {
+      await adapter.clearAllStorage()
+      dispatch({ type: "LOAD_COMMENTS", payload: [] })
+      commentEvents.emit("comments:cleared", { user: currentUser })
+      console.log("[v0] Storage cleared successfully")
+    } catch (error) {
+      console.error("[v0] Error clearing storage:", error)
+      const errorMessage = "Failed to clear storage"
+      dispatch({ type: "SET_ERROR", payload: errorMessage })
+      commentEvents.emit("error", { error: errorMessage, action: "clear" })
+    }
+  }, [adapter, currentUser])
 
   const contextValue: CommentContextType = {
     state,
     currentUser,
+    config: currentConfig,
+    events: commentEvents,
+    hooks: hookRegistry,
     addComment,
     updateComment,
     deleteComment,
@@ -413,6 +486,8 @@ export function CommentProvider({ children, initialUser, storageAdapter, initial
     getRepliesForComment,
     setCurrentUser,
     refreshData,
+    updateConfig,
+    clearAllStorage,
   }
 
   return <CommentContext.Provider value={contextValue}>{children}</CommentContext.Provider>

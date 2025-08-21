@@ -1,15 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { CommentLayout, useCommentVariant } from "@/components/layout/comment-layout"
+import { CommentLayout } from "@/components/layout/comment-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MessageSquare, Users, Clock, CheckCircle2, AlertCircle, Flag } from "lucide-react"
 import { CommentVariation } from "@/components/comments/comment-variations"
 import { sampleThreadComments, currentUser } from "@/lib/constants/comment-data"
+import { useComments } from "@/contexts/comment-context"
 
 function ThreadsPageContent() {
-  const { selectedVariant } = useCommentVariant()
+  const { config } = useComments()
+  const selectedVariant = config.variant || "compact"
   const [selectedThread, setSelectedThread] = useState<string>("audit-workflow")
 
   const threadExamples = [

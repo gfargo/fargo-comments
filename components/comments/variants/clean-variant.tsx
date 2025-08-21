@@ -33,7 +33,7 @@ export function CleanVariant({
 }: CleanVariantProps) {
   return (
     <div className={`group py-4 ${isReply ? "ml-8 border-l border-l-gray-200 pl-6 bg-gray-50/20" : ""}`}>
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+      <div className="flex items-center gap-3 mb-2 pb-2 border-b border-gray-100">
         <div className="flex items-center gap-2 flex-1">
           {isReply && <span className="text-gray-400 text-sm">↳</span>}
           <span className="font-medium text-gray-900">{comment.author.name}</span>
@@ -68,7 +68,7 @@ export function CleanVariant({
           <LexicalReadOnlyRenderer
             editorState={comment.editorState}
             content={comment.content}
-            className="text-sm text-gray-800 leading-relaxed mb-4"
+            className="text-sm text-gray-800 leading-relaxed mb-2"
           />
 
           {comment.sourceReference && (
@@ -96,11 +96,11 @@ export function CleanVariant({
             </div>
           )}
 
-          <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-0"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-2 h-7"
               onClick={onLike}
             >
               Like
@@ -108,7 +108,7 @@ export function CleanVariant({
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-0"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-2 h-7"
               onClick={onReply}
             >
               Reply
@@ -118,7 +118,7 @@ export function CleanVariant({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-0"
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 px-2 h-7"
                   onClick={() => setIsEditing(true)}
                 >
                   Edit
@@ -126,7 +126,7 @@ export function CleanVariant({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-0"
+                  className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-2 h-7"
                   onClick={onDelete}
                 >
                   Delete

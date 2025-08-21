@@ -1,15 +1,21 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { QueryProvider } from "@/components/providers/query-provider"
 import { MentionProvider } from "@/contexts/mention-context"
 import { CommentProvider } from "@/contexts/comment-context"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "Okayd Comments",
+  description: "",
+  generator: "",
+}
+
+const defaultUser = {
+  id: "default-user",
+  name: "Sarah Johnson",
+  email: "sarah@example.com",
+  avatar: "/placeholder.svg?height=32&width=32",
 }
 
 export default function RootLayout({
@@ -19,19 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
-      </head>
-      <body>
-        <CommentProvider>
-          <MentionProvider>{children}</MentionProvider>
-        </CommentProvider>
+      <body className="font-sans antialiased">
+        <QueryProvider>
+          <CommentProvider initialUser={defaultUser}>
+            <MentionProvider>{children}</MentionProvider>
+          </CommentProvider>
+        </QueryProvider>
       </body>
     </html>
   )

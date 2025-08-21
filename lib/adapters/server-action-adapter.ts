@@ -1,33 +1,27 @@
-import type { Comment, CommentThread, User, LabelAudit } from "@/types/comments"
+import type { Comment, CommentThread, User } from "@/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export class ServerActionAdapter implements CommentStorageAdapter {
   constructor(private config: StorageAdapterConfig) {}
 
   async getComments(): Promise<Comment[]> {
-    // Example: Call Next.js server action
-    const { getCommentsAction } = await import("@/app/actions/comments")
-    return await getCommentsAction()
+    throw new Error("ServerActionAdapter: Please implement getCommentsAction in your app/actions/comments.ts file")
   }
 
   async saveComments(comments: Comment[]): Promise<void> {
-    const { saveCommentsAction } = await import("@/app/actions/comments")
-    await saveCommentsAction(comments)
+    throw new Error("ServerActionAdapter: Please implement saveCommentsAction in your app/actions/comments.ts file")
   }
 
   async addComment(comment: Comment): Promise<void> {
-    const { addCommentAction } = await import("@/app/actions/comments")
-    await addCommentAction(comment)
+    throw new Error("ServerActionAdapter: Please implement addCommentAction in your app/actions/comments.ts file")
   }
 
   async updateComment(commentId: string, updates: Partial<Comment>): Promise<void> {
-    const { updateCommentAction } = await import("@/app/actions/comments")
-    await updateCommentAction(commentId, updates)
+    throw new Error("ServerActionAdapter: Please implement updateCommentAction in your app/actions/comments.ts file")
   }
 
   async deleteComment(commentId: string): Promise<void> {
-    const { deleteCommentAction } = await import("@/app/actions/comments")
-    await deleteCommentAction(commentId)
+    throw new Error("ServerActionAdapter: Please implement deleteCommentAction in your app/actions/comments.ts file")
   }
 
   async addLexicalComment(
@@ -36,50 +30,42 @@ export class ServerActionAdapter implements CommentStorageAdapter {
     author: User,
     mentions: any[] = [],
     tags: any[] = [],
-    auditItemId?: string,
+    sourceId?: string,
+    sourceType?: string,
     parentId?: string,
   ): Promise<Comment> {
-    const { addLexicalCommentAction } = await import("@/app/actions/comments")
-    return await addLexicalCommentAction(content, editorState, author, mentions, tags, auditItemId, parentId)
+    throw new Error(
+      "ServerActionAdapter: Please implement addLexicalCommentAction in your app/actions/comments.ts file",
+    )
   }
 
   async updateCommentWithEditorState(commentId: string, content: string, editorState: string): Promise<void> {
-    const { updateCommentWithEditorStateAction } = await import("@/app/actions/comments")
-    await updateCommentWithEditorStateAction(commentId, content, editorState)
+    throw new Error(
+      "ServerActionAdapter: Please implement updateCommentWithEditorStateAction in your app/actions/comments.ts file",
+    )
   }
 
   async getUsers(): Promise<User[]> {
-    const { getUsersAction } = await import("@/app/actions/users")
-    return await getUsersAction()
+    throw new Error("ServerActionAdapter: Please implement getUsersAction in your app/actions/users.ts file")
   }
 
   async saveUsers(users: User[]): Promise<void> {
-    const { saveUsersAction } = await import("@/app/actions/users")
-    await saveUsersAction(users)
+    throw new Error("ServerActionAdapter: Please implement saveUsersAction in your app/actions/users.ts file")
   }
 
-  async getAudits(): Promise<LabelAudit[]> {
-    const { getAuditsAction } = await import("@/app/actions/audits")
-    return await getAuditsAction()
+  async getCommentsBySource(sourceId: string, sourceType: string): Promise<Comment[]> {
+    throw new Error(
+      "ServerActionAdapter: Please implement getCommentsBySourceAction in your app/actions/comments.ts file",
+    )
   }
 
-  async saveAudits(audits: LabelAudit[]): Promise<void> {
-    const { saveAuditsAction } = await import("@/app/actions/audits")
-    await saveAuditsAction(audits)
-  }
-
-  async getCommentsByAuditItem(auditItemId: string): Promise<Comment[]> {
-    const { getCommentsByAuditItemAction } = await import("@/app/actions/comments")
-    return await getCommentsByAuditItemAction(auditItemId)
-  }
-
-  async getCommentThreads(auditItemId?: string): Promise<CommentThread[]> {
-    const { getCommentThreadsAction } = await import("@/app/actions/comments")
-    return await getCommentThreadsAction(auditItemId)
+  async getCommentThreads(sourceId?: string, sourceType?: string): Promise<CommentThread[]> {
+    throw new Error(
+      "ServerActionAdapter: Please implement getCommentThreadsAction in your app/actions/comments.ts file",
+    )
   }
 
   async clearAllStorage(): Promise<void> {
-    const { clearAllStorageAction } = await import("@/app/actions/comments")
-    await clearAllStorageAction()
+    throw new Error("ServerActionAdapter: Please implement clearAllStorageAction in your app/actions/comments.ts file")
   }
 }
