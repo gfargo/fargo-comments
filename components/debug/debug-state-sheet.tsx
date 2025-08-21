@@ -12,10 +12,10 @@ import { useToast } from "@/hooks/use-toast"
 export function DebugStateSheet() {
   const { toast } = useToast()
   const [copied, setCopied] = useState(false)
-  const { comments, users, currentUser, config, loading, error, statistics, getAllComments, getAllUsers } =
+  const { state, users, currentUser, config, loading, error, statistics, getAllComments, getAllUsers } =
     useComments()
 
-  console.log("[v0] Debug Sheet - comments from context:", comments)
+  console.log("[v0] Debug Sheet - comments from context:", state.comments)
   console.log("[v0] Debug Sheet - getAllComments:", getAllComments?.())
   console.log("[v0] Debug Sheet - getAllUsers:", getAllUsers?.())
 
@@ -23,7 +23,7 @@ export function DebugStateSheet() {
   const allUsers = getAllUsers?.() || []
 
   const debugData = {
-    contextComments: comments,
+    contextComments: state.comments,
     allStorageComments: allComments,
     contextUsers: users,
     allStorageUsers: allUsers,
