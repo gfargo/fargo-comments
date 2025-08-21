@@ -82,6 +82,228 @@ This repository contains several specialized README files for different aspects 
     └── comments.ts             # TypeScript type definitions
 \`\`\`
 
+## 🎣 Hook System
+
+The comment system includes a powerful hook system that allows developers to inject custom logic at key points in the comment lifecycle. This enables modification of comments before they're saved, addition of custom fields, parsing of special content, and integration with external systems.
+
+### Available Hook Points
+
+* **`beforeAddComment`** - Executed before a new comment is created, allows modification of comment data
+* **`afterAddComment`** - Executed after a comment is successfully added to storage
+* **`beforeUpdateComment`** - Executed before a comment is updated, allows modification of update data
+* **`afterUpdateComment`** - Executed after a comment is successfully updated
+* **`beforeSaveComment`** - Executed before any comment save operation (add or update)
+* **`afterSaveComment`** - Executed after any comment save operation completes
+
+### Hook Registration
+
+\`\`\`typescript
+import { CommentProvider } from '@/contexts/comment-context'
+
+const commentHooks = {
+  beforeAddComment: async (data, context) => {
+    // Parse content for SourceReferences
+    const sourceRefs = parseSourceReferences(data.content)
+    
+    return {
+      ...data,
+      sourceReferences: sourceRefs,
+      customField: 'additional data'
+    }
+  },
+  
+  beforeSaveComment: async (data, context) => {
+    // Add metadata to all comments
+    return {
+      ...data,
+      comment: {
+        ...data.comment,
+        department: context.user.department,
+        timestamp: new Date().toISOString()
+      }
+    }
+  },
+  
+  afterAddComment: async (data, context) => {
+    // Send notifications, update analytics, etc.
+    await sendNotification({
+      type: 'new_comment',
+      comment: data.comment,
+      user: context.user
+    })
+  }
+}
+
+function App() {
+  return (
+    <CommentProvider hooks={commentHooks}>
+      <CommentList {...props} />
+    </CommentProvider>
+  )
+}
+\`\`\`
+
+### Hook Context
+
+Each hook receives a context object with access to:
+
+\`\`\`typescript
+interface CommentHookContext {
+  user: User | null           // Current user
+  config: CommentConfig       // Current configuration
+  state: CommentState         // Current comment state
+  events: CommentEventEmitter // Event emitter for custom events
+}
+\`\`\`
+
+### Advanced Hook Examples
+
+\`\`\`typescript
+// SourceReference parsing hook
+const sourceReferenceHook = {
+  beforeAddComment: async (data, context) => {
+    // Parse content for patterns like "REF-123" or "DOC-456"
+    const sourceRefs = data.content.match(/\b[A-Z]{2,}-\d+\b/g) || []
+    
+    // Fetch additional data for each reference
+    const enrichedRefs = await Promise.all(
+      sourceRefs.map(async (ref) => {
+        const details = await fetchReferenceDetails(ref)
+        return { id: ref, ...details }
+      })
+    )
+    
+    return {
+      ...data,
+      sourceReferences: enrichedRefs
+    }
+  }
+}
+
+// Content moderation hook
+const moderationHook = {
+  beforeSaveComment: async (data, context) => {
+    const moderationResult = await moderateContent(data.comment.content)
+    
+    return {
+      ...data,
+      comment: {
+        ...data.comment,
+        moderationScore: moderationResult.score,
+        flagged: moderationResult.flagged,
+        status: moderationResult.flagged ? 'pending' : 'approved'
+      }
+    }
+  }
+}
+
+// Analytics and tracking hook
+const analyticsHook = {
+  afterAddComment: async (data, context) => {
+    // Track comment creation
+    analytics.track('Comment Created', {
+      commentId: data.comment.id,
+      sourceId: data.comment.sourceId,
+      sourceType: data.comment.sourceType,
+      hasParent: !!data.comment.parentId,
+      mentionCount: data.comment.mentions?.length || 0,
+      tagCount: data.comment.tags?.length || 0
+    })
+  },
+  
+  afterUpdateComment: async (data, context) => {
+    // Track comment edits
+    analytics.track('Comment Edited', {
+      commentId: data.comment.id,
+      editCount: data.comment.editCount || 1
+    })
+  }
+}
+
+// Workflow integration hook
+const workflowHook = {
+  beforeAddComment: async (data, context) => {
+    // Check if comment triggers workflow actions
+    const workflowTriggers = parseWorkflowTriggers(data.content)
+    
+    if (workflowTriggers.length > 0) {
+      // Create workflow tasks
+      const tasks = await createWorkflowTasks(workflowTriggers, data, context)
+      
+      return {
+        ...data,
+        workflowTasks: tasks,
+        triggersWorkflow: true
+      }
+    }
+    
+    return data
+  }
+}
+\`\`\`
+
+### Hook Composition
+
+You can combine multiple hook systems for complex workflows:
+
+\`\`\`typescript
+const compositeHooks = {
+  beforeAddComment: async (data, context) => {
+    // Chain multiple transformations
+    let processedData = data
+    
+    // 1. Parse source references
+    processedData = await sourceReferenceHook.beforeAddComment(processedData, context)
+    
+    // 2. Check for workflow triggers
+    processedData = await workflowHook.beforeAddComment(processedData, context)
+    
+    // 3. Add custom metadata
+    processedData = {
+      ...processedData,
+      metadata: {
+        processedAt: new Date().toISOString(),
+        processor: 'composite-hook-v1'
+      }
+    }
+    
+    return processedData
+  },
+  
+  afterAddComment: async (data, context) => {
+    // Execute multiple post-processing actions
+    await Promise.all([
+      analyticsHook.afterAddComment(data, context),
+      notificationHook.afterAddComment(data, context),
+      searchIndexHook.afterAddComment(data, context)
+    ])
+  }
+}
+\`\`\`
+
+### Dynamic Hook Registration
+
+You can also register hooks dynamically using the hook registry:
+
+\`\`\`typescript
+function MyComponent() {
+  const { hooks } = useComments()
+  
+  useEffect(() => {
+    // Register a hook dynamically
+    const unregister = hooks.registerHook('beforeAddComment', async (data, context) => {
+      // Custom logic here
+      return data
+    })
+    
+    // Cleanup on unmount
+    return unregister
+  }, [hooks])
+  
+  return <div>My Component</div>
+}
+\`\`\`
+
 ## 🎣 Custom Hooks
 
 The system provides several specialized React hooks for different aspects of comment management:
