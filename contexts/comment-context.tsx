@@ -7,35 +7,7 @@ import { LocalStorageAdapter } from "@/lib/adapters"
 import { generateId } from "@/lib/comment-utils"
 import { commentReducer, initialCommentState, type CommentState } from "@/lib/reducers/comment-reducer"
 import { commentEvents, type CommentEventEmitter } from "@/lib/events/comment-events"
-
-// Configuration interfaces for editor features
-interface EditorFeatures {
-  lists?: boolean
-  checkLists?: boolean
-  autoLink?: boolean
-  mentions?: boolean
-  emoji?: boolean
-  autoList?: boolean
-}
-
-interface CommentConfig {
-  editorFeatures?: EditorFeatures
-  placeholder?: string
-  variant?:
-    | "card"
-    | "bubble"
-    | "timeline"
-    | "compact"
-    | "plain"
-    | "social"
-    | "professional"
-    | "clean"
-    | "thread"
-    | "github"
-    | "email"
-    | "notion"
-    | "mobile"
-}
+import { useCommentConfig, type CommentConfig } from "@/hooks/use-comment-config"
 
 // Context interface
 interface CommentContextType {
@@ -71,20 +43,6 @@ interface CommentContextType {
   clearAllStorage: () => Promise<void>
 }
 
-// Default configuration
-const defaultConfig: CommentConfig = {
-  editorFeatures: {
-    lists: true,
-    checkLists: true,
-    autoLink: true,
-    mentions: true,
-    emoji: true,
-    autoList: true,
-  },
-  placeholder: "Add a comment ...",
-  variant: "compact",
-}
-
 // Create context
 const CommentContext = createContext<CommentContextType | undefined>(undefined)
 
@@ -109,14 +67,7 @@ export function CommentProvider({
     comments: initialComments || [],
   })
   const [currentUser, setCurrentUser] = React.useState<User | null>(initialUser || null)
-  const [currentConfig, setCurrentConfig] = React.useState<CommentConfig>({
-    ...defaultConfig,
-    ...config,
-    editorFeatures: {
-      ...defaultConfig.editorFeatures,
-      ...config?.editorFeatures,
-    },
-  })
+  const { config: currentConfig, updateConfig } = useCommentConfig(config)
 
   const adapter = useMemo(() => storageAdapter || new LocalStorageAdapter(), [storageAdapter])
 
@@ -418,18 +369,6 @@ export function CommentProvider({
       commentEvents.emit("error", { error: errorMessage, action: "clear" })
     }
   }, [adapter, currentUser])
-
-  const updateConfig = useCallback((newConfig: Partial<CommentConfig>) => {
-    console.log("updating config!!", newConfig)
-    setCurrentConfig((prev) => ({
-      ...prev,
-      ...newConfig,
-      editorFeatures: {
-        ...prev.editorFeatures,
-        ...newConfig.editorFeatures,
-      },
-    }))
-  }, [])
 
   const contextValue: CommentContextType = {
     state,
