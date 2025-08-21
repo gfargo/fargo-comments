@@ -58,7 +58,6 @@ export function CompactVariant({
       className={`p-3 border rounded-lg bg-white ${isReply ? "ml-6 border-l-2 border-l-green-200 bg-green-25" : ""}`}
     >
       <div className="flex gap-2">
-        {isReply && <span className="text-xs text-green-600">↳</span>}
         <div className="flex-shrink-0">
           <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium">
             {comment.author.name.charAt(0)}
@@ -69,6 +68,7 @@ export function CompactVariant({
           <div className="flex items-center gap-2 mb-1">
             <span className="text-sm font-medium text-gray-900">{comment.author.name}</span>
             <span className="text-xs text-gray-500">{comment.author.role}</span>
+            {isReply && <span className="text-xs text-green-600">↳</span>}
             <span className="text-xs text-gray-400">2m ago</span>
           </div>
 
