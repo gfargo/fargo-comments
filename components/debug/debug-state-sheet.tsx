@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 export function DebugStateSheet() {
   const { toast } = useToast()
   const [copied, setCopied] = useState(false)
-  const { state, users, currentUser, config, loading, error, statistics, getAllComments, getAllUsers } =
+  const { state, comments, users, currentUser, config, loading, error, statistics, getAllComments, getAllUsers } =
     useComments()
 
   console.log("[v0] Debug Sheet - comments from context:", state.comments)
