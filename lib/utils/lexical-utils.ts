@@ -1,11 +1,11 @@
 export interface ExtractedMention {
   value: string
-  [key: string]: any // Allow for dynamic properties from data object
+  [key: string]: any // Allow any additional properties from the data object
 }
 
 export interface ExtractedTag {
   value: string
-  [key: string]: any // Allow for dynamic properties from data object
+  [key: string]: any // Allow any additional properties from the data object
 }
 
 export function extractMentionsAndTags(editorState: string): {
