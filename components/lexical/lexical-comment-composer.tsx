@@ -233,22 +233,22 @@ export function LexicalCommentComposer({
                 </TooltipTrigger>
                 <TooltipContent side="top" align="start" className="max-w-xs">
                   <div className="text-sm">
-                    <p className="font-medium mb-2">Editor Features:</p>
+                    <p className="font-medium mb-2">Start typing...</p>
                     <ul className="space-y-1 text-xs">
                       {features.mentions !== false && (
                         <>
-                          <li>• Use @ to mention users</li>
-                          <li>• Use # to reference resources</li>
+                          <li>• @ to mention users</li>
+                          <li>• # to reference resources</li>
                         </>
                       )}
                       {features.lists !== false && (
                         <>
-                          <li>• Use - for bullet lists</li>
-                          <li>• Use 1. for numbered lists</li>
+                          <li>• - for bullet lists</li>
+                          <li>• 1. for numbered lists</li>
                         </>
                       )}
-                      {features.autoLink !== false && <li>• URLs auto-link</li>}
-                      {features.emoji !== false && <li>• Type : for emojis</li>}
+                      {features.autoLink !== false && <li>• URLs will auto-link</li>}
+                      {features.emoji !== false && <li>• : for emojis</li>}
                     </ul>
                     {mentionLoading && <p className="text-xs text-amber-600 mt-2">Loading mentions...</p>}
                     {mentionError && <p className="text-xs text-red-600 mt-2">Mention loading failed</p>}
