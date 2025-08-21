@@ -12,11 +12,21 @@ import { useToast } from "@/hooks/use-toast"
 export function DebugStateSheet() {
   const { toast } = useToast()
   const [copied, setCopied] = useState(false)
-  const { comments, users, currentUser, config, loading, error, statistics } = useComments()
+  const { comments, users, currentUser, config, loading, error, statistics, getAllComments, getAllUsers } =
+    useComments()
+
+  console.log("[v0] Debug Sheet - comments from context:", comments)
+  console.log("[v0] Debug Sheet - getAllComments:", getAllComments?.())
+  console.log("[v0] Debug Sheet - getAllUsers:", getAllUsers?.())
+
+  const allComments = getAllComments?.() || []
+  const allUsers = getAllUsers?.() || []
 
   const debugData = {
-    comments,
-    users,
+    contextComments: comments,
+    allStorageComments: allComments,
+    contextUsers: users,
+    allStorageUsers: allUsers,
     currentUser,
     config,
     loading,
@@ -82,7 +92,8 @@ export function DebugStateSheet() {
             <div className="space-y-2">
               <h4 className="text-sm font-medium">Quick Stats</h4>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">{comments?.length ?? 0} Comments</Badge>
+                <Badge variant="secondary">Context: {comments?.length ?? 0} Comments</Badge>
+                <Badge variant="secondary">Storage: {allComments?.length ?? 0} Comments</Badge>
                 <Badge variant="secondary">{users?.length ?? 0} Users</Badge>
                 <Badge variant="secondary">Variant: {config?.variant ?? "default"}</Badge>
                 <Badge variant={loading ? "destructive" : "default"}>{loading ? "Loading" : "Ready"}</Badge>
