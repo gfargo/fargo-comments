@@ -1,13 +1,11 @@
 export interface ExtractedMention {
-  trigger: "@"
   value: string
-  data: any
+  [key: string]: any // Allow any additional properties from the data object
 }
 
 export interface ExtractedTag {
-  trigger: "#"
   value: string
-  data: any
+  [key: string]: any // Allow any additional properties from the data object
 }
 
 export function extractMentionsAndTags(editorState: string): {
@@ -21,16 +19,15 @@ export function extractMentionsAndTags(editorState: string): {
 
     function traverseNodes(node: any) {
       if (node.type === "custom-beautifulMention") {
-        const extracted = {
-          trigger: node.trigger,
+        const flattened = {
           value: node.value,
-          data: node.data || {},
+          ...(node.data || {}),
         }
 
         if (node.trigger === "@") {
-          mentions.push(extracted as ExtractedMention)
+          mentions.push(flattened as ExtractedMention)
         } else if (node.trigger === "#") {
-          tags.push(extracted as ExtractedTag)
+          tags.push(flattened as ExtractedTag)
         }
       }
 
