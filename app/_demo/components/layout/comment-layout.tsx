@@ -151,3 +151,5 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
     </div>
   )
 }
+
+export default CommentLayout

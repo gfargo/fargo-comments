@@ -45,7 +45,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-```plaintext
+\`\`\`plaintext
 ├── app/                          # Next.js App Router pages
 │   ├── _demo/                   # Demo components and data
 │   ├── composer/                # Composer demo page
@@ -64,7 +64,7 @@ This repository contains several specialized README files for different aspects 
 │   ├── types/                   # TypeScript type definitions
 │   └── utils/                   # Utility functions
 └── public/                     # Static assets
-```
+\`\`\`
 
 ## 🎣 Hook System
 
@@ -81,7 +81,7 @@ The comment system includes a powerful hook system that allows developers to inj
 
 ### Hook Registration
 
-```typescript
+\`\`\`typescript
 import { CommentProvider } from '@/lib/contexts/comment-context'
 
 const commentHooks = {
@@ -125,24 +125,24 @@ function App() {
     </CommentProvider>
   )
 }
-```
+\`\`\`
 
 ### Hook Context
 
 Each hook receives a context object with access to:
 
-```typescript
+\`\`\`typescript
 interface CommentHookContext {
   user: User | null           // Current user
   config: CommentConfig       // Current configuration
   state: CommentState         // Current comment state
   events: CommentEventEmitter // Event emitter for custom events
 }
-```
+\`\`\`
 
 ### Advanced Hook Examples
 
-```typescript
+\`\`\`typescript
 // SourceReference parsing hook
 const sourceReferenceHook = {
   beforeAddComment: async (data, context) => {
@@ -224,13 +224,13 @@ const workflowHook = {
     return data
   }
 }
-```
+\`\`\`
 
 ### Hook Composition
 
 You can combine multiple hook systems for complex workflows:
 
-```typescript
+\`\`\`typescript
 const compositeHooks = {
   beforeAddComment: async (data, context) => {
     // Chain multiple transformations
@@ -263,13 +263,13 @@ const compositeHooks = {
     ])
   }
 }
-```
+\`\`\`
 
 ### Dynamic Hook Registration
 
 You can also register hooks dynamically using the hook registry:
 
-```typescript
+\`\`\`typescript
 function MyComponent() {
   const { hooks } = useComments()
   
@@ -286,7 +286,7 @@ function MyComponent() {
   
   return <div>My Component</div>
 }
-```
+\`\`\`
 
 ## 🎣 Custom Hooks
 
@@ -334,7 +334,7 @@ The system provides several specialized React hooks for different aspects of com
 
 ### Quick Start
 
-```bash
+\`\`\`bash
 # Clone the repository
 git clone <repository-url>
 cd okayd-comments
@@ -344,7 +344,7 @@ npm install
 
 # Run development server
 npm run dev
-```
+\`\`\`
 
 ### Environment Setup
 
@@ -354,15 +354,15 @@ No environment variables required for the default localStorage setup. For databa
 
 ### Local Storage (Default)
 
-```typescript
+\`\`\`typescript
 import { LocalStorageAdapter } from '@/lib/adapters'
 
 const adapter = new LocalStorageAdapter()
-```
+\`\`\`
 
 ### Server Actions (Next.js)
 
-```typescript
+\`\`\`typescript
 import { ServerActionAdapter } from '@/lib/adapters'
 
 const adapter = new ServerActionAdapter({
@@ -371,11 +371,11 @@ const adapter = new ServerActionAdapter({
   deleteComment: deleteCommentAction,
   // ... other actions
 })
-```
+\`\`\`
 
 ### Tanstack Query
 
-```typescript
+\`\`\`typescript
 import { useTanstackQueryAdapter } from '@/lib/adapters'
 
 function MyComponent() {
@@ -386,18 +386,18 @@ function MyComponent() {
   
   return <CommentProvider storageAdapter={adapter}>...</CommentProvider>
 }
-```
+\`\`\`
 
 ### API Integration
 
-```typescript
+\`\`\`typescript
 import { ApiAdapter } from '@/lib/adapters'
 
 const adapter = new ApiAdapter({
   baseUrl: 'https://api.example.com',
   headers: { Authorization: 'Bearer token' }
 })
-```
+\`\`\`
 
 ## 📡 Event System
 
@@ -415,7 +415,7 @@ The comment system includes a powerful event broadcasting system that allows dev
 
 ### Listening to Events
 
-```typescript
+\`\`\`typescript
 import { useCommentEvent } from '@/lib/contexts/comment-context'
 
 function NotificationPlugin() {
@@ -445,11 +445,11 @@ function App() {
     </CommentProvider>
   )
 }
-```
+\`\`\`
 
 ### Custom Event Integrations
 
-```typescript
+\`\`\`typescript
 // Email notification plugin
 function EmailNotificationPlugin() {
   useCommentEvent('comment:added', async (comment) => {
@@ -483,13 +483,13 @@ function AnalyticsPlugin() {
 
   return null
 }
-```
+\`\`\`
 
 ### Extending the Event System
 
 You can extend the event system by accessing the event emitter directly and adding your own custom events:
 
-```typescript
+\`\`\`typescript
 import { commentEvents } from '@/lib/comment-events'
 
 // Emit custom events from your components
@@ -516,11 +516,11 @@ function ModerationPlugin() {
 
   return null
 }
-```
+\`\`\`
 
 ### Advanced Event Patterns
 
-```typescript
+\`\`\`typescript
 // Debounced event handling
 function SearchPlugin() {
   const [debouncedHandler] = useMemo(() => 
@@ -565,7 +565,7 @@ function ConditionalNotificationPlugin({ enableNotifications }) {
 
   return null
 }
-```
+\`\`\`
 
 ## ⚙️ Configuration System
 
@@ -573,7 +573,7 @@ The CommentProvider accepts a comprehensive configuration object that allows you
 
 ### Configuration Options
 
-```typescript
+\`\`\`typescript
 interface CommentConfig {
   variant?: CommentVariant // Design variant (card, bubble, timeline, etc.)
   placeholder?: string     // Default composer placeholder text
@@ -585,11 +585,11 @@ interface CommentConfig {
     autoLink?: boolean     // Enable/disable automatic link detection
   }
 }
-```
+\`\`\`
 
 ### Basic Configuration
 
-```typescript
+\`\`\`typescript
 import { CommentProvider } from '@/lib/contexts/comment-context'
 
 const config = {
@@ -611,11 +611,11 @@ function App() {
     </CommentProvider>
   )
 }
-```
+\`\`\`
 
 ### Feature-Specific Configurations
 
-```typescript
+\`\`\`typescript
 // Minimal configuration - only basic text editing
 const minimalConfig = {
   variant: 'clean',
@@ -654,11 +654,11 @@ const codeReviewConfig = {
     autoLink: true
   }
 }
-```
+\`\`\`
 
 ### Dynamic Configuration Updates
 
-```typescript
+\`\`\`typescript
 function ConfigurableCommentSystem() {
   const { config, updateConfig } = useComments()
 
@@ -689,13 +689,13 @@ function ConfigurableCommentSystem() {
     </div>
   )
 }
-```
+\`\`\`
 
 ## 🎯 Usage Examples
 
 ### Basic Comment List
 
-```tsx
+\`\`\`tsx
 import { CommentList } from '@/lib/components/comments/comment-list'
 import { CommentProvider } from '@/lib/contexts/comment-context'
 
@@ -716,7 +716,7 @@ function MyApp() {
     </CommentProvider>
   )
 }
-```
+\`\`\`
 
 ### Rich Text Features
 
@@ -730,7 +730,7 @@ The Lexical editor automatically handles:
 
 ### Custom Storage Adapter
 
-```tsx
+\`\`\`tsx
 import { CommentProvider } from '@/lib/contexts/comment-context'
 import { ServerActionAdapter } from '@/lib/adapters'
 
@@ -749,11 +749,11 @@ function App() {
     </CommentProvider>
   )
 }
-```
+\`\`\`
 
 ### Lexical Composer Standalone
 
-```tsx
+\`\`\`tsx
 import { LexicalCommentComposer } from '@/lib/components/lexical/lexical-comment-composer'
 
 function MyComposer() {
@@ -768,7 +768,7 @@ function MyComposer() {
     />
   )
 }
-```
+\`\`\`
 
 ## 🎨 Theming & Customization
 
@@ -776,20 +776,20 @@ function MyComposer() {
 
 The system uses CSS custom properties for theming:
 
-```css
+\`\`\`css
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   /* ... more properties */
 }
-```
+\`\`\`
 
 ### Variant-Specific Styling
 
 Each variant has its own styling utilities in `lib/components/lexical/utils/style-utils.ts`:
 
-```typescript
+\`\`\`typescript
 export function getContainerStyles(variant: CommentVariant): string {
   switch (variant) {
     case 'timeline':
@@ -799,7 +799,7 @@ export function getContainerStyles(variant: CommentVariant): string {
     // ... other variants
   }
 }
-```
+\`\`\`
 
 ## 🧪 Testing & Development
 
@@ -821,11 +821,11 @@ For production deployment with database integration, see the [Database Schema Gu
 
 ### Environment Variables
 
-```env
+\`\`\`env
 DATABASE_URL="postgresql://..."
 NEXT_PUBLIC_SUPABASE_URL="https://..."
 NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
-```
+\`\`\`
 
 ## 🏢 About Okayd
 

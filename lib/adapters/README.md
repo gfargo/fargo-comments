@@ -121,7 +121,7 @@ export async function getCommentsBySourceAction(sourceId: string, sourceType: st
 }
 
 // ... implement other required actions
-```
+\`\`\`
 
 **Database Integration Examples:**
 - **Prisma**: `await prisma.comments.findMany()`
