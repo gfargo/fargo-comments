@@ -6,24 +6,16 @@ This document provides a detailed overview of the React Context providers that p
 
 The system relies on two core providers:
 
-1.  **`CommentProvider`**: Manages the state of all comments, handles data persistence through a storage adapter, and exposes actions for creating, updating, and deleting comments.
+1.  **`CommentProvider`**: Manages the state of all comments, handles data persistence through a storage adapter, and exposes actions for creating, updating, and deleting comments. It also includes a powerful event and hook system for extensibility.
 2.  **`MentionProvider`**: Manages the data for `@mentions` and `#tags`, allowing developers to supply their own user and entity data from any source.
 
-These providers are designed to be wrapped around your application or the specific components that will use the comment system.
+These providers should be wrapped around your application or the specific components that will use the comment system.
 
 ---
 
 ## `CommentProvider`
 
 The `CommentProvider` is the central hub for the entire comment system. It is **required** for any comment functionality to work.
-
-### Purpose
-
--   Holds the central state for all comments.
--   Interfaces with a **Storage Adapter** to load and persist comments.
--   Provides the `currentUser` object to all child components.
--   Exposes core actions (`addComment`, `updateComment`, `deleteComment`).
--   Manages a hook system for extending functionality.
 
 ### Props
 
@@ -68,6 +60,81 @@ import { useComments } from '@/lib/contexts/comment-context';
 function MyComponent() {
   const { state, currentUser, addComment } = useComments();
   // ...
+}
+```
+
+---
+
+## Extensibility
+
+The `CommentProvider` includes two powerful systems for extending its core functionality: an **Event System** for listening to actions, and a **Hook System** for modifying data and behavior.
+
+### Event System
+
+The event system allows you to listen for actions that have occurred within the comment system. This is ideal for triggering side effects like sending notifications, updating analytics, or logging.
+
+**Available Events:**
+- `comment:added`
+- `comment:updated`
+- `comment:deleted`
+- `reaction:added`
+- `reaction:removed`
+- `comments:loaded`
+- `error`
+
+**Usage:**
+
+Use the `useCommentEvent` hook to subscribe to an event within any component wrapped by `CommentProvider`.
+
+```tsx
+import { useCommentEvent } from '@/lib/contexts/comment-context';
+
+function NotificationPlugin() {
+  useCommentEvent('comment:added', ({ comment, user }) => {
+    console.log(`New comment from ${user.name}: "${comment.content}"`);
+    // Trigger a push notification or analytics event
+  });
+
+  return null; // This component does not render anything
+}
+```
+
+### Hook System
+
+The hook system allows you to intercept and modify data at key points in the comment lifecycle. This is useful for data validation, content moderation, or adding custom metadata.
+
+**Available Hooks:**
+- `beforeAddComment`
+- `afterAddComment`
+- `beforeUpdateComment`
+- `afterUpdateComment`
+- `beforeSaveComment`
+- `afterSaveComment`
+
+**Usage:**
+
+Pass a `hooks` object to the `CommentProvider`. Each hook is an async function that receives the data and a context object, and can return modified data.
+
+```tsx
+import { CommentProvider } from '@/lib/contexts/comment-context';
+
+const myCommentHooks = {
+  beforeSaveComment: async (data, context) => {
+    // Add a custom metadata field to every comment before it's saved
+    const enrichedComment = {
+      ...data.comment,
+      customData: { processedAt: new Date().toISOString() },
+    };
+    return { comment: enrichedComment };
+  },
+};
+
+function App() {
+  return (
+    <CommentProvider hooks={myCommentHooks} currentUser={...}>
+      {/* ... */}
+    </CommentProvider>
+  );
 }
 ```
 
@@ -124,7 +191,3 @@ function App() {
   );
 }
 ```
-
-### Interacting with the Context
-
-The `useMentions()` hook is used internally by the `LexicalCommentComposer` to populate the mention dropdown. You typically will not need to call this hook directly in your application code.

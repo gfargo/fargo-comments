@@ -6,7 +6,8 @@ An open source, production-ready React commenting system built with Next.js, Typ
 
 This repository contains several specialized README files for different aspects of the system:
 
-- **[Context Providers Guide](lib/contexts/README.md)** - A guide to the core state management providers.
+- **[Context Providers Guide](lib/contexts/README.md)** - A guide to the core state management providers, including the event and hook systems.
+- **[Custom Hooks Guide](lib/hooks/README.md)** - An overview of the custom React hooks.
 - **[Lexical Editor Documentation](lib/components/lexical/README.md)** - Complete guide to rich text editing, plugins, and customizations.
 - **[Storage Adapters Documentation](lib/adapters/README.md)** - Comprehensive guide to all storage adapter implementations.
 - **[Database Schema Guide](README-SCHEMA.md)** - Database requirements and Prisma schema for production deployment.
@@ -44,33 +45,46 @@ This repository contains several specialized README files for different aspects 
 - **Tanstack Query**: React Query adapter with caching and optimistic updates.
 - **API Integration**: RESTful API adapter for external services.
 
-### Search & Filtering
-
-- **Full-Text Search**: Search across comment content and metadata.
-- **Advanced Filtering**: Filter by user, date, status, and custom criteria.
-- **Real-Time Updates**: Live search with debounced input.
+### Extensibility
+- **Event System**: Subscribe to comment lifecycle events (e.g., `comment:added`) to trigger side effects like notifications or analytics.
+- **Hook System**: Intercept and modify data at key points (e.g., `beforeAddComment`) for validation, moderation, or adding custom metadata.
 
 ## 📁 Project Structure
 
 ```plaintext
-├── app/                          # Next.js App Router pages
+├── app/
 │   ├── _demo/                   # Demo components and data
-│   ├── composer/                # Composer demo page
-│   ├── threads/                 # Threads demo page
-│   └── page.tsx                 # Main demo page
+│   └── ...                      # Other demo pages (composer, threads)
 ├── components/
 │   └── ui/                      # shadcn/ui components
 ├── lib/
-│   ├── components/
-│   │   ├── comments/            # Comment components (variants, lists)
-│   │   └── lexical/             # Lexical editor components and plugins
-│   ├── contexts/                # React context providers
-│   ├── hooks/                   # Custom React hooks
 │   ├── adapters/                # Storage adapter implementations
-│   ├── reducers/                # State management logic
-│   ├── types/                   # TypeScript type definitions
-│   └── utils/                   # Utility functions
-└── public/                     # Static assets
+│   │   ├── api-adapter.ts       # Implements storage via REST API calls.
+│   │   ├── comment-storage-adapter.ts # The interface all adapters must implement.
+│   │   ├── index.ts             # Exports all adapters and a factory function.
+│   │   ├── local-storage-adapter.ts # Implements storage using browser localStorage.
+│   │   ├── server-action-adapter.ts # Template for Next.js Server Actions.
+│   │   └── tanstack-query-adapter.ts # Implements storage using TanStack Query.
+│   ├── components/
+│   │   ├── comments/            # High-level comment components (list, variants, etc.).
+│   │   └── lexical/             # Lexical editor implementation and plugins.
+│   ├── contexts/
+│   │   ├── comment-context.tsx  # Manages comment state, actions, and persistence.
+│   │   └── mention-context.tsx  # Manages data for @mentions and #tags.
+│   ├── hooks/
+│   │   ├── use-comment-actions.ts # Encapsulates user interaction logic.
+│   │   ├── use-comment-config.ts # Manages dynamic configuration (variant, features).
+│   │   ├── use-comment-context-hooks.ts # Manages the lifecycle hook system.
+│   │   └── use-comments-from-source.ts # Fetches and filters comments for a source.
+│   ├── reducers/
+│   │   └── comment-reducer.ts   # The state reducer for all comment actions.
+│   ├── types/
+│   │   ├── comment-hooks.ts     # TypeScript types for the hook system.
+│   │   └── comments.ts          # Core TypeScript types for comments, users, etc.
+│   ├── comment-events.ts        # Defines the event emitter and event types.
+│   ├── lexical-utils.ts         # Utilities for working with Lexical editor state.
+│   └── utils.ts                 # General utility functions.
+└── public/                      # Static assets
 ```
 
 ## 🎯 Usage Example
