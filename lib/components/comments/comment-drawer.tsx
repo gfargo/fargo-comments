@@ -8,7 +8,8 @@ import { useComments } from "@/lib/contexts/comment-context"
 import { useCommentActions } from "@/lib/hooks/use-comment-actions"
 
 interface CommentDrawerProps {
-  auditItemId?: string
+  sourceId?: string
+  sourceType?: string
   variant?:
     | "card"
     | "bubble"
@@ -32,17 +33,17 @@ interface CommentDrawerProps {
 }
 
 export function CommentDrawer({
-  auditItemId,
+  sourceId,
+  sourceType,
   variant = "card",
   enableSearch = true,
   enableSorting = true,
   enableComposer = true,
-  enableFiltering = true,
-  title = "Audit Comments",
+  title = "Comments",
   triggerLabel = "All Comments",
   width = "700px",
 }: CommentDrawerProps) {
-  const { state, currentUser, getCommentsByAuditItem, getRepliesForComment } = useComments()
+  const { state, currentUser, getCommentsBySource, getRepliesForComment } = useComments()
   const {
     handleAddComment,
     handleUpdateComment,
@@ -54,8 +55,7 @@ export function CommentDrawer({
     handleReact,
   } = useCommentActions()
 
-  const comments = auditItemId ? getCommentsByAuditItem(auditItemId) : state.comments
-  const allComments = state.comments // For replies lookup
+  const comments = sourceId ? getCommentsBySource(sourceId, sourceType) : state.comments
 
   return (
     <Sheet>
@@ -82,12 +82,13 @@ export function CommentDrawer({
               <CommentList
                 comments={comments}
                 currentUser={currentUser!}
-                auditItemId={auditItemId}
+                sourceId={sourceId}
+                sourceType={sourceType}
                 variant={variant}
                 enableSearch={enableSearch}
                 enableSorting={enableSorting}
                 showAddForm={enableComposer}
-                onAddComment={(content, editorState) => handleAddComment(content, editorState, auditItemId)}
+                onAddComment={(content, editorState) => handleAddComment(content, editorState, sourceId, sourceType)}
                 onEdit={handleUpdateComment}
                 onDelete={handleDeleteComment}
                 onLike={handleLike}
@@ -96,7 +97,6 @@ export function CommentDrawer({
                 onApprove={handleApprove}
                 onReact={handleReact}
                 getRepliesForComment={getRepliesForComment}
-                className="border-none shadow-none p-0"
               />
             </div>
           </div>

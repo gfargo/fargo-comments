@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function CommentSystemDemo() {
   return (
-    <CommentProvider initialUser={currentUser}>
+    <CommentProvider currentUser={currentUser}>
       <CommentLayout
         title={
           <div className="flex items-baseline gap-2">

@@ -61,7 +61,7 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
 
   const handleClearStorage = async () => {
     await clearAllStorage()
-    toast.success("All comments, users, and audit data have been cleared.")
+    toast.success("All comment data has been cleared.")
     window.location.reload()
   }
 

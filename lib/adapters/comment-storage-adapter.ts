@@ -27,10 +27,6 @@ export interface CommentStorageAdapter {
     tags?: any[],
   ): Promise<void>
 
-  // User operations
-  getUsers(): Promise<User[]>
-  saveUsers(users: User[]): Promise<void>
-
   getCommentsBySource(sourceId: string, sourceType?: string): Promise<Comment[]>
   getCommentThreads(sourceId?: string, sourceType?: string): Promise<CommentThread[]>
 

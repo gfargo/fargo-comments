@@ -45,14 +45,6 @@ export class ServerActionAdapter implements CommentStorageAdapter {
     )
   }
 
-  async getUsers(): Promise<User[]> {
-    throw new Error("ServerActionAdapter: Please implement getUsersAction in your app/actions/users.ts file")
-  }
-
-  async saveUsers(users: User[]): Promise<void> {
-    throw new Error("ServerActionAdapter: Please implement saveUsersAction in your app/actions/users.ts file")
-  }
-
   async getCommentsBySource(sourceId: string, sourceType: string): Promise<Comment[]> {
     throw new Error(
       "ServerActionAdapter: Please implement getCommentsBySourceAction in your app/actions/comments.ts file",

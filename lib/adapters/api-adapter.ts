@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User, LabelAudit } from "@/lib/types/comments"
+import type { Comment, CommentThread, User } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export class ApiAdapter implements CommentStorageAdapter {
@@ -63,7 +63,8 @@ export class ApiAdapter implements CommentStorageAdapter {
     author: User,
     mentions: any[] = [],
     tags: any[] = [],
-    auditItemId?: string,
+    sourceId?: string,
+    sourceType?: string,
     parentId?: string,
   ): Promise<Comment> {
     return this.request<Comment>("/comments/lexical", {
@@ -74,7 +75,8 @@ export class ApiAdapter implements CommentStorageAdapter {
         author,
         mentions,
         tags,
-        auditItemId,
+        sourceId,
+        sourceType,
         parentId,
       }),
     })
@@ -87,34 +89,13 @@ export class ApiAdapter implements CommentStorageAdapter {
     })
   }
 
-  async getUsers(): Promise<User[]> {
-    return this.request<User[]>("/users")
+  async getCommentsBySource(sourceId: string, sourceType?: string): Promise<Comment[]> {
+    const query = `?sourceId=${sourceId}${sourceType ? `&sourceType=${sourceType}` : ''}`;
+    return this.request<Comment[]>(`/comments${query}`);
   }
 
-  async saveUsers(users: User[]): Promise<void> {
-    await this.request("/users/bulk", {
-      method: "PUT",
-      body: JSON.stringify(users),
-    })
-  }
-
-  async getAudits(): Promise<LabelAudit[]> {
-    return this.request<LabelAudit[]>("/audits")
-  }
-
-  async saveAudits(audits: LabelAudit[]): Promise<void> {
-    await this.request("/audits/bulk", {
-      method: "PUT",
-      body: JSON.stringify(audits),
-    })
-  }
-
-  async getCommentsByAuditItem(auditItemId: string): Promise<Comment[]> {
-    return this.request<Comment[]>(`/comments?auditItemId=${auditItemId}`)
-  }
-
-  async getCommentThreads(auditItemId?: string): Promise<CommentThread[]> {
-    const query = auditItemId ? `?auditItemId=${auditItemId}` : ""
+  async getCommentThreads(sourceId?: string, sourceType?: string): Promise<CommentThread[]> {
+    const query = sourceId ? `?sourceId=${sourceId}${sourceType ? `&sourceType=${sourceType}` : ''}` : "";
     return this.request<CommentThread[]>(`/comments/threads${query}`)
   }
 

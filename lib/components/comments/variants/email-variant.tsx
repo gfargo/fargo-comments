@@ -1,7 +1,5 @@
 "use client"
-import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
@@ -95,7 +93,7 @@ export function EmailVariant({
             </div>
             <div className="flex items-center gap-2">
               <span className="font-medium text-gray-600 w-12">Subject:</span>
-              <span className="text-gray-700">{isReply ? "Re: " : ""}Comment on Audit Item</span>
+              <span className="text-gray-700">{isReply ? "Re: " : ""}Comment on Item</span>
             </div>
           </div>
         </div>
