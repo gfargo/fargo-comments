@@ -130,7 +130,7 @@ export function useCommentActions() {
       const sourceId = parentComment?.sourceId
       const sourceType = parentComment?.sourceType
 
-      console.log("[v0] Reply submission - parentId:", rootParentId, "sourceId:", sourceId, "sourceType:", sourceType)
+      console.log("[OKAYD] Reply submission - parentId:", rootParentId, "sourceId:", sourceId, "sourceType:", sourceType)
 
       await handleAddComment(content, editorState, sourceId, sourceType, rootParentId)
       setReplyingTo(null)
@@ -151,7 +151,7 @@ export function useCommentActions() {
           const sourceType = parentComment?.sourceType
 
           console.log(
-            "[v0] Reply submission - parentId:",
+            "[OKAYD] Reply submission - parentId:",
             rootParentId,
             "sourceId:",
             sourceId,
@@ -181,13 +181,13 @@ export function useCommentActions() {
   )
 
   const handleLike = useCallback((commentId: string) => handleReaction(commentId, "like"), [handleReaction])
-  const handleShare = useCallback((commentId: string) => console.log("[v0] Share clicked for comment:", commentId), [])
+  const handleShare = useCallback((commentId: string) => console.log("[OKAYD] Share clicked for comment:", commentId), [])
   const handleForward = useCallback(
-    (commentId: string) => console.log("[v0] Forward clicked for comment:", commentId),
+    (commentId: string) => console.log("[OKAYD] Forward clicked for comment:", commentId),
     [],
   )
   const handleApprove = useCallback(
-    (commentId: string) => console.log("[v0] Approve clicked for comment:", commentId),
+    (commentId: string) => console.log("[OKAYD] Approve clicked for comment:", commentId),
     [],
   )
   const handleReact = useCallback(

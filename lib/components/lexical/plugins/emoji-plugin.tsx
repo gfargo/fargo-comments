@@ -49,7 +49,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
         setEmojiResults(emojiResults)
         setSelectedIndex(0)
       } catch (error) {
-        console.log("[v0] Emoji search error:", error)
+        console.log("[OKAYD] Emoji search error:", error)
         setEmojiResults([])
       }
     },
@@ -86,7 +86,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             top: rect.bottom - containerRect.top + 5,
             left: Math.max(rect.left - containerRect.left, 0),
           })
-          console.log("[v0] EmojiPlugin: Position updated", {
+          console.log("[OKAYD] EmojiPlugin: Position updated", {
             top: rect.bottom - containerRect.top + 5,
             left: Math.max(rect.left - containerRect.left, 0),
           })
@@ -99,7 +99,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
         }
       }
     } catch (error) {
-      console.log("[v0] Position calculation error:", error)
+      console.log("[OKAYD] Position calculation error:", error)
     }
   }, [editor])
 
@@ -157,7 +157,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                 }
               })
             } catch (error) {
-              console.log("[v0] Backspace handling error:", error)
+              console.log("[OKAYD] Backspace handling error:", error)
               // Close picker on error to prevent stuck state
               setShowResults(false)
               setSearchQuery("")
@@ -169,7 +169,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
       }
 
       if (event.key === ":") {
-        console.log("[v0] EmojiPlugin: Colon detected, starting search mode...")
+        console.log("[OKAYD] EmojiPlugin: Colon detected, starting search mode...")
 
         setTimeout(() => {
           try {
@@ -186,7 +186,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                 const charBeforeCursor = textContent[anchorOffset - 1]
 
                 if (charBeforeCursor === ":") {
-                  console.log("[v0] EmojiPlugin: Starting emoji search")
+                  console.log("[OKAYD] EmojiPlugin: Starting emoji search")
                   setTriggerNode(textNode)
                   setTriggerOffset(anchorOffset - 1)
                   setSearchQuery("")
@@ -196,7 +196,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
               }
             })
           } catch (error) {
-            console.log("[v0] Colon detection error:", error)
+            console.log("[OKAYD] Colon detection error:", error)
           }
         }, 10)
       }
@@ -214,13 +214,13 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
               if ($isRangeSelection(selection) && selection.isCollapsed()) {
                 const currentOffset = selection.anchor.offset
                 const searchText = textContent.substring(colonIndex + 1, currentOffset)
-                console.log("[v0] EmojiPlugin: Search query updated:", searchText)
+                console.log("[OKAYD] EmojiPlugin: Search query updated:", searchText)
                 setSearchQuery(searchText)
                 searchEmojis(searchText)
               }
             })
           } catch (error) {
-            console.log("[v0] Search update error:", error)
+            console.log("[OKAYD] Search update error:", error)
             // Close picker on error to prevent stuck state
             setShowResults(false)
             setSearchQuery("")
@@ -235,7 +235,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
   )
 
   useEffect(() => {
-    console.log("[v0] EmojiPlugin initialized")
+    console.log("[OKAYD] EmojiPlugin initialized")
 
     const removeKeyListener = editor.registerCommand(KEY_DOWN_COMMAND, keyDownHandler, COMMAND_PRIORITY_LOW)
 
@@ -259,7 +259,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
   }, [showResults])
 
   const handleEmojiSelect = (emoji: EmojiResult) => {
-    console.log("[v0] EmojiPlugin: Emoji selected:", emoji.native)
+    console.log("[OKAYD] EmojiPlugin: Emoji selected:", emoji.native)
 
     editor.update(() => {
       if (triggerNode && typeof triggerOffset === "number") {
@@ -280,10 +280,10 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             selection.anchor.set(triggerNode.getKey(), newOffset, "text")
             selection.focus.set(triggerNode.getKey(), newOffset, "text")
 
-            console.log("[v0] EmojiPlugin: Emoji inserted successfully")
+            console.log("[OKAYD] EmojiPlugin: Emoji inserted successfully")
           }
         } catch (error) {
-          console.log("[v0] Emoji insertion error:", error)
+          console.log("[OKAYD] Emoji insertion error:", error)
         }
       }
     })

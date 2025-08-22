@@ -15,7 +15,7 @@ export default function ComposerPageContent() {
   const [recentComments, setRecentComments] = useState<any[]>([])
 
   const handleAddComment = async (content: string, mentions: any[], tags: any[]) => {
-    console.log("[v0] New comment:", { content, mentions, tags })
+    console.log("[OKAYD] New comment:", { content, mentions, tags })
 
     const newComment = await addComment(
       content,

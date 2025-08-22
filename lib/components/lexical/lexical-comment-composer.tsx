@@ -97,7 +97,7 @@ function ContentExtractor({
           const editorState = editor.parseEditorState(initialEditorState)
           editor.setEditorState(editorState)
         } catch (error) {
-          console.error("[v0] Failed to parse editor state:", error)
+          console.error("[OKAYD] Failed to parse editor state:", error)
           if (initialContent && initialContent.trim()) {
             const root = $getRoot()
             root.clear()

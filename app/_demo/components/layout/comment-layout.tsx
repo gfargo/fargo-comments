@@ -137,8 +137,7 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
           <AlertDialogHeader>
             <AlertDialogTitle>Clear All Data</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all comments, users, and audit data from local
-              storage.
+              This action cannot be undone. This will permanently delete all comments from local storage.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

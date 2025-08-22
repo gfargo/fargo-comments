@@ -353,7 +353,7 @@ The system includes comprehensive logging:
 - AutoListPlugin logs pattern detection
 - ContentExtractor logs state changes
 - Error boundaries catch and report issues
-- Use `console.log("[v0] ...")` for debugging
+- Use `console.log("[OKAYD] ...")` for debugging
 
 ## 📚 Dependencies
 

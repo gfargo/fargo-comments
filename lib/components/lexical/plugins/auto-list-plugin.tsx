@@ -9,36 +9,36 @@ export function AutoListPlugin(): null {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
-    console.log("[v0] AutoListPlugin initialized")
+    console.log("[OKAYD] AutoListPlugin initialized")
 
     return editor.registerCommand(
       KEY_SPACE_COMMAND,
       () => {
-        console.log("[v0] AutoListPlugin: Space key pressed")
+        console.log("[OKAYD] AutoListPlugin: Space key pressed")
 
         const selection = $getSelection()
-        console.log("[v0] AutoListPlugin: Selection:", selection)
+        console.log("[OKAYD] AutoListPlugin: Selection:", selection)
 
         if (!$isRangeSelection(selection)) {
-          console.log("[v0] AutoListPlugin: Not a range selection, returning false")
+          console.log("[OKAYD] AutoListPlugin: Not a range selection, returning false")
           return false
         }
 
         const anchorNode = selection.anchor.getNode()
         const element = anchorNode.getTopLevelElementOrThrow()
-        console.log("[v0] AutoListPlugin: Element type:", element.getType())
+        console.log("[OKAYD] AutoListPlugin: Element type:", element.getType())
 
         if (element.getType() !== "paragraph") {
-          console.log("[v0] AutoListPlugin: Not a paragraph, returning false")
+          console.log("[OKAYD] AutoListPlugin: Not a paragraph, returning false")
           return false
         }
 
         const textContent = element.getTextContent()
-        console.log("[v0] AutoListPlugin: Text content:", JSON.stringify(textContent))
+        console.log("[OKAYD] AutoListPlugin: Text content:", JSON.stringify(textContent))
 
         // Check for bullet list pattern: exactly "-"
         if (textContent === "-") {
-          console.log("[v0] AutoListPlugin: Bullet list pattern detected, creating unordered list")
+          console.log("[OKAYD] AutoListPlugin: Bullet list pattern detected, creating unordered list")
           editor.update(() => {
             // Clear the dash and dispatch command
             element.clear()
@@ -50,7 +50,7 @@ export function AutoListPlugin(): null {
         // Check for numbered list pattern: exactly "1.", "2.", etc.
         const numberedMatch = textContent.match(/^\d+\.$/)
         if (numberedMatch) {
-          console.log("[v0] AutoListPlugin: Numbered list pattern detected:", textContent)
+          console.log("[OKAYD] AutoListPlugin: Numbered list pattern detected:", textContent)
           editor.update(() => {
             // Clear the numbered prefix and dispatch command
             element.clear()
@@ -59,7 +59,7 @@ export function AutoListPlugin(): null {
           return true
         }
 
-        console.log("[v0] AutoListPlugin: No list pattern matched, returning false")
+        console.log("[OKAYD] AutoListPlugin: No list pattern matched, returning false")
         return false
       },
       COMMAND_PRIORITY_LOW,

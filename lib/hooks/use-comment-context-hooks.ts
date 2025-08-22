@@ -73,7 +73,7 @@ export function useCommentContextHooks({
               result = { ...result, ...hookResult }
             }
           } catch (error) {
-            console.error(`[v0] Hook ${hookName} failed:`, error)
+            console.error(`[OKAYD] Hook ${hookName} failed:`, error)
             events.emit("error", {
               error: `Hook ${hookName} failed: ${error}`,
               action: "hook",

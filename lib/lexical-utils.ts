@@ -39,7 +39,7 @@ export function extractMentionsAndTags(editorState: string): {
     traverseNodes(parsed.root)
     return { mentions, tags }
   } catch (error) {
-    console.error("[v0] Error extracting mentions/tags from editorState:", error)
+    console.error("[OKAYD] Error extracting mentions/tags from editorState:", error)
     return { mentions: [], tags: [] }
   }
 }

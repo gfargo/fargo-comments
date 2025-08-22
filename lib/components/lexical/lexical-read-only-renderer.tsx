@@ -33,7 +33,7 @@ function EditorStateLoader({ editorState, content }: { editorState?: string; con
           editor.setEditorState(newEditorState)
         })
       } catch (error) {
-        console.error("[v0] Failed to parse editor state:", error)
+        console.error("[OKAYD] Failed to parse editor state:", error)
         editor.update(() => {
           const root = $getRoot()
           root.clear()
@@ -63,7 +63,7 @@ export function LexicalReadOnlyRenderer({ editorState, content, className = "" }
     theme: lexicalReadOnlyTheme,
     nodes: lexicalNodes,
     onError: (error: Error) => {
-      console.error("[v0] Lexical read-only renderer error:", error)
+      console.error("[OKAYD] Lexical read-only renderer error:", error)
     },
   }
 

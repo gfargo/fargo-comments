@@ -60,7 +60,7 @@ export function CommentDrawer({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="gap-2 bg-transparent">
+        <Button variant="outline" className="gap-2 bg-transparent w-full">
           <MessageSquare className="h-4 w-4" />
           {triggerLabel}
         </Button>

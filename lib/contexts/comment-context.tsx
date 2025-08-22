@@ -105,7 +105,7 @@ export function CommentProvider({
 
   useEffect(() => {
     if (initialComments) {
-      console.log("[v0] Using provided initial data, skipping loadData")
+      console.log("[OKAYD] Using provided initial data, skipping loadData")
       commentEvents.emit("comments:loaded", { comments: initialComments })
       return
     }
@@ -144,7 +144,7 @@ export function CommentProvider({
       }
 
       try {
-        console.log("[v0] Context addComment called with:", { content, sourceId, sourceType, parentId })
+        console.log("[OKAYD] Context addComment called with:", { content, sourceId, sourceType, parentId })
 
         let finalSourceId = sourceId
         let finalSourceType = sourceType
@@ -156,13 +156,13 @@ export function CommentProvider({
             finalSourceId = parentComment.sourceId
             finalSourceType = parentComment.sourceType
             finalParentId = parentComment.parentId || parentId
-            console.log("[v0] Reply inheriting sourceId/sourceType from parent:", finalSourceId, finalSourceType)
-            console.log("[v0] Flat threading - using parent:", finalParentId)
+            console.log("[OKAYD] Reply inheriting sourceId/sourceType from parent:", finalSourceId, finalSourceType)
+            console.log("[OKAYD] Flat threading - using parent:", finalParentId)
           }
         }
 
         const { mentions, tags } = extractMentionsAndTags(editorState)
-        console.log("[v0] Extracted mentions:", mentions, "tags:", tags)
+        console.log("[OKAYD] Extracted mentions:", mentions, "tags:", tags)
 
         const hookData: AddCommentHookData = {
           content,
@@ -188,7 +188,7 @@ export function CommentProvider({
           processedData.parentId,
         )
 
-        console.log("[v0] New comment created:", newComment)
+        console.log("[OKAYD] New comment created:", newComment)
 
         const commentHookData: CommentHookData = { comment: newComment }
         const processedComment = await hookRegistry.executeHooks(
@@ -205,9 +205,9 @@ export function CommentProvider({
         await hookRegistry.executeHooks("afterAddComment", { comment: finalComment }, createHookContext())
         await hookRegistry.executeHooks("afterSaveComment", { comment: finalComment }, createHookContext())
 
-        console.log("[v0] Comment added to state")
+        console.log("[OKAYD] Comment added to state")
       } catch (error) {
-        console.error("[v0] Error adding comment:", error)
+        console.error("[OKAYD] Error adding comment:", error)
         const errorMessage = "Failed to add comment"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
         commentEvents.emit("error", { error: errorMessage, action: "add" })
@@ -221,14 +221,14 @@ export function CommentProvider({
       if (!currentUser) return
 
       try {
-        console.log("[v0] updateComment called with:", {
+        console.log("[OKAYD] updateComment called with:", {
           commentId,
           content,
           editorState: editorState ? "present" : "undefined",
         })
 
         if (!editorState) {
-          console.error("[v0] ERROR: editorState is undefined in updateComment!")
+          console.error("[OKAYD] ERROR: editorState is undefined in updateComment!")
           return
         }
 
@@ -238,7 +238,7 @@ export function CommentProvider({
         const previousContent = existingComment.content || ""
 
         const { mentions, tags } = extractMentionsAndTags(editorState)
-        console.log("[v0] Extracted mentions for update:", mentions, "tags:", tags)
+        console.log("[OKAYD] Extracted mentions for update:", mentions, "tags:", tags)
 
         const hookData: UpdateCommentHookData = {
           commentId,
@@ -289,9 +289,9 @@ export function CommentProvider({
         await hookRegistry.executeHooks("afterUpdateComment", { comment: finalComment }, createHookContext())
         await hookRegistry.executeHooks("afterSaveComment", { comment: finalComment }, createHookContext())
 
-        console.log("[v0] Comment updated in storage successfully")
+        console.log("[OKAYD] Comment updated in storage successfully")
       } catch (error) {
-        console.error("[v0] Error updating comment:", error)
+        console.error("[OKAYD] Error updating comment:", error)
         const errorMessage = "Failed to update comment"
         dispatch({ type: "SET_ERROR", payload: errorMessage })
         commentEvents.emit("error", { error: errorMessage, action: "update" })
@@ -419,7 +419,7 @@ export function CommentProvider({
           comment.sourceId === sourceId && (!sourceType || comment.sourceType === sourceType) && !comment.parentId,
       )
       console.log(
-        "[v0] getCommentsBySource found",
+        "[OKAYD] getCommentsBySource found",
         topLevelComments.length,
         "top-level comments for sourceId:",
         sourceId,
@@ -434,7 +434,7 @@ export function CommentProvider({
   const getRepliesForComment = useCallback(
     (parentId: string): Comment[] => {
       const replies = state.comments.filter((comment) => comment.parentId === parentId)
-      console.log("[v0] getRepliesForComment found", replies.length, "replies for parentId:", parentId)
+      console.log("[OKAYD] getRepliesForComment found", replies.length, "replies for parentId:", parentId)
       return replies
     },
     [state.comments],
@@ -461,9 +461,9 @@ export function CommentProvider({
       await adapter.clearAllStorage()
       dispatch({ type: "LOAD_COMMENTS", payload: [] })
       commentEvents.emit("comments:cleared", { user: currentUser })
-      console.log("[v0] Storage cleared successfully")
+      console.log("[OKAYD] Storage cleared successfully")
     } catch (error) {
-      console.error("[v0] Error clearing storage:", error)
+      console.error("[OKAYD] Error clearing storage:", error)
       const errorMessage = "Failed to clear storage"
       dispatch({ type: "SET_ERROR", payload: errorMessage })
       commentEvents.emit("error", { error: errorMessage, action: "clear" })

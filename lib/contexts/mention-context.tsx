@@ -51,7 +51,7 @@ export function MentionProvider({ children, initialUsers, initialTags, getUsersC
 
   const loadMentionItems = useCallback(async () => {
     if (initialUsers && initialTags) {
-      console.log("[v0] Using provided initial mention data, skipping loadMentionItems")
+      console.log("[OKAYD] Using provided initial mention data, skipping loadMentionItems")
       return
     }
 
@@ -65,9 +65,9 @@ export function MentionProvider({ children, initialUsers, initialTags, getUsersC
       ])
 
       setMentionItems({ "@": users, "#": tags })
-      console.log("[v0] Mention items loaded:", { userCount: users.length, tagCount: tags.length })
+      console.log("[OKAYD] Mention items loaded:", { userCount: users.length, tagCount: tags.length })
     } catch (err) {
-      console.error("[v0] Failed to load mention items:", err)
+      console.error("[OKAYD] Failed to load mention items:", err)
       setError("Failed to load mention data")
     } finally {
       setLoading(false)

@@ -19,23 +19,23 @@ function LiveCommentDemo() {
   const comments = getCommentsBySource(sourceId, sourceType)
 
   const handleLike = (commentId: string) => {
-    console.log("[v0] Like button pressed for comment:", commentId)
+    console.log("[OKAYD] Like button pressed for comment:", commentId)
   }
 
   const handleShare = (commentId: string) => {
-    console.log("[v0] Share button pressed for comment:", commentId)
+    console.log("[OKAYD] Share button pressed for comment:", commentId)
   }
 
   const handleForward = (commentId: string) => {
-    console.log("[v0] Forward button pressed for comment:", commentId)
+    console.log("[OKAYD] Forward button pressed for comment:", commentId)
   }
 
   const handleApprove = (commentId: string) => {
-    console.log("[v0] Approve button pressed for comment:", commentId)
+    console.log("[OKAYD] Approve button pressed for comment:", commentId)
   }
 
   const handleReact = (commentId: string, reaction: string) => {
-    console.log("[v0] React button pressed for comment:", commentId, "with reaction:", reaction)
+    console.log("[OKAYD] React button pressed for comment:", commentId, "with reaction:", reaction)
   }
 
   return (
@@ -74,7 +74,7 @@ export default function MainPageContent() {
     <div className="space-y-6">
       {/* Navigation Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Link href="/composer">
+        <Link href="/composer" className='flex'>
           <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export default function MainPageContent() {
           </Card>
         </Link>
 
-        <Link href="/threads">
+        <Link href="/threads" className='flex'>
           <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

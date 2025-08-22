@@ -93,7 +93,7 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     }
 
     await this.addComment(comment)
-    console.log("[v0] Comment added to storage:", comment)
+    console.log("[OKAYD] Comment added to storage:", comment)
     return comment
   }
 

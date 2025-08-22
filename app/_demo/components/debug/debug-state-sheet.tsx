@@ -47,7 +47,7 @@ export function DebugStateSheet() {
           Debug State
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[600px] sm:w-[800px] max-w-[90vw] p-0">
+      <SheetContent className="w-[600px] sm:w-[800px] max-w-[90vw] md:max-w-[90vw] p-0">
         <div className="flex flex-col h-full">
           <SheetHeader className="px-6 py-4 border-b bg-gray-50/50">
             <div className="flex items-center justify-between">
@@ -110,7 +110,7 @@ export function DebugStateSheet() {
                   </Button>
                 </div>
                 <div className="bg-gray-900 rounded-lg border overflow-hidden flex-1 min-h-0">
-                  <ScrollArea className="h-[400px] md:h-[500px]">
+                  <ScrollArea className="h-[400px] md:h-[600px]">
                     <pre className="text-xs font-mono text-green-400 p-4 whitespace-pre-wrap break-words leading-relaxed">
                       {JSON.stringify(debugData, null, 2)}
                     </pre>
