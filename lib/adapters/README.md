@@ -6,7 +6,6 @@ This directory contains a comprehensive adapter pattern implementation for comme
 
 All adapters implement the `CommentStorageAdapter` interface, which defines a consistent contract for:
 - Comment CRUD operations
-- User management
 - Thread and reply handling
 - Lexical editor state persistence
 - Source-based comment filtering (using `sourceId`/`sourceType`)
@@ -122,24 +121,7 @@ export async function getCommentsBySourceAction(sourceId: string, sourceType: st
 }
 
 // ... implement other required actions
-\`\`\`
-
-**`app/actions/users.ts`**
-\`\`\`typescript
-'use server'
-
-import type { User } from '@/types/comments'
-
-export async function getUsersAction(): Promise<User[]> {
-  // Your user query logic here
-  // Example: return await db.users.findMany()
-}
-
-export async function saveUsersAction(users: User[]): Promise<void> {
-  // Your user save logic here
-  // Example: await db.users.createMany({ data: users })
-}
-\`\`\`
+```
 
 **Database Integration Examples:**
 - **Prisma**: `await prisma.comments.findMany()`

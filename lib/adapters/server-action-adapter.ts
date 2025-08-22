@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User } from "@/types/comments"
+import type { Comment, CommentThread, User } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export class ServerActionAdapter implements CommentStorageAdapter {
@@ -43,14 +43,6 @@ export class ServerActionAdapter implements CommentStorageAdapter {
     throw new Error(
       "ServerActionAdapter: Please implement updateCommentWithEditorStateAction in your app/actions/comments.ts file",
     )
-  }
-
-  async getUsers(): Promise<User[]> {
-    throw new Error("ServerActionAdapter: Please implement getUsersAction in your app/actions/users.ts file")
-  }
-
-  async saveUsers(users: User[]): Promise<void> {
-    throw new Error("ServerActionAdapter: Please implement saveUsersAction in your app/actions/users.ts file")
   }
 
   async getCommentsBySource(sourceId: string, sourceType: string): Promise<Comment[]> {

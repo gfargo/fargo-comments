@@ -1,4 +1,4 @@
-import type { Comment, CommentReaction } from "@/types/comments"
+import type { Comment, CommentReaction } from "@/lib/types/comments";
 
 // Action types for comment reducer
 export type CommentAction =
