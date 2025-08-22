@@ -1,243 +1,115 @@
 # Comment Storage Adapters
 
-This directory contains a comprehensive adapter pattern implementation for comment storage, providing multiple storage backends with a unified interface. The adapter system allows you to easily switch between different storage solutions while maintaining the same API.
+This document provides a comprehensive overview of the storage adapter pattern used in the Okayd Comment System. The adapters provide a unified interface for data persistence, allowing developers to easily integrate their preferred backend.
 
 ## Architecture Overview
 
-All adapters implement the `CommentStorageAdapter` interface, which defines a consistent contract for:
-- Comment CRUD operations
-- Thread and reply handling
-- Lexical editor state persistence
-- Source-based comment filtering (using `sourceId`/`sourceType`)
+All adapters implement the `CommentStorageAdapter` interface, which defines a consistent contract for all comment-related data operations. The system is intentionally decoupled from user and other entity management; its sole focus is on the persistence of comments.
+
+The core responsibilities defined by the interface are:
+- Comment CRUD (Create, Read, Update, Delete) operations.
+- Handling for rich text content via Lexical editor state.
+- Fetching comment threads and replies.
+- Filtering comments based on a generic `sourceId` and `sourceType`.
 
 ## Available Adapters
 
 ### 1. LocalStorageAdapter
 **File:** `local-storage-adapter.ts`  
-**Use Case:** Client-side persistence, demos, prototypes, offline-first applications
+**Use Case:** Ideal for client-side persistence, demos, prototypes, and offline-first applications. It requires no backend setup.
 
-\`\`\`typescript
+```typescript
 import { LocalStorageAdapter } from '@/lib/adapters'
-
-const adapter = new LocalStorageAdapter({
-  enableDemoData: true
-})
-\`\`\`
-
-**Features:**
-- Browser localStorage persistence
-- Automatic date serialization/deserialization
-- Built-in demo users and data
-- No backend required
-- Perfect for development and demos
+const adapter = new LocalStorageAdapter();
+```
 
 ### 2. ApiAdapter
 **File:** `api-adapter.ts`  
-**Use Case:** Traditional REST API backends
+**Use Case:** For applications with a traditional REST or GraphQL API backend.
 
-\`\`\`typescript
+```typescript
 import { ApiAdapter } from '@/lib/adapters'
-
 const adapter = new ApiAdapter({
-  apiEndpoint: 'https://api.example.com',
-  headers: {
-    'Authorization': 'Bearer token',
-    'X-API-Key': 'your-key'
-  }
-})
-\`\`\`
-
-**Features:**
-- HTTP REST API integration
-- Configurable base URL and headers
-- Full CRUD operations via API endpoints
-- Error handling for failed requests
-- Ideal for client-server architectures
+  apiEndpoint: 'https://api.example.com/comments',
+  headers: { 'Authorization': 'Bearer your_token' }
+});
+```
 
 ### 3. ServerActionAdapter
 **File:** `server-action-adapter.ts`  
-**Use Case:** Next.js applications using server actions
+**Use Case:** For Next.js applications utilizing Server Actions for data mutations. This adapter serves as a template, and you must implement the actual server action functions.
 
-\`\`\`typescript
-import { ServerActionAdapter } from '@/lib/adapters'
-
-const adapter = new ServerActionAdapter({
-  enableDemoData: false
-})
-\`\`\`
-
-**Features:**
-- Leverages Next.js server actions
-- Type-safe server-side operations
-- Perfect for Next.js app router applications
-- **Requires implementation of server action files**
-
-**⚠️ Implementation Required:**
-This adapter is a template that requires you to create your own server action files. You need to implement the following files in your project:
-
-**`app/actions/comments.ts`**
-\`\`\`typescript
+```typescript
+// In your app/actions/comments.ts
 'use server'
+import type { Comment } from '@/lib/types/comments'
 
-import type { Comment, CommentThread, User } from '@/types/comments'
-
-export async function getCommentsAction(): Promise<Comment[]> {
-  // Your database query logic here
-  // Example: return await db.comments.findMany()
+export async function addLexicalCommentAction(/*...args*/): Promise<Comment> {
+  // Your database logic here (e.g., using Prisma or Drizzle)
 }
 
-export async function addCommentAction(comment: Comment): Promise<void> {
-  // Your database insert logic here
-  // Example: await db.comments.create({ data: comment })
-}
-
-export async function updateCommentAction(commentId: string, updates: Partial<Comment>): Promise<void> {
-  // Your database update logic here
-  // Example: await db.comments.update({ where: { id: commentId }, data: updates })
-}
-
-export async function deleteCommentAction(commentId: string): Promise<void> {
-  // Your database delete logic here
-  // Example: await db.comments.delete({ where: { id: commentId } })
-}
-
-export async function addLexicalCommentAction(
-  content: string,
-  editorState: string,
-  author: User,
-  mentions: any[],
-  tags: any[],
-  sourceId?: string,
-  sourceType?: string,
-  parentId?: string,
-): Promise<Comment> {
-  // Your comment creation logic here with Lexical editor state
-  // Example: return await db.comments.create({ data: { content, editorState, authorId: author.id, sourceId, sourceType, parentId } })
-}
-
-export async function getCommentsBySourceAction(sourceId: string, sourceType: string): Promise<Comment[]> {
-  // Your filtered query logic here
-  // Example: return await db.comments.findMany({ where: { sourceId, sourceType } })
-}
-
-// ... implement other required actions
-\`\`\`
-
-**Database Integration Examples:**
-- **Prisma**: `await prisma.comments.findMany()`
-- **Drizzle**: `await db.select().from(comments)`
-- **Supabase**: `await supabase.from('comments').select('*')`
-- **Direct SQL**: Your custom database queries
+// ... other actions
+```
 
 ### 4. TanstackQueryAdapter
 **File:** `tanstack-query-adapter.ts`  
-**Use Case:** React applications requiring advanced caching and state management
+**Use Case:** For applications using TanStack Query for advanced data fetching, caching, and state management. It provides hooks for queries and mutations.
 
-\`\`\`typescript
+```typescript
 import { useTanstackQueryAdapter } from '@/lib/adapters'
 
 function MyComponent() {
-  const adapter = useTanstackQueryAdapter({
-    apiEndpoint: '/api',
-    headers: { 'Content-Type': 'application/json' }
-  })
-  
-  // Use hooks for optimal data fetching
-  const { data: comments } = adapter.hooks.useComments()
-  
-  // Use mutations for updates
-  const addComment = adapter.mutations.addComment
+  const adapter = useTanstackQueryAdapter({ apiEndpoint: '/api' });
+  const { data: comments } = adapter.hooks.useComments();
+  const addComment = adapter.mutations.addComment;
 }
-\`\`\`
-
-**Features:**
-- TanStack Query integration for caching
-- Optimistic updates and automatic cache invalidation
-- Both hook-based and traditional async interfaces
-- Background refetching and error handling
-- Ideal for complex React applications
+```
 
 ## Usage with CommentProvider
 
-Pass any adapter to the `CommentProvider` to use it throughout your application:
+To activate an adapter, pass an instance of it to the `CommentProvider`.
 
-\`\`\`typescript
-import { CommentProvider } from '@/contexts/comment-context'
-import { LocalStorageAdapter, ApiAdapter } from '@/lib/adapters'
+```typescript
+import { CommentProvider } from '@/lib/contexts/comment-context'
+import { ApiAdapter } from '@/lib/adapters'
 
-// Using LocalStorage (default)
-<CommentProvider storageAdapter={new LocalStorageAdapter()}>
-  <App />
-</CommentProvider>
-
-// Using API backend
 <CommentProvider storageAdapter={new ApiAdapter({ apiEndpoint: '/api' })}>
-  <App />
+  <YourApp />
 </CommentProvider>
-
-// Using server actions
-<CommentProvider storageAdapter={new ServerActionAdapter()}>
-  <App />
-</CommentProvider>
-\`\`\`
-
-## Factory Function
-
-Use the `createStorageAdapter` factory for convenient adapter creation:
-
-\`\`\`typescript
-import { createStorageAdapter } from '@/lib/adapters'
-
-const adapter = createStorageAdapter('localStorage', {
-  enableDemoData: true
-})
-
-const apiAdapter = createStorageAdapter('api', {
-  apiEndpoint: 'https://api.example.com',
-  headers: { 'Authorization': 'Bearer token' }
-})
-\`\`\`
+```
 
 ## Generic Source System
 
-All adapters support the generic source system using `sourceId` and `sourceType`:
+All adapters use a generic source system to associate comments with any entity in your application. This is achieved with `sourceId` and `sourceType`.
 
-\`\`\`typescript
-// Comments can be associated with any entity type
+```typescript
+// Associate a comment with a specific project document
 await adapter.addLexicalComment(
-  'Great point!',
+  content,
   editorState,
-  user,
+  currentUser,
   [], // mentions
   [], // tags
-  'project-123', // sourceId
-  'project', // sourceType
-  parentId
-)
+  'doc-123',    // sourceId: The ID of the document
+  'document',   // sourceType: The type of entity
+);
 
-// Filter comments by source
-const projectComments = await adapter.getCommentsBySource('project-123', 'project')
-const documentComments = await adapter.getCommentsBySource('doc-456', 'document')
-\`\`\`
+// Retrieve all comments for that document
+const documentComments = await adapter.getCommentsBySource('doc-123', 'document');
+```
 
-## Legacy Usage Note
+## Creating a Custom Adapter
 
-The original `lib/comment-storage.ts` file is still used in some components but is being phased out in favor of the adapter pattern. Consider migrating remaining usages to use adapters for better consistency and maintainability.
+You can create your own adapter by implementing the `CommentStorageAdapter` interface. This is useful for connecting to different database types, GraphQL, or other backend services.
 
-## Creating Custom Adapters
-
-Implement the `CommentStorageAdapter` interface to create custom storage solutions:
-
-\`\`\`typescript
+```typescript
 import { CommentStorageAdapter } from './comment-storage-adapter'
 
-export class CustomAdapter implements CommentStorageAdapter {
+export class MyCustomAdapter implements CommentStorageAdapter {
   async getComments(): Promise<Comment[]> {
-    // Your implementation
+    // Your custom implementation
   }
   
-  // ... implement all required methods
+  // ... implement all other required methods
 }
-\`\`\`
-
-This adapter system provides maximum flexibility while maintaining a consistent API across different storage backends.
+```
