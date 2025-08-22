@@ -40,6 +40,7 @@ export interface CommentVariationProps {
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: (commentId: string) => void
   onReply?: (commentId: string) => void
+  onReplyCancel?: () => void
   // Custom action callbacks
   onLike?: (commentId: string) => void
   onShare?: (commentId: string) => void
@@ -58,6 +59,7 @@ export function CommentVariation({
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onLike,
   onShare,
   onForward,
@@ -84,9 +86,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
         replies={replies}
       />
@@ -101,9 +105,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onReact={handleReact}
       />
     )
@@ -117,9 +123,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onForward={handleForward}
       />
     )
@@ -133,9 +141,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )
@@ -149,9 +159,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )
@@ -165,9 +177,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
         onShare={handleShare}
       />
@@ -182,9 +196,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )
@@ -198,9 +214,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onApprove={handleApprove}
       />
     )
@@ -214,9 +232,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )
@@ -230,9 +250,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )
@@ -246,9 +268,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )
@@ -262,9 +286,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
         replies={replies}
       />
@@ -279,9 +305,11 @@ export function CommentVariation({
         isReply={isReply}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        isReplyingTo={isReplyingTo}
         onEdit={onEdit}
         onDelete={handleDelete}
         onReply={handleReply}
+        onReplyCancel={onReplyCancel}
         onLike={handleLike}
       />
     )

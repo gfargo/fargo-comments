@@ -7,7 +7,7 @@ import Image from "next/image";
 import { MessageSquareDot } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Demo",
+  title: "Okayd Comments",
   description:
     "An open-source React commenting system with rich text editing, multiple design variants, and flexible storage adapters.",
 };

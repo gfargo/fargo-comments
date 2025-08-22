@@ -285,6 +285,7 @@ export function CommentList({
                   onEdit={finalHandlers.onEdit}
                   onDelete={finalHandlers.onDelete}
                   onReply={handleStartReply}
+                  onReplyCancel={handleCancelReply}
                   onLike={finalHandlers.onLike}
                   onShare={finalHandlers.onShare}
                   onForward={finalHandlers.onForward}
@@ -301,7 +302,7 @@ export function CommentList({
                       key={replyComposerKeys[comment.id] || 0}
                       onSubmit={(content, editorState) => handleReplyWithReset(content, editorState, comment.id)}
                       placeholder={getComposerPlaceholder(true)}
-                      variant={variant}
+                      variant={variant as any}
                     />
                     <div className="mt-2">
                       <Button variant="ghost" size="sm" onClick={handleCancelReply} className="text-xs text-gray-500">

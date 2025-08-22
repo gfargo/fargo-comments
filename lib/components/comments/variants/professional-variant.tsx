@@ -8,8 +8,8 @@ import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
-import { DeleteConfirmationDialog } from "../delete-confirmation-dialog"
-import { useState } from "react"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 
 interface ProfessionalVariantProps {
   comment: Comment
@@ -17,9 +17,11 @@ interface ProfessionalVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: () => void
   onReply?: () => void
+  onReplyCancel?: () => void
   onApprove?: () => void
   replies?: Comment[]
 }
@@ -30,14 +32,14 @@ export function ProfessionalVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onApprove,
   replies = [],
 }: ProfessionalVariantProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -46,16 +48,7 @@ export function ProfessionalVariant({
       .toUpperCase()
   }
 
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const handleConfirmDelete = () => {
-    onDelete?.()
-    setShowDeleteDialog(false)
-  }
-
-  const hasReplies = replies.length > 0
+  const isCurrentUser = comment.author.id === currentUser.id
 
   return (
     <>
@@ -93,108 +86,50 @@ export function ProfessionalVariant({
 
         <div className="p-4">
           {isEditing ? (
-            <div className="space-y-3">
-              <LexicalCommentComposer
-                variant="default"
-                placeholder="Edit your comment..."
-                onSubmit={async (content: string, editorState: string) => {
-                  if (onEdit) {
-                    await onEdit(comment.id, content, editorState)
-                    setIsEditing(false)
-                  }
-                }}
-                className="border border-slate-300 rounded-lg"
-                initialContent={comment.content}
-                initialEditorState={comment.editorState}
-              />
-            </div>
+            <LexicalCommentComposer
+              variant="professional"
+              placeholder="Edit your comment..."
+              onSubmit={async (content: string, editorState: string) => {
+                if (onEdit) {
+                  await onEdit(comment.id, content, editorState)
+                  setIsEditing(false)
+                }
+              }}
+              className="border border-slate-300 rounded-lg"
+              initialContent={comment.content}
+              initialEditorState={comment.editorState}
+            />
           ) : (
-            <>
-              <LexicalReadOnlyRenderer
-                editorState={comment.editorState}
-                content={comment.content}
-                className="text-sm text-slate-800 leading-relaxed"
-              />
-
-              {comment.sourceReference && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="flex-1">
-                      <div className="text-xs font-medium text-blue-700 mb-1">Referenced:</div>
-                      <div className="text-sm font-medium text-blue-900">{comment.sourceReference.label}</div>
-                      {comment.sourceReference.description && (
-                        <div className="text-xs text-blue-700 mt-1">{comment.sourceReference.description}</div>
-                      )}
-                      {comment.sourceReference.url && (
-                        <Link
-                          href={comment.sourceReference.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 mt-2 font-medium"
-                        >
-                          View Source <ExternalLink className="w-3 h-3" />
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center gap-3 mt-4 pt-3 border-t border-slate-100">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-slate-600 hover:text-blue-600 hover:bg-blue-50"
-                  onClick={onApprove}
-                >
-                  <ThumbsUp className="h-4 w-4 mr-2" />
-                  Approve
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-slate-600 hover:text-slate-800 hover:bg-slate-100"
-                  onClick={onReply}
-                >
-                  <Reply className="h-4 w-4 mr-2" />
-                  Reply
-                </Button>
-                {comment.author.id === currentUser.id && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-slate-600 hover:text-slate-800 hover:bg-slate-100"
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-slate-600 hover:text-red-600 hover:bg-red-50"
-                      onClick={handleDeleteClick}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </div>
-            </>
+            <LexicalReadOnlyRenderer
+              editorState={comment.editorState}
+              content={comment.content}
+              className="text-sm text-slate-800 leading-relaxed"
+            />
           )}
+
+          <CommentActionBar
+            comment={comment}
+            currentUser={currentUser}
+            variant="professional"
+            isReply={isReply}
+            isEditing={isEditing}
+            isOwner={isCurrentUser}
+            isReplyingTo={isReplyingTo}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReply={onReply}
+            onReplyCancel={onReplyCancel}
+            onApprove={onApprove}
+            onToggleEdit={() => setIsEditing(!isEditing)}
+            replies={replies}
+          />
+
+          <CommentSourceReference
+            sourceReference={comment.sourceReference}
+            variant="professional"
+          />
         </div>
       </div>
-      <DeleteConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        commentAuthor={comment.author.name}
-        hasReplies={hasReplies}
-        replyCount={replies.length}
-      />
     </>
   )
 }

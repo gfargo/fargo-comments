@@ -6,8 +6,9 @@ import { ThumbsUp, Reply, Edit, Trash2, ExternalLink } from "lucide-react"
 import { formatTimeAgo } from '@/lib/utils'
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 import type { Comment, User as UserType } from "@/lib/types/comments"
-import Link from "next/link"
 
 interface ThreadVariantProps {
   comment: Comment
@@ -15,10 +16,13 @@ interface ThreadVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete: () => void
   onReply: () => void
+  onReplyCancel?: () => void
   onLike: () => void
+  replies?: Comment[]
 }
 
 export function ThreadVariant({
@@ -27,10 +31,13 @@ export function ThreadVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onLike,
+  replies = [],
 }: ThreadVariantProps) {
   const getInitials = (name: string) => {
     return name
@@ -46,6 +53,8 @@ export function ThreadVariant({
       setIsEditing(false)
     }
   }
+
+  const isCurrentUser = comment.author.id === currentUser.id
 
   return (
     <div
@@ -73,94 +82,43 @@ export function ThreadVariant({
           </div>
 
           {isEditing ? (
-            <div className="space-y-2">
-              <LexicalCommentComposer
-                variant="compact"
-                placeholder="Edit your comment..."
-                onSubmit={handleEditSubmit}
-                className="border border-gray-300 rounded-md"
-                initialContent={comment.content}
-                initialEditorState={comment.editorState}
-              />
-            </div>
+            <LexicalCommentComposer
+              variant="thread"
+              placeholder="Edit your comment..."
+              onSubmit={handleEditSubmit}
+              className="border border-gray-300 rounded-md"
+              initialContent={comment.content}
+              initialEditorState={comment.editorState}
+            />
           ) : (
-            <>
-              <div className="mb-2">
-                <LexicalReadOnlyRenderer
-                  editorState={comment.editorState}
-                  content={comment.content}
-                  className="text-sm text-gray-800 leading-relaxed"
-                />
-              </div>
-
-              {comment.sourceReference && (
-                <div className="mb-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
-                  <div className="flex items-center gap-2 text-blue-700">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                    <span className="font-medium text-xs">Referenced:</span>
-                    <span className="text-xs">{comment.sourceReference.label}</span>
-                    {comment.sourceReference.description && (
-                      <span className="text-blue-600 text-xs">- {comment.sourceReference.description}</span>
-                    )}
-                    {comment.sourceReference.url && (
-                      <Link
-                        href={comment.sourceReference.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-auto text-blue-600 hover:text-blue-800 flex items-center gap-1 text-xs"
-                      >
-                        View Source
-                        <ExternalLink className="w-2.5 h-2.5" />
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50"
-                  onClick={onLike}
-                >
-                  <ThumbsUp className="h-3 w-3 mr-1" />
-                  Like
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs text-gray-500 hover:text-green-600 hover:bg-green-50"
-                  onClick={onReply}
-                >
-                  <Reply className="h-3 w-3 mr-1" />
-                  Reply
-                </Button>
-                {comment.author.id === currentUser.id && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50"
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <Edit className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs text-gray-500 hover:text-red-600 hover:bg-red-50"
-                      onClick={onDelete}
-                    >
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </div>
-            </>
+            <LexicalReadOnlyRenderer
+              editorState={comment.editorState}
+              content={comment.content}
+              className="text-sm text-gray-800 leading-relaxed"
+            />
           )}
+
+          <CommentActionBar
+            comment={comment}
+            currentUser={currentUser}
+            variant="thread"
+            isReply={isReply}
+            isEditing={isEditing}
+            isOwner={isCurrentUser}
+            isReplyingTo={isReplyingTo}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReply={onReply}
+            onReplyCancel={onReplyCancel}
+            onLike={onLike}
+            onToggleEdit={() => setIsEditing(!isEditing)}
+            replies={replies}
+          />
+
+          <CommentSourceReference
+            sourceReference={comment.sourceReference}
+            variant="thread"
+          />
         </div>
       </div>
     </div>

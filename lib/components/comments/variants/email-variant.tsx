@@ -2,13 +2,12 @@
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Edit, Trash2, ExternalLink } from "lucide-react"
 import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
-import { DeleteConfirmationDialog } from "../delete-confirmation-dialog"
-import { useState } from "react"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 
 interface EmailVariantProps {
   comment: Comment
@@ -16,9 +15,11 @@ interface EmailVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: () => void
   onReply?: () => void
+  onReplyCancel?: () => void
   onForward?: () => void
   replies?: Comment[]
 }
@@ -29,13 +30,14 @@ export function EmailVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onForward,
   replies = [],
 }: EmailVariantProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const styles = {
     container: "border border-gray-300 rounded-none bg-white shadow-sm mb-1",
@@ -69,57 +71,7 @@ export function EmailVariant({
     }
   }
 
-  const renderCommentContent = () => {
-    return (
-      <LexicalReadOnlyRenderer
-        editorState={comment.editorState}
-        content={comment.content}
-        className="text-sm text-gray-800 leading-relaxed"
-      />
-    )
-  }
-
-  const renderSourceReference = () => {
-    if (!comment.sourceReference) return null
-
-    return (
-      <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <div className="flex items-start gap-2">
-          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-          <div className="flex-1">
-            <div className="text-sm text-blue-800">
-              <span className="font-medium">Referenced:</span> {comment.sourceReference.label}
-            </div>
-            {comment.sourceReference.description && (
-              <div className="text-sm text-blue-700 mt-1">{comment.sourceReference.description}</div>
-            )}
-            {comment.sourceReference.url && (
-              <Link
-                href={comment.sourceReference.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mt-2"
-              >
-                View Source
-                <ExternalLink className="w-3 h-3" />
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const handleConfirmDelete = () => {
-    onDelete?.()
-    setShowDeleteDialog(false)
-  }
-
-  const hasReplies = replies.length > 0
+  const isCurrentUser = comment.author.id === currentUser.id
 
   return (
     <>
@@ -149,57 +101,45 @@ export function EmailVariant({
         </div>
         <div className="p-4">
           {isEditing ? (
-            <div className="space-y-2">
-              <LexicalCommentComposer
-                variant="default"
-                placeholder="Edit your comment..."
-                onSubmit={handleEditSubmit}
-                className="border border-gray-300 rounded-md"
-                initialContent={comment.content}
-                initialEditorState={comment.editorState}
-              />
-            </div>
+            <LexicalCommentComposer
+              variant="email"
+              placeholder="Edit your comment..."
+              onSubmit={handleEditSubmit}
+              className="border border-gray-300 rounded-md"
+              initialContent={comment.content}
+              initialEditorState={comment.editorState}
+            />
           ) : (
-            <>
-              {renderCommentContent()}
-              {comment.sourceReference && renderSourceReference()}
-              <div className={styles.actions}>
-                <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onReply}>
-                  Reply
-                </Button>
-                <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onForward}>
-                  Forward
-                </Button>
-                {comment.author.id === currentUser.id && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={styles.actionButton}
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <Edit className="h-3 w-3" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className={styles.actionButton} onClick={handleDeleteClick}>
-                      <Trash2 className="h-3 w-3" />
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </div>
-            </>
+            <LexicalReadOnlyRenderer
+              editorState={comment.editorState}
+              content={comment.content}
+              className="text-sm text-gray-800 leading-relaxed"
+            />
           )}
+
+          <CommentActionBar
+            comment={comment}
+            currentUser={currentUser}
+            variant="email"
+            isReply={isReply}
+            isEditing={isEditing}
+            isOwner={isCurrentUser}
+            isReplyingTo={isReplyingTo}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReply={onReply}
+            onReplyCancel={onReplyCancel}
+            onForward={onForward}
+            onToggleEdit={() => setIsEditing(!isEditing)}
+            replies={replies}
+          />
+
+          <CommentSourceReference
+            sourceReference={comment.sourceReference}
+            variant="email"
+          />
         </div>
       </div>
-      <DeleteConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        commentAuthor={comment.author.name}
-        hasReplies={hasReplies}
-        replyCount={replies.length}
-      />
     </>
   )
 }

@@ -8,8 +8,8 @@ import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
-import { DeleteConfirmationDialog } from "../delete-confirmation-dialog"
-import { useState } from "react"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 
 interface NotionVariantProps {
   comment: Comment
@@ -17,9 +17,11 @@ interface NotionVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: () => void
   onReply?: () => void
+  onReplyCancel?: () => void
   onLike?: () => void
   replies?: Comment[]
 }
@@ -30,14 +32,14 @@ export function NotionVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onLike,
   replies = [],
 }: NotionVariantProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -46,16 +48,7 @@ export function NotionVariant({
       .toUpperCase()
   }
 
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const handleConfirmDelete = () => {
-    onDelete?.()
-    setShowDeleteDialog(false)
-  }
-
-  const hasReplies = replies.length > 0
+  const isCurrentUser = comment.author.id === currentUser.id
 
   return (
     <>
@@ -80,109 +73,53 @@ export function NotionVariant({
             </div>
 
             {isEditing ? (
-              <div className="space-y-2">
-                <LexicalCommentComposer
-                  variant="compact"
-                  placeholder="Edit your comment..."
-                  onSubmit={async (content: string, editorState: string) => {
-                    if (onEdit) {
-                      await onEdit(comment.id, content, editorState)
-                      setIsEditing(false)
-                    }
-                  }}
-                  className="border border-gray-300 rounded-md"
-                  initialContent={comment.content}
-                  initialEditorState={comment.editorState}
+              <LexicalCommentComposer
+                variant="notion"
+                placeholder="Edit your comment..."
+                onSubmit={async (content: string, editorState: string) => {
+                  if (onEdit) {
+                    await onEdit(comment.id, content, editorState)
+                    setIsEditing(false)
+                  }
+                }}
+                className="border border-gray-300 rounded-md"
+                initialContent={comment.content}
+                initialEditorState={comment.editorState}
+              />
+            ) : (
+              <div className="border-l-3 border-l-gray-300 pl-3 py-1 bg-gray-50/50 rounded-r-md">
+                <LexicalReadOnlyRenderer
+                  editorState={comment.editorState}
+                  content={comment.content}
+                  className="text-sm text-gray-800 leading-relaxed"
                 />
               </div>
-            ) : (
-              <>
-                <div className="border-l-3 border-l-gray-300 pl-3 py-1 bg-gray-50/50 rounded-r-md">
-                  <LexicalReadOnlyRenderer
-                    editorState={comment.editorState}
-                    content={comment.content}
-                    className="text-sm text-gray-800 leading-relaxed"
-                  />
-                </div>
-
-                {comment.sourceReference && (
-                  <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-md">
-                    <div className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <div className="text-xs font-medium text-orange-700 mb-1">Referenced:</div>
-                        <div className="text-sm font-medium text-orange-900">{comment.sourceReference.label}</div>
-                        {comment.sourceReference.description && (
-                          <div className="text-xs text-orange-700 mt-1">{comment.sourceReference.description}</div>
-                        )}
-                        {comment.sourceReference.url && (
-                          <Link
-                            href={comment.sourceReference.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-orange-600 hover:text-orange-800 mt-2 font-medium"
-                          >
-                            View Source <ExternalLink className="w-3 h-3" />
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs text-gray-500 hover:text-orange-600 hover:bg-orange-50"
-                    onClick={onLike}
-                  >
-                    <ThumbsUp className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                    onClick={onReply}
-                  >
-                    <Reply className="h-3 w-3" />
-                    Reply
-                  </Button>
-                  {comment.author.id === currentUser.id && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                        onClick={() => setIsEditing(true)}
-                      >
-                        <Edit className="h-3 w-3" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2 text-xs text-gray-500 hover:text-red-600 hover:bg-red-50"
-                        onClick={handleDeleteClick}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </>
             )}
+
+            <CommentActionBar
+              comment={comment}
+              currentUser={currentUser}
+              variant="notion"
+              isReply={isReply}
+              isEditing={isEditing}
+              isOwner={isCurrentUser}
+              isReplyingTo={isReplyingTo}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onReply={onReply}
+              onReplyCancel={onReplyCancel}
+              onLike={onLike}
+              onToggleEdit={() => setIsEditing(!isEditing)}
+              replies={replies}
+            />
+
+            <CommentSourceReference
+              sourceReference={comment.sourceReference}
+              variant="notion"
+            />
           </div>
         </div>
       </div>
-      <DeleteConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        commentAuthor={comment.author.name}
-        hasReplies={hasReplies}
-        replyCount={replies.length}
-      />
     </>
   )
 }

@@ -1,14 +1,12 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Heart, Reply, Edit, Trash2, ExternalLink } from "lucide-react"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 import type { Comment, User as UserType } from "@/lib/types/comments"
-import Link from "next/link"
-import { DeleteConfirmationDialog } from "../delete-confirmation-dialog"
-import { useState } from "react"
 
 interface BubbleVariantProps {
   comment: Comment
@@ -16,9 +14,11 @@ interface BubbleVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: () => void
   onReply?: () => void
+  onReplyCancel?: () => void
   onLike?: () => void
   replies?: Comment[]
 }
@@ -29,13 +29,14 @@ export function BubbleVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onLike,
   replies = [],
 }: BubbleVariantProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const styles = {
     container: "max-w-md",
@@ -67,16 +68,7 @@ export function BubbleVariant({
     }
   }
 
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const handleConfirmDelete = () => {
-    onDelete?.()
-    setShowDeleteDialog(false)
-  }
-
-  const hasReplies = replies.length > 0
+  const isCurrentUser = comment.author.id === currentUser.id
 
   return (
     <>
@@ -93,16 +85,14 @@ export function BubbleVariant({
               <div className={isReply ? styles.replyContent : styles.content}>
                 <div className={isReply ? styles.replyName : styles.name}>{comment.author.name}</div>
                 {isEditing ? (
-                  <div className="space-y-2">
-                    <LexicalCommentComposer
-                      variant="inline"
-                      placeholder="Edit your comment..."
-                      onSubmit={handleEditSubmit}
-                      className="border border-gray-300 rounded-md"
-                      initialContent={comment.content}
-                      initialEditorState={comment.editorState}
-                    />
-                  </div>
+                  <LexicalCommentComposer
+                    variant="bubble"
+                    placeholder="Edit your comment..."
+                    onSubmit={handleEditSubmit}
+                    className="border border-gray-300 rounded-md"
+                    initialContent={comment.content}
+                    initialEditorState={comment.editorState}
+                  />
                 ) : (
                   <>
                     <LexicalReadOnlyRenderer
@@ -117,57 +107,27 @@ export function BubbleVariant({
                 )}
               </div>
 
-              {comment.sourceReference && !isEditing && (
-                <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg text-xs">
-                  <div className="flex items-center gap-1 text-blue-700">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                    <span className="font-medium">Referenced:</span>
-                    <span>{comment.sourceReference.label}</span>
-                    {comment.sourceReference.description && (
-                      <span className="text-blue-600">- {comment.sourceReference.description}</span>
-                    )}
-                    {comment.sourceReference.url && (
-                      <Link
-                        href={comment.sourceReference.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-1 text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                      >
-                        View Source
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              )}
+              <CommentActionBar
+                comment={comment}
+                currentUser={currentUser}
+                variant="bubble"
+                isReply={isReply}
+                isEditing={isEditing}
+                isOwner={isCurrentUser}
+                isReplyingTo={isReplyingTo}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onReply={onReply}
+                onReplyCancel={onReplyCancel}
+                onLike={onLike}
+                onToggleEdit={() => setIsEditing(!isEditing)}
+                replies={replies}
+              />
 
-              <div className={styles.actions}>
-                <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onLike}>
-                  <Heart className="h-3 w-3 mr-1" />
-                  Like
-                </Button>
-                <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onReply}>
-                  <Reply className="h-3 w-3 mr-1" />
-                  Reply
-                </Button>
-                {comment.author.id === currentUser.id && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={styles.actionButton}
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <Edit className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className={styles.actionButton} onClick={handleDeleteClick}>
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </div>
+              <CommentSourceReference
+                sourceReference={comment.sourceReference}
+                variant="bubble"
+              />
             </div>
             {!isReply && (
               <Avatar className={styles.avatar}>
@@ -178,14 +138,6 @@ export function BubbleVariant({
           </div>
         </div>
       </div>
-      <DeleteConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        commentAuthor={comment.author.name}
-        hasReplies={hasReplies}
-        replyCount={replies.length}
-      />
     </>
   )
 }

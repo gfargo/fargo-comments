@@ -1,15 +1,14 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ThumbsUp, Reply, Edit, Trash2, ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
-import { DeleteConfirmationDialog } from "../delete-confirmation-dialog"
-import { useState } from "react"
+import { CommentActionBar } from "../comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 
 interface MobileVariantProps {
   comment: Comment
@@ -21,6 +20,8 @@ interface MobileVariantProps {
   onDelete?: () => void
   onReply?: () => void
   onLike?: () => void
+  isReplyingTo?: boolean
+  onReplyCancel?: () => void
   replies?: Comment[]
 }
 
@@ -34,9 +35,11 @@ export function MobileVariant({
   onDelete,
   onReply,
   onLike,
+  isReplyingTo = false,
+  onReplyCancel,
   replies = [],
 }: MobileVariantProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const isCurrentUser = comment.author.id === currentUser.id
 
   const getInitials = (name: string) => {
     return name
@@ -45,17 +48,6 @@ export function MobileVariant({
       .join("")
       .toUpperCase()
   }
-
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const handleConfirmDelete = () => {
-    onDelete?.()
-    setShowDeleteDialog(false)
-  }
-
-  const hasReplies = replies.length > 0
 
   return (
     <>
@@ -85,106 +77,50 @@ export function MobileVariant({
 
         <div className="p-4">
           {isEditing ? (
-            <div className="space-y-3">
-              <LexicalCommentComposer
-                variant="compact"
-                placeholder="Edit your comment..."
-                onSubmit={async (content: string, editorState: string) => {
-                  if (onEdit) {
-                    await onEdit(comment.id, content, editorState)
-                    setIsEditing(false)
-                  }
-                }}
-                className="border border-gray-300 rounded-lg"
-                initialContent={comment.content}
-                initialEditorState={comment.editorState}
-              />
-            </div>
+            <LexicalCommentComposer
+              variant="mobile"
+              placeholder="Edit your comment..."
+              onSubmit={async (content: string, editorState: string) => {
+                if (onEdit) {
+                  await onEdit(comment.id, content, editorState)
+                  setIsEditing(false)
+                }
+              }}
+              className="border border-gray-300 rounded-lg"
+              initialContent={comment.content}
+              initialEditorState={comment.editorState}
+            />
           ) : (
-            <>
-              <LexicalReadOnlyRenderer
-                editorState={comment.editorState}
-                content={comment.content}
-                className="text-base text-gray-800 leading-relaxed"
-              />
-
-              {comment.sourceReference && (
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-blue-700 mb-1">Referenced:</div>
-                      <div className="text-base font-medium text-blue-900">{comment.sourceReference.label}</div>
-                      {comment.sourceReference.description && (
-                        <div className="text-sm text-blue-700 mt-1">{comment.sourceReference.description}</div>
-                      )}
-                      {comment.sourceReference.url && (
-                        <Link
-                          href={comment.sourceReference.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 mt-3 font-medium"
-                        >
-                          View Source <ExternalLink className="w-4 h-4" />
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-3 mt-6">
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  className="flex-1 h-12 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
-                  onClick={onLike}
-                >
-                  <ThumbsUp className="h-5 w-5 mr-2" />
-                  Like
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  className="flex-1 h-12 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg"
-                  onClick={onReply}
-                >
-                  <Reply className="h-5 w-5 mr-2" />
-                  Reply
-                </Button>
-                {comment.author.id === currentUser.id && (
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="lg"
-                      className="h-12 w-12 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg"
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <Edit className="h-5 w-5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="lg"
-                      className="h-12 w-12 p-0 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                      onClick={handleDeleteClick}
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </>
+            <LexicalReadOnlyRenderer
+              editorState={comment.editorState}
+              content={comment.content}
+              className="text-base text-gray-800 leading-relaxed"
+            />
           )}
+
+          <CommentActionBar
+            comment={comment}
+            currentUser={currentUser}
+            variant="mobile"
+            isReply={isReply}
+            isEditing={isEditing}
+            isOwner={isCurrentUser}
+            isReplyingTo={isReplyingTo}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReply={onReply}
+            onReplyCancel={onReplyCancel}
+            onLike={onLike}
+            onToggleEdit={() => setIsEditing(!isEditing)}
+            replies={replies}
+          />
+
+          <CommentSourceReference
+            sourceReference={comment.sourceReference}
+            variant="mobile"
+          />
         </div>
       </div>
-      <DeleteConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        commentAuthor={comment.author.name}
-        hasReplies={hasReplies}
-        replyCount={replies.length}
-      />
     </>
   )
 }

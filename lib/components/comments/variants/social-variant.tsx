@@ -6,8 +6,9 @@ import { Heart, MessageSquare, Share, Edit, Trash2, ExternalLink } from "lucide-
 import { formatTimeAgo } from '@/lib/utils'
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 import type { Comment, User as UserType } from "@/lib/types/comments"
-import Link from "next/link"
 
 interface SocialVariantProps {
   comment: Comment
@@ -15,11 +16,14 @@ interface SocialVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete: () => void
   onReply: () => void
+  onReplyCancel?: () => void
   onLike: () => void
   onShare: () => void
+  replies?: Comment[]
 }
 
 export function SocialVariant({
@@ -28,11 +32,14 @@ export function SocialVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onLike,
   onShare,
+  replies = [],
 }: SocialVariantProps) {
   const styles = {
     container: "bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-all duration-200",
@@ -64,6 +71,8 @@ export function SocialVariant({
     }
   }
 
+  const isCurrentUser = comment.author.id === currentUser.id
+
   return (
     <div className={`${styles.container} ${isReply ? styles.replyContainer : ""}`}>
       <div className={styles.content}>
@@ -82,7 +91,7 @@ export function SocialVariant({
             {isEditing ? (
               <div className="space-y-2">
                 <LexicalCommentComposer
-                  variant="inline"
+                  variant="social"
                   placeholder="Edit your comment..."
                   onSubmit={handleEditSubmit}
                   className="border border-gray-300 rounded-md"
@@ -98,85 +107,33 @@ export function SocialVariant({
                   className="text-sm text-gray-800 leading-relaxed"
                 />
 
-                {comment.sourceReference && (
-                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-center gap-2 text-blue-700">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="font-medium text-sm">Referenced:</span>
-                      <span className="text-sm">{comment.sourceReference.label}</span>
-                      {comment.sourceReference.description && (
-                        <span className="text-blue-600 text-sm">- {comment.sourceReference.description}</span>
-                      )}
-                      {comment.sourceReference.url && (
-                        <Link
-                          href={comment.sourceReference.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="ml-auto text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
-                        >
-                          View Source
-                          <ExternalLink className="w-3 h-3" />
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                )}
               </>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-4 mt-3 pt-2 border-t border-gray-100">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-pink-600 hover:bg-pink-50"
-            onClick={onLike}
-          >
-            <Heart className="h-4 w-4 mr-1" />
-            <span className="font-medium">12</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-blue-600 hover:bg-blue-50"
-            onClick={onReply}
-          >
-            <MessageSquare className="h-4 w-4 mr-1" />
-            Reply
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-green-600 hover:bg-green-50"
-            onClick={onShare}
-          >
-            <Share className="h-4 w-4 mr-1" />
-            Share
-          </Button>
-          {comment.author.id === currentUser.id && (
-            <>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-gray-800"
-                onClick={() => setIsEditing(true)}
-              >
-                <Edit className="h-4 w-4 mr-1" />
-                Edit
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-red-600 hover:bg-red-50"
-                onClick={onDelete}
-              >
-                <Trash2 className="h-4 w-4 mr-1" />
-                Delete
-              </Button>
-            </>
-          )}
-        </div>
+        <CommentActionBar
+          comment={comment}
+          currentUser={currentUser}
+          variant="social"
+          isReply={isReply}
+          isEditing={isEditing}
+          isOwner={isCurrentUser}
+          isReplyingTo={isReplyingTo}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onReply={onReply}
+          onReplyCancel={onReplyCancel}
+          onLike={onLike}
+          onShare={onShare}
+          onToggleEdit={() => setIsEditing(!isEditing)}
+          replies={replies}
+        />
+
+        <CommentSourceReference
+          sourceReference={comment.sourceReference}
+          variant="social"
+        />
       </div>
     </div>
   )

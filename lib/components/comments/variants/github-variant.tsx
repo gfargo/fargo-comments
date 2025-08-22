@@ -1,15 +1,14 @@
 "use client"
-import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ThumbsUp, Reply, Edit, Trash2, ExternalLink, CircleX } from "lucide-react"
+import { CircleX } from "lucide-react"
 import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
-import { DeleteConfirmationDialog } from "../delete-confirmation-dialog"
-import { useState } from "react"
+import { CommentActionBar } from "@/lib/components/comments/comment-action-bar"
+import { CommentSourceReference } from "../comment-source-reference"
 
 interface GitHubVariantProps {
   comment: Comment
@@ -17,9 +16,11 @@ interface GitHubVariantProps {
   isReply: boolean
   isEditing: boolean
   setIsEditing: (editing: boolean) => void
+  isReplyingTo?: boolean
   onEdit?: (commentId: string, content: string, editorState: string) => void
   onDelete?: () => void
   onReply?: () => void
+  onReplyCancel?: () => void
   onReact?: (reaction: string) => void
   replies?: Comment[]
 }
@@ -30,29 +31,19 @@ export function GitHubVariant({
   isReply,
   isEditing,
   setIsEditing,
+  isReplyingTo = false,
   onEdit,
   onDelete,
   onReply,
+  onReplyCancel,
   onReact,
   replies = [],
 }: GitHubVariantProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const styles = {
     container: "border border-gray-300 rounded-md bg-white",
     replyContainer: "ml-8 mt-2 border-l-4 border-gray-300 bg-gray-50",
-    content: "relative",
-    header: "bg-gray-50 border-b border-gray-300 px-4 py-2 rounded-t-md",
-    body: "p-4",
-    avatar: "h-8 w-8 flex-shrink-0 rounded-full",
-    avatarFallback: "bg-gray-600 text-white text-sm font-medium",
-    name: "font-semibold text-gray-900",
-    badge: "text-xs px-2 py-0.5 bg-blue-100 text-blue-800 rounded border",
-    timestamp: "text-sm text-gray-600",
-    replyIcon: "text-gray-600",
-    actions: "flex items-center gap-3 mt-3 pt-3 border-t border-gray-200",
     actionButton: "text-gray-600 hover:text-blue-600 text-sm flex items-center gap-1",
-    codeBlock: "bg-gray-100 border border-gray-200 rounded p-2 font-mono text-sm",
   }
 
   const getInitials = (name: string) => {
@@ -70,57 +61,7 @@ export function GitHubVariant({
     }
   }
 
-  const renderCommentContent = () => {
-    return (
-      <LexicalReadOnlyRenderer
-        editorState={comment.editorState}
-        content={comment.content}
-        className="text-sm text-gray-800 leading-relaxed"
-      />
-    )
-  }
-
-  const renderSourceReference = () => {
-    if (!comment.sourceReference) return null
-
-    return (
-      <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <div className="flex items-start gap-2">
-          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-          <div className="flex-1">
-            <div className="text-sm text-blue-800">
-              <span className="font-medium">Referenced:</span> {comment.sourceReference.label}
-            </div>
-            {comment.sourceReference.description && (
-              <div className="text-sm text-blue-700 mt-1">{comment.sourceReference.description}</div>
-            )}
-            {comment.sourceReference.url && (
-              <Link
-                href={comment.sourceReference.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mt-2"
-              >
-                View Source
-                <ExternalLink className="w-3 h-3" />
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const handleConfirmDelete = () => {
-    onDelete?.()
-    setShowDeleteDialog(false)
-  }
-
-  const hasReplies = replies.length > 0
+  const isCurrentUser = comment.author.id === currentUser.id
 
   return (
     <>
@@ -162,60 +103,45 @@ export function GitHubVariant({
         </div>
         <div className="p-4">
           {isEditing ? (
-            <div className="space-y-2">
-              <LexicalCommentComposer
-                variant="compact"
-                placeholder="Edit your comment..."
-                onSubmit={handleEditSubmit}
-                className="border border-gray-300 rounded-md"
-                initialContent={comment.content}
-                initialEditorState={comment.editorState}
-              />
-            </div>
+            <LexicalCommentComposer
+              variant="github"
+              placeholder="Edit your comment..."
+              onSubmit={handleEditSubmit}
+              className="border border-gray-300 rounded-md"
+              initialContent={comment.content}
+              initialEditorState={comment.editorState}
+            />
           ) : (
-            <>
-              {renderCommentContent()}
-              {renderSourceReference()}
-              <div className={styles.actions}>
-                <Button variant="ghost" size="sm" className={styles.actionButton} onClick={() => onReact?.("👍")}>
-                  <ThumbsUp className="h-3 w-3" />👍 React
-                </Button>
-
-                <Button variant="ghost" size="sm" className={styles.actionButton} onClick={onReply}>
-                  <Reply className="h-3 w-3" />
-                  Reply
-                </Button>
-
-                {comment.author.id === currentUser.id && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={styles.actionButton}
-                      onClick={() => setIsEditing(true)}
-                    >
-                      <Edit className="h-3 w-3" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" className={styles.actionButton} onClick={handleDeleteClick}>
-                      <Trash2 className="h-3 w-3" />
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </div>
-            </>
+            <LexicalReadOnlyRenderer
+              editorState={comment.editorState}
+              content={comment.content}
+              className="text-sm text-gray-800 leading-relaxed"
+            />
           )}
+
+          <CommentActionBar
+            comment={comment}
+            currentUser={currentUser}
+            variant="github"
+            isReply={isReply}
+            isEditing={isEditing}
+            isOwner={isCurrentUser}
+            isReplyingTo={isReplyingTo}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onReply={onReply}
+            onReplyCancel={onReplyCancel}
+            onReact={onReact}
+            onToggleEdit={() => setIsEditing(!isEditing)}
+            replies={replies}
+          />
+
+          <CommentSourceReference
+            sourceReference={comment.sourceReference}
+            variant="github"
+          />
         </div>
       </div>
-      <DeleteConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        commentAuthor={comment.author.name}
-        hasReplies={hasReplies}
-        replyCount={replies.length}
-      />
     </>
   )
 }
