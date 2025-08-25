@@ -1,9 +1,15 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
+import type React from "react";
+import { useState } from "react";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,12 +19,17 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Palette, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useComments } from "@/lib/contexts/comment-context"
-import { toast } from "sonner"
-import { DebugStateSheet } from "@/app/_demo/components/debug/debug-state-sheet"
+} from "@/components/ui/alert-dialog";
+import { Palette, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useComments } from "@/lib/contexts/comment-context";
+import { toast } from "sonner";
+import { DebugStateSheet } from "@/app/_demo/components/debug/debug-state-sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type CommentVariant =
   | "card"
@@ -32,12 +43,12 @@ type CommentVariant =
   | "github"
   | "email"
   | "notion"
-  | "mobile"
+  | "mobile";
 
 interface CommentLayoutProps {
-  children: React.ReactNode
-  title?: string | React.ReactNode
-  description?: string
+  children: React.ReactNode;
+  title?: string | React.ReactNode;
+  description?: string;
 }
 
 const variantOptions = [
@@ -53,31 +64,35 @@ const variantOptions = [
   { value: "email", label: "Email" },
   { value: "notion", label: "Notion" },
   { value: "mobile", label: "Mobile" },
-]
+];
 
-export function CommentLayout({ children, title, description }: CommentLayoutProps) {
-  const { clearAllStorage, config, updateConfig } = useComments()
-  const [showClearConfirmation, setShowClearConfirmation] = useState(false)
+export function CommentLayout({
+  children,
+  title,
+  description,
+}: CommentLayoutProps) {
+  const { clearAllStorage, config, updateConfig } = useComments();
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
 
   const handleClearStorage = async () => {
-    await clearAllStorage()
-    toast.success("All comment data has been cleared.")
-    window.location.reload()
-  }
+    await clearAllStorage();
+    toast.success("All comment data has been cleared.");
+    window.location.reload();
+  };
 
   const handleClearStorageClick = () => {
-    setShowClearConfirmation(true)
-  }
+    setShowClearConfirmation(true);
+  };
 
   const handleConfirmedClear = async () => {
-    setShowClearConfirmation(false)
-    await handleClearStorage()
-  }
+    setShowClearConfirmation(false);
+    await handleClearStorage();
+  };
 
   const handleVariantChange = (variant: CommentVariant) => {
-    console.log(variant)
-    updateConfig({ variant })
-  }
+    console.log(variant);
+    updateConfig({ variant });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -86,22 +101,35 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">{title || "Flexible Comment System"}</h1>
-              {description && <p className="text-gray-600 mt-1 text-sm">{description}</p>}
+              <h1 className="text-xl font-bold text-gray-900">
+                {title || "Flexible Comment System"}
+              </h1>
+              {description && (
+                <p className="text-gray-600 mt-1 text-sm">{description}</p>
+              )}
             </div>
 
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {/* Variant Selector */}
               <div className="flex items-center gap-2 px-2 py-1 bg-gray-50 rounded-md border">
                 <Palette className="h-3 w-3 text-gray-500" />
-                <span className="text-xs font-medium text-gray-600 hidden sm:inline">Style:</span>
-                <Select value={config.variant || "card"} onValueChange={handleVariantChange}>
+                <span className="text-xs font-medium text-gray-600 hidden sm:inline">
+                  Style:
+                </span>
+                <Select
+                  value={config.variant || "card"}
+                  onValueChange={handleVariantChange}
+                >
                   <SelectTrigger className="w-24 sm:w-28 h-6 text-xs border-0 bg-transparent p-0">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {variantOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-xs">
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        className="text-xs"
+                      >
                         {option.label}
                       </SelectItem>
                     ))}
@@ -113,16 +141,24 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
               <DebugStateSheet />
 
               {/* Clear Storage Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleClearStorageClick}
-                className="h-8 px-2 sm:px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
-              >
-                <Trash2 className="h-3 w-3 mr-1" />
-                <span className="hidden sm:inline">Clear Data</span>
-                <span className="sm:hidden">Clear</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleClearStorageClick}
+                      className="h-8 px-2 sm:px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      <span className="sr-only">Clear Local Data</span>
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Clear all comments from local storage</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -132,24 +168,31 @@ export function CommentLayout({ children, title, description }: CommentLayoutPro
       <div className="max-w-7xl mx-auto p-4 sm:p-6">{children}</div>
 
       {/* Confirmation Dialog for Clear Storage Action */}
-      <AlertDialog open={showClearConfirmation} onOpenChange={setShowClearConfirmation}>
+      <AlertDialog
+        open={showClearConfirmation}
+        onOpenChange={setShowClearConfirmation}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Clear All Data</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all comments from local storage.
+              This action cannot be undone. This will permanently delete all
+              comments from local storage.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmedClear} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction
+              onClick={handleConfirmedClear}
+              className="bg-red-600 hover:bg-red-700"
+            >
               Clear All Data
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }
 
-export default CommentLayout
+export default CommentLayout;
