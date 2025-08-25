@@ -11,7 +11,7 @@ import { useCommentActions } from '@/lib/hooks/use-comment-actions'
 
 function LiveCommentDemo() {
   const { config, getCommentsBySource, getRepliesForComment } = useComments()
-  const selectedVariant = config.variant || "compact"
+  const selectedVariant = config.variant || "compact" 
   const { handleAddComment, handleUpdateComment, handleDeleteComment, handleReply } = useCommentActions()
 
   const sourceId = "test-source-id"
@@ -68,7 +68,7 @@ function LiveCommentDemo() {
 
 export default function MainPageContent() {
   const { config } = useComments()
-  const selectedVariant = config.variant || "compact"
+  const selectedVariant = config.variant || "card"
 
   return (
     <div className="space-y-6">
@@ -130,7 +130,7 @@ export default function MainPageContent() {
               onEdit={() => {}}
               onDelete={() => {}}
               onReact={() => {}}
-              variant={selectedVariant}
+              variant={selectedVariant} 
             />
           </CardContent>
         </Card>

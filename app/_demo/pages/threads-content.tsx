@@ -10,7 +10,7 @@ import { useComments } from "@/lib/contexts/comment-context"
 
 export default function ThreadsPageContent() {
   const { config } = useComments()
-  const selectedVariant = config.variant || "compact"
+  const selectedVariant = config.variant || "card"
   const [selectedThread, setSelectedThread] = useState<string>("audit-workflow")
 
   const threadExamples = [

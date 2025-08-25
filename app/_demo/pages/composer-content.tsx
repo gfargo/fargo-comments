@@ -11,7 +11,7 @@ import { useComments } from "@/lib/contexts/comment-context"
 
 export default function ComposerPageContent() {
   const { config, addComment } = useComments()
-  const selectedVariant = config.variant || "compact"
+  const selectedVariant = config.variant || "card"
   const [recentComments, setRecentComments] = useState<any[]>([])
 
   const handleAddComment = async (content: string, mentions: any[], tags: any[]) => {
