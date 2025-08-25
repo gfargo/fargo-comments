@@ -17,7 +17,7 @@ This document provides a comprehensive overview of the rich text editing system 
 
 ## 📁 Directory Structure
 
-```plaintext
+\`\`\`plaintext
 lexical/
 ├── lexical-comment-composer.tsx    # The main rich text editor component.
 ├── lexical-read-only-renderer.tsx  # Renders saved Lexical state for display.
@@ -32,7 +32,7 @@ lexical/
 └── utils/
     ├── mention-utils.tsx           # Helper functions for styling and linking mentions.
     └── style-utils.ts              # Functions that provide variant-specific styles for the composer.
-```
+\`\`\`
 
 ## 🔧 Core Components
 

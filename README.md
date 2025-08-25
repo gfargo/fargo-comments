@@ -51,7 +51,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-```plaintext
+\`\`\`plaintext
 ├── app/
 │   ├── _demo/                   # Demo components and data
 │   └── ...                      # Other demo pages (composer, threads)
@@ -85,11 +85,11 @@ This repository contains several specialized README files for different aspects 
 │   ├── lexical-utils.ts         # Utilities for working with Lexical editor state.
 │   └── utils.ts                 # General utility functions.
 └── public/                      # Static assets
-```
+\`\`\`
 
 ## 🎯 Usage Example
 
-```tsx
+\`\`\`tsx
 import { CommentList } from '@/lib/components/comments/comment-list';
 import { CommentProvider } from '@/lib/contexts/comment-context';
 import { MentionProvider } from '@/lib/contexts/mention-context';
@@ -121,7 +121,7 @@ function MyApp() {
     </MentionProvider>
   );
 }
-```
+\`\`\`
 
 ## 🔧 Installation & Setup
 
@@ -132,7 +132,7 @@ function MyApp() {
 
 ### Quick Start
 
-````bash
+\`\`\``bash
 # Clone the repository
 git clone <repository-url>
 cd okayd-comments
@@ -142,7 +142,7 @@ npm install
 
 # Run development server
 npm run dev
-````
+\`\`\``
 
 ## 🚀 Production Deployment
 
