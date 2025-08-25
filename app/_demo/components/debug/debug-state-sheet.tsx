@@ -58,7 +58,7 @@ export function DebugStateSheet() {
                 size="sm"
                 className="h-8 px-3 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200 bg-transparent"
               >
-                <Bug className="h-3 w-3 mr-1" />
+                <Bug className="h-3 w-3" />
                 <span className="sr-only">Debug State</span>
               </Button>
             </SheetTrigger>

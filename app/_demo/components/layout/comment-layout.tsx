@@ -150,7 +150,7 @@ export function CommentLayout({
                       onClick={handleClearStorageClick}
                       className="h-8 px-2 sm:px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
                     >
-                      <Trash2 className="h-3 w-3 mr-1" />
+                      <Trash2 className="h-3 w-3" />
                       <span className="sr-only">Clear Local Data</span>
                     </Button>
                   </div>
