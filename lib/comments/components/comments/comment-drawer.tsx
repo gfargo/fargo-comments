@@ -6,23 +6,12 @@ import { MessageSquare } from "lucide-react"
 import { CommentList } from "./comment-list"
 import { useComments } from "@/lib/comments/contexts/comment-context"
 import { useCommentActions } from "@/lib/comments/hooks/use-comment-actions"
+import { CommentVariant } from '@/lib/comments/types/comments'
 
 interface CommentDrawerProps {
   sourceId?: string
   sourceType?: string
-  variant?:
-    | "card"
-    | "bubble"
-    | "timeline"
-    | "compact"
-    | "social"
-    | "professional"
-    | "clean"
-    | "github"
-    | "email"
-    | "notion"
-    | "mobile"
-    | "thread"
+  variant?: CommentVariant
   enableSearch?: boolean
   enableSorting?: boolean
   enableComposer?: boolean
