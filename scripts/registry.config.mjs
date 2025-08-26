@@ -23,14 +23,14 @@ export default {
       "tailwind-merge": "^2.5.5",
     }
   },
-  // Path rewriter: since files are already organized under lib/comments/,
-  // we just need to ensure proper @/ prefixing
+  // Path rewriter: convert to installation paths without @/ alias
   pathRewriter: (fromPath) => {
     // App demo files stay as-is (but we exclude them anyway)
     if (fromPath.startsWith("app/")) return fromPath;
     
-    // Everything else gets @/ prefix
-    return `@/${fromPath}`;
+    // Remove lib/comments/ prefix and install directly to lib/comments/
+    // This assumes the target project structure is src/lib/comments/...
+    return fromPath;
   },
 
   items: [

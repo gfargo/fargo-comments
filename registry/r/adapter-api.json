@@ -24,7 +24,7 @@
       "type": "registry:lib",
       "path": "lib/comments/adapters/api-adapter.ts",
       "content": "",
-      "target": "@/lib/comments/adapters/api-adapter.ts"
+      "target": "lib/comments/adapters/api-adapter.ts"
     }
   ]
 }

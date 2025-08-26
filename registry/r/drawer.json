@@ -25,7 +25,7 @@
       "type": "registry:component",
       "path": "lib/comments/components/comments/comment-drawer.tsx",
       "content": "",
-      "target": "@/lib/comments/components/comments/comment-drawer.tsx"
+      "target": "lib/comments/components/comments/comment-drawer.tsx"
     }
   ]
 }
