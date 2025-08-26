@@ -3,11 +3,12 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { MessageSquare, Users, Clock, CheckCircle2, AlertCircle, Flag } from "lucide-react"
+import { MessageSquare, Users, CheckCircle2, AlertCircle, Flag } from "lucide-react"
 import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
 import { sampleThreadComments, currentUser } from "@/app/_demo/config/comment-data"
 import { useComments } from "@/lib/comments/contexts/comment-context"
 import { InstallationCard } from "@/app/_demo/components/installation-card"
+import { ThreadFeaturesCard } from "@/app/_demo/components/thread-features-card"
 
 export default function ThreadsPageContent() {
   const { config } = useComments()
@@ -172,54 +173,7 @@ export default function ThreadsPageContent() {
       )}
 
       {/* Thread Features */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Thread Features
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Visual Hierarchy</h4>
-              <p className="text-sm text-gray-600">
-                Clear parent-child relationships with proper indentation and visual connections between replies and
-                their parent comments.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Status Tracking</h4>
-              <p className="text-sm text-gray-600">
-                Comments can have different statuses (open, in-progress, resolved) with visual indicators and color
-                coding.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Priority Levels</h4>
-              <p className="text-sm text-gray-600">
-                High, medium, and low priority indicators help teams focus on the most important discussions first.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Multi-Participant</h4>
-              <p className="text-sm text-gray-600">
-                Support for multiple team members with role-based styling and clear authorship identification.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <h4 className="font-medium text-purple-900 mb-2">Thread Flow Example</h4>
-            <p className="text-sm text-purple-800">
-              The &quot;Audit Workflow Example&quot; above demonstrates a complete workflow from issue identification to
-              resolution, showing how different team members collaborate using the comment system. Notice how replies
-              are visually connected to parent comments and how status changes are reflected throughout the
-              conversation.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <ThreadFeaturesCard />
 
       {/* Installation Instructions */}
       <InstallationCard />
