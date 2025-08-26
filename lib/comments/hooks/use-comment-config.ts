@@ -44,7 +44,7 @@ const defaultConfig: CommentConfig = {
     autoList: true,
   },
   placeholder: "Add a comment ...",
-  variant: "compact",
+  variant: "card",
 }
 
 export function useCommentConfig(initialConfig?: CommentConfig) {
