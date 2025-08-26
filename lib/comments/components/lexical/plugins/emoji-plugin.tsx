@@ -62,7 +62,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
 
       try {
         const results = await SearchIndex.search(query);
-        debug.log( Raw emoji search results:", results?.slice(0, 2));
+        debug.log("Raw emoji search results:", results?.slice(0, 2));
         
         if (!results || results.length === 0) {
           setEmojiResults([]);
@@ -80,7 +80,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             try {
               native = String.fromCodePoint(...emoji.unified.split('-').map((u: string) => parseInt(u, 16)));
             } catch (e) {
-              debug.log( Failed to convert unified to native:", emoji.unified, e);
+              debug.log("Failed to convert unified to native:", emoji.unified, e);
               native = '❓';
             }
           } else if (!native) {
@@ -95,11 +95,11 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
           };
         });
         
-        debug.log( Processed emoji results:", emojiResults.slice(0, 2));
+        debug.log("Processed emoji results:", emojiResults.slice(0, 2));
         setEmojiResults(emojiResults);
         setSelectedIndex(0);
       } catch (error) {
-        debug.log( Emoji search error:", error);
+        debug.log("Emoji search error:", error);
         setEmojiResults([]);
       }
     },
@@ -140,7 +140,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             top: rect.bottom - containerRect.top + 5,
             left: Math.max(rect.left - containerRect.left, 0),
           });
-          debug.log( EmojiPlugin: Position updated", {
+          debug.log("EmojiPlugin: Position updated", {
             top: rect.bottom - containerRect.top + 5,
             left: Math.max(rect.left - containerRect.left, 0),
           });
@@ -153,51 +153,15 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
         }
       }
     } catch (error) {
-      debug.log( Position calculation error:", error);
+      debug.log("Position calculation error:", error);
     }
   }, [editor]);
 
-  // const handleEmojiSelect = useCallback((emoji: EmojiResult) => {
-  //   debug.log( EmojiPlugin: Emoji selected:", emoji.native)
-
-  //   editor.update(() => {
-  //     if (triggerNode && typeof triggerOffset === "number") {
-  //       try {
-  //         const textContent = triggerNode.getTextContent()
-  //         const selection = $getSelection()
-
-  //         if ($isRangeSelection(selection) && selection.isCollapsed()) {
-  //           const currentOffset = selection.anchor.offset
-  //           const beforeTrigger = textContent.substring(0, triggerOffset)
-  //           const afterSearch = textContent.substring(currentOffset)
-  //           const newText = beforeTrigger + emoji.native + afterSearch
-
-  //           triggerNode.setTextContent(newText)
-
-  //           // Move cursor after the emoji
-  //           const newOffset = triggerOffset + emoji.native.length
-  //           selection.anchor.set(triggerNode.getKey(), newOffset, "text")
-  //           selection.focus.set(triggerNode.getKey(), newOffset, "text")
-
-  //           debug.log( EmojiPlugin: Emoji inserted successfully")
-  //         }
-  //       } catch (error) {
-  //         debug.log( Emoji insertion error:", error)
-  //       }
-  //     }
-  //   })
-
-  //   setShowResults(false)
-  //   setSearchQuery("")
-  //   setTriggerNode(null)
-  //   setTimeout(() => editor.focus(), 10)
-  // }, [editor, triggerNode, triggerOffset])
-
   const handleEmojiSelect = (emoji: EmojiResult) => {
-    debug.log( EmojiPlugin: Emoji selected:", emoji);
+    debug.log("EmojiPlugin: Emoji selected:", emoji);
 
     if (!emoji.native) {
-      debug.error( EmojiPlugin: No native emoji found:", emoji);
+      debug.error("EmojiPlugin: No native emoji found:", emoji);
       setShowResults(false);
       setSearchQuery("");
       setTriggerNode(null);
@@ -223,10 +187,10 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             selection.anchor.set(triggerNode.getKey(), newOffset, "text");
             selection.focus.set(triggerNode.getKey(), newOffset, "text");
 
-            debug.log( EmojiPlugin: Emoji inserted successfully");
+            debug.log("EmojiPlugin: Emoji inserted successfully");
           }
         } catch (error) {
-          debug.log( Emoji insertion error:", error);
+          debug.log("Emoji insertion error:", error);
         }
       }
     });
@@ -296,7 +260,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                 }
               });
             } catch (error) {
-              debug.log( Backspace handling error:", error);
+              debug.log("Backspace handling error:", error);
               // Close picker on error to prevent stuck state
               setShowResults(false);
               setSearchQuery("");
@@ -308,9 +272,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
       }
 
       if (event.key === ":") {
-        console.log(
-          "[OKAYD] EmojiPlugin: Colon detected, starting search mode..."
-        );
+        debug.log("EmojiPlugin: Colon detected, starting search mode...");
 
         setTimeout(() => {
           try {
@@ -328,7 +290,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                 const charBeforeCursor = textContent[anchorOffset - 1];
 
                 if (charBeforeCursor === ":") {
-                  debug.log( EmojiPlugin: Starting emoji search");
+                  debug.log("EmojiPlugin: Starting emoji search");
                   setTriggerNode(textNode);
                   setTriggerOffset(anchorOffset - 1);
                   setSearchQuery("");
@@ -338,7 +300,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
               }
             });
           } catch (error) {
-            debug.log( Colon detection error:", error);
+            debug.log("Colon detection error:", error);
           }
         }, 10);
       }
@@ -365,16 +327,13 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                   colonIndex + 1,
                   currentOffset
                 );
-                console.log(
-                  "[OKAYD] EmojiPlugin: Search query updated:",
-                  searchText
-                );
+                debug.log("EmojiPlugin: Search query updated:", searchText);
                 setSearchQuery(searchText);
                 searchEmojis(searchText);
               }
             });
           } catch (error) {
-            debug.log( Search update error:", error);
+            debug.log("Search update error:", error);
             // Close picker on error to prevent stuck state
             setShowResults(false);
             setSearchQuery("");
@@ -399,7 +358,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
   );
 
   useEffect(() => {
-    debug.log( EmojiPlugin initialized");
+    debug.log("EmojiPlugin initialized");
     
     // Initialize emoji-mart when component mounts
     initializeEmojiMart();
