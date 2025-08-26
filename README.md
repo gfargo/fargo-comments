@@ -10,7 +10,7 @@ This repository contains several specialized README files for different aspects 
 - **[Custom Hooks Guide](lib/hooks/README.md)** - An overview of the custom React hooks.
 - **[Comment Components Guide](lib/components/comments/README.md)** - An overview of the core UI components for rendering comments.
 - **[Lexical Editor Guide](lib/components/lexical/README.md)** - Complete guide to rich text editing, plugins, and customizations.
-- **[Storage Adapters Guide](lib/adapters/README.md)** - Comprehensive guide to all storage adapter implementations.
+- **[Storage Adapters Guide](lib/comments/adapters/README.md)** - Comprehensive guide to all storage adapter implementations.
 - **[Database Schema Guide](README-SCHEMA.md)** - Database requirements and Prisma schema for production deployment.
 
 ## 🚀 Features
@@ -55,36 +55,50 @@ This repository contains several specialized README files for different aspects 
 ```plaintext
 ├── app/
 │   ├── _demo/                   # Demo components and data
+│   ├── api/                     # Component registry API routes
+│   │   ├── registry/            # Registry manifest and component definitions
+│   │   └── templates/           # Serves component source files
 │   └── ...                      # Other demo pages (composer, threads)
 ├── components/
 │   └── ui/                      # shadcn/ui components
 ├── lib/
-│   ├── adapters/                # Storage adapter implementations
-│   │   ├── api-adapter.ts       # Implements storage via REST API calls.
-│   │   ├── comment-storage-adapter.ts # The interface all adapters must implement.
-│   │   ├── index.ts             # Exports all adapters and a factory function.
-│   │   ├── local-storage-adapter.ts # Implements storage using browser localStorage.
-│   │   ├── server-action-adapter.ts # Template for Next.js Server Actions.
-│   │   └── tanstack-query-adapter.ts # Implements storage using TanStack Query.
-│   ├── components/
-│   │   ├── comments/            # High-level comment components (list, variants, etc.).
-│   │   └── lexical/             # Lexical editor implementation and plugins.
-│   ├── contexts/
-│   │   ├── comment-context.tsx  # Manages comment state, actions, and persistence.
-│   │   └── mention-context.tsx  # Manages data for @mentions and #tags.
-│   ├── hooks/
-│   │   ├── use-comment-actions.ts # Encapsulates user interaction logic.
-│   │   ├── use-comment-config.ts # Manages dynamic configuration (variant, features).
-│   │   ├── use-comment-context-hooks.ts # Manages the lifecycle hook system.
-│   │   └── use-comments-from-source.ts # Fetches and filters comments for a source.
-│   ├── reducers/
-│   │   └── comment-reducer.ts   # The state reducer for all comment actions.
-│   ├── types/
-│   │   ├── comment-hooks.ts     # TypeScript types for the hook system.
-│   │   └── comments.ts          # Core TypeScript types for comments, users, etc.
-│   ├── comment-events.ts        # Defines the event emitter and event types.
-│   ├── lexical-utils.ts         # Utilities for working with Lexical editor state.
-│   └── utils.ts                 # General utility functions.
+│   ├── comments/                # Main commenting system (registry-ready)
+│   │   ├── adapters/            # Storage adapter implementations
+│   │   │   ├── api-adapter.ts       # Implements storage via REST API calls
+│   │   │   ├── comment-storage-adapter.ts # The interface all adapters must implement
+│   │   │   ├── cached-server-action-adapter.ts # React cache() integration
+│   │   │   ├── index.ts             # Exports all adapters and factory function
+│   │   │   ├── local-storage-adapter.ts # Browser localStorage implementation
+│   │   │   ├── server-action-adapter.ts # Next.js Server Actions integration
+│   │   │   └── tanstack-query-adapter.ts # TanStack Query with caching
+│   │   ├── components/
+│   │   │   ├── comments/            # High-level comment components
+│   │   │   │   ├── comment-list.tsx     # Main comment listing component
+│   │   │   │   ├── comment-search.tsx   # Search and filtering
+│   │   │   │   ├── comment-drawer.tsx   # Sidebar/drawer component
+│   │   │   │   ├── variants/            # 12+ design variants
+│   │   │   │   └── ...
+│   │   │   └── lexical/             # Rich text editor implementation
+│   │   │       ├── lexical-comment-composer.tsx
+│   │   │       ├── plugins/             # Auto-lists, emoji, mentions
+│   │   │       └── utils/
+│   │   ├── contexts/
+│   │   │   ├── comment-context.tsx  # Central state management
+│   │   │   └── mention-context.tsx  # @mentions and #tags data
+│   │   ├── hooks/                   # React hooks for comment functionality
+│   │   ├── types/                   # TypeScript definitions
+│   │   ├── reducers/                # State management
+│   │   ├── utils/                   # Utility functions
+│   │   ├── comment-events.ts        # Event system
+│   │   └── lexical-utils.ts         # Lexical editor utilities
+│   └── utils.ts                 # General utility functions
+├── registry/                    # Generated component registry
+│   ├── r/                       # Component definitions (JSON)
+│   └── registry.json            # Registry manifest
+├── scripts/                     # Registry generation and maintenance
+│   ├── registry.config.mjs      # Registry configuration
+│   ├── gen-registry.mjs         # Registry generator
+│   └── sync-registry-deps.mjs   # Dependency synchronization
 └── public/                      # Static assets
 ```
 
@@ -94,7 +108,7 @@ This repository contains several specialized README files for different aspects 
 import { CommentList } from '@/lib/components/comments/comment-list';
 import { CommentProvider } from '@/lib/contexts/comment-context';
 import { MentionProvider } from '@/lib/contexts/mention-context';
-import { LocalStorageAdapter } from '@/lib/adapters';
+import { LocalStorageAdapter } from '@/lib/comments/adapters';
 
 const myCurrentUser = { id: 'user-1', name: 'Jane Doe', ... };
 const myStorageAdapter = new LocalStorageAdapter();
@@ -126,12 +140,33 @@ function MyApp() {
 
 ## 🔧 Installation & Setup
 
-### Prerequisites
+### For Users: Install into Your Project
 
-- Node.js 18+
-- npm/yarn/pnpm
+Add Okayd Comments to your existing application using our ShadcnUI-compatible registry:
 
-### Quick Start
+```bash
+# Install the core commenting system
+npx shadcn@latest add https://commentsby.okayd.com/r/core
+
+# Add the comment list component
+npx shadcn@latest add https://commentsby.okayd.com/r/comment-list
+
+# Optional: Add specific storage adapters
+npx shadcn@latest add https://commentsby.okayd.com/r/adapter-server-actions
+npx shadcn@latest add https://commentsby.okayd.com/r/adapter-api
+```
+
+**Available Components:**
+- `core` - Essential commenting system (contexts, hooks, types, lexical editor)
+- `comment-list` - Main comment list component with search
+- `drawer` - Comment drawer/sidebar component
+- `adapter-server-actions` - Next.js Server Actions storage adapter
+- `adapter-api` - REST API storage adapter
+- `adapter-tanstack-query` - TanStack Query storage adapter
+
+For detailed registry usage, configuration, and integration examples, see the **[Component Registry Guide](README-REGISTRY.md)**.
+
+### For Developers: Contributing to the Project
 
 ```bash
 # Clone the repository
@@ -144,6 +179,11 @@ pnpm install
 # Run development server
 npm run dev
 ```
+
+### Prerequisites
+
+- Node.js 18+
+- npm/yarn/pnpm
 
 ## 🚀 Production Deployment
 

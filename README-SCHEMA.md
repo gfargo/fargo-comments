@@ -222,7 +222,7 @@ npx prisma db seed
 
 ### 5. Create Prisma Adapter
 \`\`\`typescript
-// lib/adapters/prisma-adapter.ts
+// lib/comments/adapters/prisma-adapter.ts
 import { PrismaClient } from '@prisma/client'
 import { CommentStorageAdapter } from './comment-storage-adapter'
 import type { Comment, User } from '@/types/comments'
