@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
+import { track } from '@vercel/analytics/server'
 
 export async function GET() {
   try {
@@ -15,6 +16,12 @@ export async function GET() {
     
     const registryContent = fs.readFileSync(registryPath, 'utf-8')
     const registry = JSON.parse(registryContent)
+    
+    // Track registry access
+    await track('registry_accessed', {
+      type: 'registry_index',
+      timestamp: Date.now()
+    })
     
     return NextResponse.json(registry)
   } catch (error) {

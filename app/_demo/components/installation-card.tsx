@@ -8,6 +8,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { installationConfig } from "@/app/_demo/config/installation-data"
 import { OpenInV0Button } from "@/components/open-in-v0-button"
+import { track } from '@vercel/analytics'
 
 export function InstallationCard() {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null)
@@ -25,11 +26,18 @@ export function InstallationCard() {
     return mappings[itemName] || itemName.toLowerCase().replace(/\s+/g, '-')
   }
 
-  const copyToClipboard = async (command: string) => {
+  const copyToClipboard = async (command: string, itemName?: string) => {
     try {
       await navigator.clipboard.writeText(command)
       setCopiedCommand(command)
       setTimeout(() => setCopiedCommand(null), 2000)
+      
+      // Track copy action
+      track('install_command_copied', {
+        command: command.split(' ')[command.split(' ').length - 1], // Get just the component name
+        item_name: itemName || 'unknown',
+        timestamp: Date.now()
+      })
     } catch (err) {
       console.error('Failed to copy command:', err)
     }
@@ -64,7 +72,7 @@ export function InstallationCard() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => copyToClipboard(installationConfig.prerequisiteCommand)}
+                  onClick={() => copyToClipboard(installationConfig.prerequisiteCommand, "Prerequisites")}
                   className="h-6 w-6 p-0"
                 >
                   {copiedCommand === installationConfig.prerequisiteCommand ? (
@@ -97,7 +105,7 @@ export function InstallationCard() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => copyToClipboard(item.command)}
+                          onClick={() => copyToClipboard(item.command, item.name)}
                           className="h-6 w-6 p-0"
                         >
                           {copiedCommand === item.command ? (
@@ -171,7 +179,7 @@ export function InstallationCard() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => copyToClipboard(adapter.command)}
+                          onClick={() => copyToClipboard(adapter.command, adapter.name)}
                           className="h-6 w-6 p-0"
                         >
                           {copiedCommand === adapter.command ? (
