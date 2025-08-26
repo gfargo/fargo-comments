@@ -4,7 +4,7 @@
 
 export default {
   outDir: "registry",
-  baseUrl: "https://commentsby.okayd.com", // used in registry.json manifest
+  baseUrl: "https://commentsby.okayd.com/api/registry", // used in registry.json manifest
   // Global dependency defaults (merged into items; item-specific deps win)
   defaults: {
     dependencies: {

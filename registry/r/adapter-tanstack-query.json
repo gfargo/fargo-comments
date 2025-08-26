@@ -18,7 +18,7 @@
     "@tanstack/react-query@^5.0.0"
   ],
   "registryDependencies": [
-    "https://commentsby.okayd.com/r/core"
+    "https://commentsby.okayd.com/api/registry/r/core"
   ],
   "files": [
     {

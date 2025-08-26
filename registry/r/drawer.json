@@ -17,8 +17,8 @@
     "tailwind-merge@^2.5.5"
   ],
   "registryDependencies": [
-    "https://commentsby.okayd.com/r/core",
-    "https://commentsby.okayd.com/r/comment-list"
+    "https://commentsby.okayd.com/api/registry/r/core",
+    "https://commentsby.okayd.com/api/registry/r/comment-list"
   ],
   "files": [
     {
