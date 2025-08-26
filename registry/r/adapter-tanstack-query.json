@@ -23,7 +23,7 @@
   "files": [
     {
       "type": "registry:lib",
-      "path": "@/lib/comments/adapters/tanstack-query-adapter.ts",
+      "path": "lib/comments/adapters/tanstack-query-adapter.ts",
       "content": "",
       "target": "@/lib/comments/adapters/tanstack-query-adapter.ts"
     }

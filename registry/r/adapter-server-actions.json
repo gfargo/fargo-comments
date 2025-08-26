@@ -22,13 +22,13 @@
   "files": [
     {
       "type": "registry:lib",
-      "path": "@/lib/comments/adapters/cached-server-action-adapter.ts",
+      "path": "lib/comments/adapters/cached-server-action-adapter.ts",
       "content": "",
       "target": "@/lib/comments/adapters/cached-server-action-adapter.ts"
     },
     {
       "type": "registry:lib",
-      "path": "@/lib/comments/adapters/server-action-adapter.ts",
+      "path": "lib/comments/adapters/server-action-adapter.ts",
       "content": "",
       "target": "@/lib/comments/adapters/server-action-adapter.ts"
     }

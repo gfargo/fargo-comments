@@ -31,7 +31,29 @@ export async function GET(
     const fileContent = fs.readFileSync(filePath, 'utf-8')
     const componentData = JSON.parse(fileContent)
     
-    return NextResponse.json(componentData)
+    // Populate actual file content for each file
+    const populatedFiles = componentData.files.map((file: any) => {
+      // Extract the original source path from the target
+      const sourcePath = file.target.replace('@/', '')
+      const fullSourcePath = path.join(process.cwd(), sourcePath)
+      
+      let content = ''
+      if (fs.existsSync(fullSourcePath)) {
+        content = fs.readFileSync(fullSourcePath, 'utf-8')
+      }
+      
+      return {
+        ...file,
+        content
+      }
+    })
+    
+    const responseData = {
+      ...componentData,
+      files: populatedFiles
+    }
+    
+    return NextResponse.json(responseData)
   } catch (error) {
     console.error('Error serving registry component:', error)
     return NextResponse.json(

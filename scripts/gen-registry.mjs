@@ -64,9 +64,9 @@ function buildItemJSON(allFiles, itemCfg, items) {
     
     return { 
       type: fileType,
-      path: toRaw,
-      content: "", // Will be populated by ShadcnUI CLI
-      target: toRaw
+      path: from, // Point to the actual source file in the repository
+      content: "", // Will be populated dynamically by API
+      target: toRaw // Where it should be installed
     };
   });
 

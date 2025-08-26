@@ -22,13 +22,13 @@
   "files": [
     {
       "type": "registry:component",
-      "path": "@/lib/comments/components/comments/comment-list.tsx",
+      "path": "lib/comments/components/comments/comment-list.tsx",
       "content": "",
       "target": "@/lib/comments/components/comments/comment-list.tsx"
     },
     {
       "type": "registry:component",
-      "path": "@/lib/comments/components/comments/comment-search.tsx",
+      "path": "lib/comments/components/comments/comment-search.tsx",
       "content": "",
       "target": "@/lib/comments/components/comments/comment-search.tsx"
     }

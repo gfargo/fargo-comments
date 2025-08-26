@@ -23,7 +23,7 @@
   "files": [
     {
       "type": "registry:component",
-      "path": "@/lib/comments/components/comments/comment-drawer.tsx",
+      "path": "lib/comments/components/comments/comment-drawer.tsx",
       "content": "",
       "target": "@/lib/comments/components/comments/comment-drawer.tsx"
     }
