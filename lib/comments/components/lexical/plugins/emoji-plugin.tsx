@@ -11,6 +11,7 @@ import {
 } from "lexical";
 import data from "@emoji-mart/data";
 import { init, SearchIndex } from "emoji-mart";
+import { debug } from "@/lib/comments/utils/debug";
 
 // Initialize emoji-mart data with proper configuration
 let emojiMartInitialized = false;
@@ -20,9 +21,9 @@ const initializeEmojiMart = () => {
     try {
       init({ data });
       emojiMartInitialized = true;
-      console.log("[OKAYD] EmojiMart initialized successfully");
+      debug.log("EmojiMart initialized successfully");
     } catch (error) {
-      console.error("[OKAYD] EmojiMart initialization failed:", error);
+      debug.error("EmojiMart initialization failed:", error);
     }
   }
 };
@@ -61,7 +62,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
 
       try {
         const results = await SearchIndex.search(query);
-        console.log("[OKAYD] Raw emoji search results:", results?.slice(0, 2));
+        debug.log( Raw emoji search results:", results?.slice(0, 2));
         
         if (!results || results.length === 0) {
           setEmojiResults([]);
@@ -79,7 +80,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             try {
               native = String.fromCodePoint(...emoji.unified.split('-').map((u: string) => parseInt(u, 16)));
             } catch (e) {
-              console.log("[OKAYD] Failed to convert unified to native:", emoji.unified, e);
+              debug.log( Failed to convert unified to native:", emoji.unified, e);
               native = '❓';
             }
           } else if (!native) {
@@ -94,11 +95,11 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
           };
         });
         
-        console.log("[OKAYD] Processed emoji results:", emojiResults.slice(0, 2));
+        debug.log( Processed emoji results:", emojiResults.slice(0, 2));
         setEmojiResults(emojiResults);
         setSelectedIndex(0);
       } catch (error) {
-        console.log("[OKAYD] Emoji search error:", error);
+        debug.log( Emoji search error:", error);
         setEmojiResults([]);
       }
     },
@@ -139,7 +140,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             top: rect.bottom - containerRect.top + 5,
             left: Math.max(rect.left - containerRect.left, 0),
           });
-          console.log("[OKAYD] EmojiPlugin: Position updated", {
+          debug.log( EmojiPlugin: Position updated", {
             top: rect.bottom - containerRect.top + 5,
             left: Math.max(rect.left - containerRect.left, 0),
           });
@@ -152,12 +153,12 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
         }
       }
     } catch (error) {
-      console.log("[OKAYD] Position calculation error:", error);
+      debug.log( Position calculation error:", error);
     }
   }, [editor]);
 
   // const handleEmojiSelect = useCallback((emoji: EmojiResult) => {
-  //   console.log("[OKAYD] EmojiPlugin: Emoji selected:", emoji.native)
+  //   debug.log( EmojiPlugin: Emoji selected:", emoji.native)
 
   //   editor.update(() => {
   //     if (triggerNode && typeof triggerOffset === "number") {
@@ -178,10 +179,10 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
   //           selection.anchor.set(triggerNode.getKey(), newOffset, "text")
   //           selection.focus.set(triggerNode.getKey(), newOffset, "text")
 
-  //           console.log("[OKAYD] EmojiPlugin: Emoji inserted successfully")
+  //           debug.log( EmojiPlugin: Emoji inserted successfully")
   //         }
   //       } catch (error) {
-  //         console.log("[OKAYD] Emoji insertion error:", error)
+  //         debug.log( Emoji insertion error:", error)
   //       }
   //     }
   //   })
@@ -193,10 +194,10 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
   // }, [editor, triggerNode, triggerOffset])
 
   const handleEmojiSelect = (emoji: EmojiResult) => {
-    console.log("[OKAYD] EmojiPlugin: Emoji selected:", emoji);
+    debug.log( EmojiPlugin: Emoji selected:", emoji);
 
     if (!emoji.native) {
-      console.error("[OKAYD] EmojiPlugin: No native emoji found:", emoji);
+      debug.error( EmojiPlugin: No native emoji found:", emoji);
       setShowResults(false);
       setSearchQuery("");
       setTriggerNode(null);
@@ -222,10 +223,10 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
             selection.anchor.set(triggerNode.getKey(), newOffset, "text");
             selection.focus.set(triggerNode.getKey(), newOffset, "text");
 
-            console.log("[OKAYD] EmojiPlugin: Emoji inserted successfully");
+            debug.log( EmojiPlugin: Emoji inserted successfully");
           }
         } catch (error) {
-          console.log("[OKAYD] Emoji insertion error:", error);
+          debug.log( Emoji insertion error:", error);
         }
       }
     });
@@ -295,7 +296,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                 }
               });
             } catch (error) {
-              console.log("[OKAYD] Backspace handling error:", error);
+              debug.log( Backspace handling error:", error);
               // Close picker on error to prevent stuck state
               setShowResults(false);
               setSearchQuery("");
@@ -327,7 +328,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
                 const charBeforeCursor = textContent[anchorOffset - 1];
 
                 if (charBeforeCursor === ":") {
-                  console.log("[OKAYD] EmojiPlugin: Starting emoji search");
+                  debug.log( EmojiPlugin: Starting emoji search");
                   setTriggerNode(textNode);
                   setTriggerOffset(anchorOffset - 1);
                   setSearchQuery("");
@@ -337,7 +338,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
               }
             });
           } catch (error) {
-            console.log("[OKAYD] Colon detection error:", error);
+            debug.log( Colon detection error:", error);
           }
         }, 10);
       }
@@ -373,7 +374,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
               }
             });
           } catch (error) {
-            console.log("[OKAYD] Search update error:", error);
+            debug.log( Search update error:", error);
             // Close picker on error to prevent stuck state
             setShowResults(false);
             setSearchQuery("");
@@ -398,7 +399,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
   );
 
   useEffect(() => {
-    console.log("[OKAYD] EmojiPlugin initialized");
+    debug.log( EmojiPlugin initialized");
     
     // Initialize emoji-mart when component mounts
     initializeEmojiMart();

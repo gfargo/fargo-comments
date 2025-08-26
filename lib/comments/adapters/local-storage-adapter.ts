@@ -11,6 +11,7 @@ import type {
 } from "./comment-storage-adapter";
 import { generateId } from "@/lib/comments/utils/generateId";
 import { extractMentionsAndTags } from "@/lib/comments/lexical-utils";
+import { debug } from "@/lib/comments/utils/debug";
 
 export class LocalStorageAdapter implements CommentStorageAdapter {
   private readonly STORAGE_KEYS = {
@@ -103,7 +104,7 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     };
 
     await this.addComment(comment);
-    console.log("[OKAYD] Comment added to storage:", comment);
+    debug.log("Comment added to storage:", comment);
     return comment;
   }
 

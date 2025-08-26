@@ -14,6 +14,7 @@ export interface EditorFeatures {
 
 export interface CommentConfig {
   hideToast?: boolean
+  debug?: boolean
   editorFeatures?: EditorFeatures
   placeholder?: string
   variant?:
@@ -35,6 +36,7 @@ export interface CommentConfig {
 // Default configuration
 const defaultConfig: CommentConfig = {
   hideToast: false,
+  debug: false,
   editorFeatures: {
     lists: true,
     checkLists: true,
@@ -72,5 +74,26 @@ export function useCommentConfig(initialConfig?: CommentConfig) {
   return {
     config: currentConfig,
     updateConfig,
+  }
+}
+
+// Debug logging utility
+export function createDebugLogger(config: CommentConfig) {
+  return {
+    log: (...args: any[]) => {
+      if (config.debug) {
+        console.log("[OKAYD]", ...args)
+      }
+    },
+    error: (...args: any[]) => {
+      if (config.debug) {
+        console.error("[OKAYD]", ...args)
+      }
+    },
+    warn: (...args: any[]) => {
+      if (config.debug) {
+        console.warn("[OKAYD]", ...args)
+      }
+    }
   }
 }

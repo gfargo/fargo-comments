@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useTransition } from "react";
+import { debug } from "@/lib/comments/utils/debug";
 import { useComments } from "@/lib/comments/contexts/comment-context";
 import { toast } from "sonner";
 import type { Comment } from "@/lib/comments/types/comments";
@@ -186,8 +187,8 @@ export function useCommentActions() {
       const sourceId = parentComment?.sourceId;
       const sourceType = parentComment?.sourceType;
 
-      console.log(
-        "[OKAYD] Reply submission - parentId:",
+      debug.log(
+        "Reply submission - parentId:",
         rootParentId,
         "sourceId:",
         sourceId,
@@ -221,8 +222,8 @@ export function useCommentActions() {
           const sourceId = parentComment?.sourceId;
           const sourceType = parentComment?.sourceType;
 
-          console.log(
-            "[OKAYD] Reply submission - parentId:",
+          debug.log(
+            "Reply submission - parentId:",
             rootParentId,
             "sourceId:",
             sourceId,
@@ -276,17 +277,17 @@ export function useCommentActions() {
   );
   const handleShare = useCallback(
     (commentId: string) =>
-      console.log("[OKAYD] Share clicked for comment:", commentId),
+      debug.log("Share clicked for comment:", commentId),
     []
   );
   const handleForward = useCallback(
     (commentId: string) =>
-      console.log("[OKAYD] Forward clicked for comment:", commentId),
+      debug.log("Forward clicked for comment:", commentId),
     []
   );
   const handleApprove = useCallback(
     (commentId: string) =>
-      console.log("[OKAYD] Approve clicked for comment:", commentId),
+      debug.log("Approve clicked for comment:", commentId),
     []
   );
   const handleReact = useCallback(

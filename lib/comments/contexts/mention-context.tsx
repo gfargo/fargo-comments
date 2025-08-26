@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
+import { debug } from "@/lib/comments/utils/debug"
 
 interface MentionUser {
   id: string
@@ -51,7 +52,7 @@ export function MentionProvider({ children, initialUsers, initialTags, getUsersC
 
   const loadMentionItems = useCallback(async () => {
     if (initialUsers && initialTags) {
-      console.log("[OKAYD] Using provided initial mention data, skipping loadMentionItems")
+      debug.log("Using provided initial mention data, skipping loadMentionItems")
       return
     }
 
@@ -65,9 +66,9 @@ export function MentionProvider({ children, initialUsers, initialTags, getUsersC
       ])
 
       setMentionItems({ "@": users, "#": tags })
-      console.log("[OKAYD] Mention items loaded:", { userCount: users.length, tagCount: tags.length })
+      debug.log("Mention items loaded:", { userCount: users.length, tagCount: tags.length })
     } catch (err) {
-      console.error("[OKAYD] Failed to load mention items:", err)
+      debug.error("Failed to load mention items:", err)
       setError("Failed to load mention data")
     } finally {
       setLoading(false)

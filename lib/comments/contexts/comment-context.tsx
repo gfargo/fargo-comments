@@ -30,9 +30,11 @@ import {
 import {
   useCommentConfig,
   type CommentConfig,
+  createDebugLogger,
 } from "@/lib/comments/hooks/use-comment-config";
 import { useCommentContextHooks } from "@/lib/comments/hooks/use-comment-context-hooks";
 import { extractMentionsAndTags } from "@/lib/comments/lexical-utils";
+import { setDebugMode } from "@/lib/comments/utils/debug";
 import type {
   CommentHooks,
   CommentHookRegistry,
@@ -137,9 +139,15 @@ export function CommentProvider({
     events: commentEvents,
   });
 
+  // Create debug logger and set global debug mode
+  const debug = useMemo(() => {
+    setDebugMode(currentConfig.debug || false);
+    return createDebugLogger(currentConfig);
+  }, [currentConfig]);
+
   useEffect(() => {
     if (initialComments) {
-      console.log("[OKAYD] Using provided initial data, skipping loadData");
+      debug.log("Using provided initial data, skipping loadData");
       commentEvents.emit("comments:loaded", { comments: initialComments });
       return;
     }
@@ -183,7 +191,7 @@ export function CommentProvider({
       }
 
       try {
-        console.log("[OKAYD] Context addComment called with:", {
+        debug.log("Context addComment called with:", {
           content,
           sourceId,
           sourceType,
@@ -200,20 +208,20 @@ export function CommentProvider({
             finalSourceId = parentComment.sourceId;
             finalSourceType = parentComment.sourceType;
             finalParentId = parentComment.parentId || parentId;
-            console.log(
-              "[OKAYD] Reply inheriting sourceId/sourceType from parent:",
+            debug.log(
+              "Reply inheriting sourceId/sourceType from parent:",
               finalSourceId,
               finalSourceType
             );
-            console.log(
-              "[OKAYD] Flat threading - using parent:",
+            debug.log(
+              "Flat threading - using parent:",
               finalParentId
             );
           }
         }
 
         const { mentions, tags } = extractMentionsAndTags(editorState);
-        console.log("[OKAYD] Extracted mentions:", mentions, "tags:", tags);
+        debug.log("Extracted mentions:", mentions, "tags:", tags);
 
         const hookData: AddCommentHookData = {
           content,
@@ -243,7 +251,7 @@ export function CommentProvider({
           processedData.parentId
         );
 
-        console.log("[OKAYD] New comment created:", newComment);
+        debug.log("New comment created:", newComment);
 
         const commentHookData: CommentHookData = { comment: newComment };
         const processedComment = await hookRegistry.executeHooks(
@@ -271,19 +279,19 @@ export function CommentProvider({
           createHookContext()
         );
 
-        console.log("[OKAYD] Comment added to state");
+        debug.log("Comment added to state");
       } catch (error) {
         // The `error` variable is a placeholder for the actual implementation.
         if (error) {
           // do nothing
         }
-        console.error("[OKAYD] Error adding comment:", error);
+        debug.error("Error adding comment:", error);
         const errorMessage = "Failed to add comment";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
         commentEvents.emit("error", { error: errorMessage, action: "add" });
       }
     },
-    [currentUser, state.comments, adapter, hookRegistry, createHookContext]
+    [currentUser, state.comments, adapter, hookRegistry, createHookContext, debug]
   );
 
   const updateComment = useCallback(
@@ -291,15 +299,15 @@ export function CommentProvider({
       if (!currentUser) return;
 
       try {
-        console.log("[OKAYD] updateComment called with:", {
+        debug.log("updateComment called with:", {
           commentId,
           content,
           editorState: editorState ? "present" : "undefined",
         });
 
         if (!editorState) {
-          console.error(
-            "[OKAYD] ERROR: editorState is undefined in updateComment!"
+          debug.error(
+            "ERROR: editorState is undefined in updateComment!"
           );
           return;
         }
@@ -310,8 +318,8 @@ export function CommentProvider({
         const previousContent = existingComment.content || "";
 
         const { mentions, tags } = extractMentionsAndTags(editorState);
-        console.log(
-          "[OKAYD] Extracted mentions for update:",
+        debug.log(
+          "Extracted mentions for update:",
           mentions,
           "tags:",
           tags
@@ -381,19 +389,19 @@ export function CommentProvider({
           createHookContext()
         );
 
-        console.log("[OKAYD] Comment updated in storage successfully");
+        debug.log("Comment updated in storage successfully");
       } catch (error) {
         // The `error` variable is a placeholder for the actual implementation.
         if (error) {
           // do nothing
         }
-        console.error("[OKAYD] Error updating comment:", error);
+        debug.error("Error updating comment:", error);
         const errorMessage = "Failed to update comment";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
         commentEvents.emit("error", { error: errorMessage, action: "update" });
       }
     },
-    [adapter, currentUser, state.comments, hookRegistry, createHookContext]
+    [adapter, currentUser, state.comments, hookRegistry, createHookContext, debug]
   );
 
   const deleteComment = useCallback(
@@ -443,7 +451,7 @@ export function CommentProvider({
           const newReaction: CommentReaction = {
             id: generateId(),
             userId: currentUser.id,
-            type: reactionType,
+            type: reactionType as CommentReaction['type'],
             createdAt: new Date(),
           };
 
@@ -467,7 +475,7 @@ export function CommentProvider({
                   {
                     id: generateId(),
                     userId: currentUser.id,
-                    type: reactionType,
+                    type: reactionType as CommentReaction['type'],
                     createdAt: new Date(),
                   },
                 ];
@@ -554,8 +562,8 @@ export function CommentProvider({
           (!sourceType || comment.sourceType === sourceType) &&
           !comment.parentId
       );
-      console.log(
-        "[OKAYD] getCommentsBySource found",
+      debug.log(
+        "getCommentsBySource found",
         topLevelComments.length,
         "top-level comments for sourceId:",
         sourceId,
@@ -564,7 +572,7 @@ export function CommentProvider({
       );
       return topLevelComments;
     },
-    [state.comments]
+    [state.comments, debug]
   );
 
   const getRepliesForComment = useCallback(
@@ -572,15 +580,15 @@ export function CommentProvider({
       const replies = state.comments.filter(
         (comment) => comment.parentId === parentId
       );
-      console.log(
-        "[OKAYD] getRepliesForComment found",
+      debug.log(
+        "getRepliesForComment found",
         replies.length,
         "replies for parentId:",
         parentId
       );
       return replies;
     },
-    [state.comments]
+    [state.comments, debug]
   );
 
   const refreshData = useCallback(async () => {
@@ -608,18 +616,18 @@ export function CommentProvider({
       await adapter.clearAllStorage();
       dispatch({ type: "LOAD_COMMENTS", payload: [] });
       commentEvents.emit("comments:cleared", { user: currentUser });
-      console.log("[OKAYD] Storage cleared successfully");
+      debug.log("Storage cleared successfully");
     } catch (error) {
       // The `error` variable is a placeholder for the actual implementation.
       if (error) {
         // do nothing
       }
-      console.error("[OKAYD] Error clearing storage:", error);
+      debug.error("Error clearing storage:", error);
       const errorMessage = "Failed to clear storage";
       dispatch({ type: "SET_ERROR", payload: errorMessage });
       commentEvents.emit("error", { error: errorMessage, action: "clear" });
     }
-  }, [adapter, currentUser]);
+  }, [adapter, currentUser, debug]);
 
   const contextValue: CommentContextType = {
     state,

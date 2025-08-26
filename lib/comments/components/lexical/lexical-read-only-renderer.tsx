@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { debug } from "@/lib/comments/utils/debug"
 import { $createParagraphNode, $createTextNode, $getRoot } from "lexical"
 import { LexicalComposer } from "@lexical/react/LexicalComposer"
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
@@ -33,7 +34,7 @@ function EditorStateLoader({ editorState, content }: { editorState?: string; con
           editor.setEditorState(newEditorState)
         })
       } catch (error) {
-        console.error("[OKAYD] Failed to parse editor state:", error)
+        debug.error("Failed to parse editor state:", error)
         editor.update(() => {
           const root = $getRoot()
           root.clear()
@@ -63,7 +64,7 @@ export function LexicalReadOnlyRenderer({ editorState, content, className = "" }
     theme: lexicalReadOnlyTheme,
     nodes: lexicalNodes,
     onError: (error: Error) => {
-      console.error("[OKAYD] Lexical read-only renderer error:", error)
+      debug.error("Lexical read-only renderer error:", error)
     },
   }
 

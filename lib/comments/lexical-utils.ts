@@ -1,3 +1,5 @@
+import { debug } from "@/lib/comments/utils/debug"
+
 export interface ExtractedMention {
   value: string
   [key: string]: string | number | boolean | undefined
@@ -47,7 +49,7 @@ export function extractMentionsAndTags(editorState: string): {
     traverseNodes(parsed.root)
     return { mentions, tags }
   } catch (error) {
-    console.error("[OKAYD] Error extracting mentions/tags from editorState:", error)
+    debug.error("Error extracting mentions/tags from editorState:", error)
     return { mentions: [], tags: [] }
   }
 }

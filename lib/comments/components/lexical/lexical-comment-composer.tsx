@@ -1,6 +1,7 @@
 "use client"
 
 import { forwardRef, useEffect, useState, useRef } from "react"
+import { debug } from "@/lib/comments/utils/debug"
 import { LexicalComposer } from "@lexical/react/LexicalComposer"
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
@@ -111,7 +112,7 @@ function ContentExtractor({
           const editorState = editor.parseEditorState(initialEditorState)
           editor.setEditorState(editorState)
         } catch (error) {
-          console.error("[OKAYD] Failed to parse editor state:", error)
+          debug.error("Failed to parse editor state:", error)
           if (initialContent && initialContent.trim()) {
             const root = $getRoot()
             root.clear()
@@ -185,7 +186,7 @@ export function LexicalCommentComposer({
     theme: lexicalTheme,
     nodes: lexicalNodes,
     onError: (error: Error) => {
-      console.error("Lexical error:", error)
+      debug.error("Lexical error:", error)
     },
   }
 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo, useCallback } from "react"
+import { debug } from "@/lib/comments/utils/debug"
 import type { CommentHooks, CommentHookRegistry, CommentHookContext } from "@/lib/comments/types/comment-hooks"
 import type { User } from "@/lib/comments/types/comments"
 import type { CommentConfig } from "@/hooks/use-comment-config"
@@ -73,7 +74,7 @@ export function useCommentContextHooks({
               result = { ...result, ...hookResult }
             }
           } catch (error) {
-            console.error(`[OKAYD] Hook ${hookName} failed:`, error)
+            debug.error(`Hook ${hookName} failed:`, error)
             events.emit("error", {
               error: `Hook ${hookName} failed: ${error}`,
               action: "hook",
