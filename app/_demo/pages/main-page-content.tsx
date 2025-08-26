@@ -1,13 +1,13 @@
 "use client"
-import { CommentList } from "@/lib/components/comments/comment-list"
-import { CommentDrawer } from "@/lib/components/comments/comment-drawer"
-import { useComments } from "@/lib/contexts/comment-context"
+import { CommentList } from "@/lib/comments/components/comments/comment-list"
+import { CommentDrawer } from "@/lib/comments/components/comments/comment-drawer"
+import { useComments } from "@/lib/comments/contexts/comment-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, Edit3, FileText } from "lucide-react"
 import Link from "next/link"
 import { currentUser } from "@/app/_demo/config/comment-data"
-import { useCommentActions } from '@/lib/hooks/use-comment-actions'
+import { useCommentActions } from '@/lib/comments/hooks/use-comment-actions'
 
 function LiveCommentDemo() {
   const { config, getCommentsBySource, getRepliesForComment } = useComments()

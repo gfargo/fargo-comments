@@ -4,11 +4,11 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Edit3, User, Hash, FileText, BookOpen, Tag } from "lucide-react"
-import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
-import { CommentVariation } from "@/lib/components/comments/comment-variations"
+import { LexicalCommentComposer } from "@/lib/comments/components/lexical/lexical-comment-composer"
+import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
 import { currentUser } from "@/app/_demo/config/comment-data"
-import { useComments } from "@/lib/contexts/comment-context"
-import { Comment, MentionTag, MentionUser } from "@/lib/types/comments"
+import { useComments } from "@/lib/comments/contexts/comment-context"
+import { Comment, MentionTag, MentionUser } from "@/lib/comments/types/comments"
 
 export default function ComposerPageContent() {
   const { config, addComment } = useComments()

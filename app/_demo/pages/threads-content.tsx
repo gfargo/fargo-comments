@@ -4,9 +4,9 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MessageSquare, Users, Clock, CheckCircle2, AlertCircle, Flag } from "lucide-react"
-import { CommentVariation } from "@/lib/components/comments/comment-variations"
+import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
 import { sampleThreadComments, currentUser } from "@/app/_demo/config/comment-data"
-import { useComments } from "@/lib/contexts/comment-context"
+import { useComments } from "@/lib/comments/contexts/comment-context"
 
 export default function ThreadsPageContent() {
   const { config } = useComments()

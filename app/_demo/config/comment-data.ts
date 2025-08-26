@@ -1,4 +1,4 @@
-import { User } from "@/lib/types/comments";
+import { User } from "@/lib/comments/types/comments";
 
 export const currentUser = {
   id: "user1",
