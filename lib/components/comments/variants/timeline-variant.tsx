@@ -1,14 +1,12 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink } from "lucide-react"
 import { formatTimeAgo } from '@/lib/utils'
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"
 import { CommentActionBar } from "../comment-action-bar"
 import { CommentSourceReference } from "../comment-source-reference"
 import type { Comment, User as UserType } from "@/lib/types/comments"
-import Link from "next/link"
 
 interface TimelineVariantProps {
   comment: Comment

@@ -1,129 +1,159 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { User } from "@/lib/types/comments";
-import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import type {
+  User,
+  Comment,
+  CommentThread,
+  MentionUser,
+  MentionTag,
+} from "@/lib/types/comments"
+import type {
+  CommentStorageAdapter,
+  StorageAdapterConfig,
+} from "./comment-storage-adapter"
 
 export function useTanstackQueryAdapter(config: StorageAdapterConfig = {}) {
-  const queryClient = useQueryClient();
-  const baseUrl = config.apiEndpoint || "/api";
+  const queryClient = useQueryClient()
+  const baseUrl = config.apiEndpoint || "/api"
   const headers = {
     "Content-Type": "application/json",
     ...config.headers,
-  };
+  }
 
-  const request = async (
+  const request = async <T>(
     endpoint: string,
     options: RequestInit = {}
-  ): Promise<any> => {
+  ): Promise<T> => {
     const response = await fetch(`${baseUrl}${endpoint}`, {
       headers,
       ...options,
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.statusText}`);
+      throw new Error(`API request failed: ${response.statusText}`)
     }
 
-    return response.json();
-  };
+    return response.json()
+  }
 
   // Query hooks for data fetching
   const useComments = () =>
-    useQuery({
+    useQuery<Comment[]>({
       queryKey: ["comments"],
-      queryFn: () => request("/comments"),
+      queryFn: () => request<Comment[]>("/comments"),
       staleTime: 5 * 60 * 1000, // 5 minutes
-    });
+    })
 
   const useCommentThreads = (sourceId?: string, sourceType?: string) =>
-    useQuery({
+    useQuery<CommentThread[]>({
       queryKey: ["comments", "threads", sourceId, sourceType],
       queryFn: () => {
-        const query = sourceId ? `?sourceId=${sourceId}${sourceType ? `&sourceType=${sourceType}` : ''}` : "";
-        return request(`/comments/threads${query}`);
+        const query = sourceId
+          ? `?sourceId=${sourceId}${
+              sourceType ? `&sourceType=${sourceType}` : ""
+            }`
+          : ""
+        return request<CommentThread[]>(`/comments/threads${query}`)
       },
-    });
+    })
 
   const addCommentMutation = useMutation({
-    mutationFn: (comment: any) =>
-      request("/comments", {
+    mutationFn: (comment: Comment) =>
+      request<Comment>("/comments", {
         method: "POST",
         body: JSON.stringify(comment),
       }),
     onMutate: async (newComment) => {
-      await queryClient.cancelQueries({ queryKey: ["comments"] });
-      const previousComments = queryClient.getQueryData(["comments"]);
+      await queryClient.cancelQueries({ queryKey: ["comments"] })
+      const previousComments = queryClient.getQueryData<Comment[]>(["comments"])
 
-      queryClient.setQueryData(["comments"], (old: any[] = []) => [
-        ...old,
-        newComment,
-      ]);
+      queryClient.setQueryData(
+        ["comments"],
+        (old: Comment[] = []) => [...old, newComment]
+      )
 
-      return { previousComments };
+      return { previousComments }
     },
-    onError: (err, newComment, context) => {
-      queryClient.setQueryData(["comments"], context?.previousComments);
+    onError: (_err, _newComment, context) => {
+      queryClient.setQueryData(["comments"], context?.previousComments)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] })
     },
-  });
+  })
 
   const updateCommentMutation = useMutation({
-    mutationFn: ({ commentId, updates }: { commentId: string; updates: any }) =>
-      request(`/comments/${commentId}`, {
+    mutationFn: ({
+      commentId,
+      updates,
+    }: {
+      commentId: string
+      updates: Partial<Comment>
+    }) =>
+      request<void>(`/comments/${commentId}`, {
         method: "PATCH",
         body: JSON.stringify(updates),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] })
     },
-  });
+  })
 
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId: string) =>
-      request(`/comments/${commentId}`, {
+      request<void>(`/comments/${commentId}`, {
         method: "DELETE",
       }),
     onMutate: async (deletedId) => {
-      await queryClient.cancelQueries({ queryKey: ["comments"] });
-      const previousComments = queryClient.getQueryData(["comments"]);
+      await queryClient.cancelQueries({ queryKey: ["comments"] })
+      const previousComments = queryClient.getQueryData<Comment[]>(["comments"])
 
-      queryClient.setQueryData(["comments"], (old: any[] = []) =>
-        old.filter((comment) => comment.id !== deletedId)
-      );
+      queryClient.setQueryData(
+        ["comments"],
+        (old: Comment[] = []) =>
+          old.filter((comment) => comment.id !== deletedId)
+      )
 
-      return { previousComments };
+      return { previousComments }
     },
-    onError: (err, deletedId, context) => {
-      queryClient.setQueryData(["comments"], context?.previousComments);
+    onError: (_err, _deletedId, context) => {
+      queryClient.setQueryData(["comments"], context?.previousComments)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] })
     },
-  });
+  })
 
   const addLexicalCommentMutation = useMutation({
-    mutationFn: (params: any) =>
-      request("/comments/lexical", {
+    mutationFn: (params: {
+      content: string
+      editorState: string
+      author: User
+      mentions?: MentionUser[]
+      tags?: MentionTag[]
+      sourceId?: string
+      sourceType?: string
+      parentId?: string
+    }) =>
+      request<Comment>("/comments/lexical", {
         method: "POST",
         body: JSON.stringify(params),
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] })
     },
-  });
+  })
 
   const adapter: CommentStorageAdapter & {
     hooks: {
-      useComments: typeof useComments;
-      useCommentThreads: typeof useCommentThreads;
-    };
+      useComments: typeof useComments
+      useCommentThreads: typeof useCommentThreads
+    }
     mutations: {
-      addComment: typeof addCommentMutation;
-      updateComment: typeof updateCommentMutation;
-      deleteComment: typeof deleteCommentMutation;
-      addLexicalComment: typeof addLexicalCommentMutation;
-    };
+      addComment: typeof addCommentMutation
+      updateComment: typeof updateCommentMutation
+      deleteComment: typeof deleteCommentMutation
+      addLexicalComment: typeof addLexicalCommentMutation
+    }
   } = {
     // Hook access
     hooks: {
@@ -138,48 +168,51 @@ export function useTanstackQueryAdapter(config: StorageAdapterConfig = {}) {
     },
 
     // Fallback methods for backward compatibility
-    async getComments(): Promise<any[]> {
-      return request("/comments");
+    async getComments(): Promise<Comment[]> {
+      return request<Comment[]>("/comments")
     },
 
-    async saveComments(comments: any[]): Promise<void> {
-      await request("/comments/bulk", {
+    async saveComments(comments: Comment[]): Promise<void> {
+      await request<void>("/comments/bulk", {
         method: "PUT",
         body: JSON.stringify(comments),
-      });
+      })
     },
 
-    async addComment(comment: any): Promise<void> {
-      await request("/comments", {
+    async addComment(comment: Comment): Promise<void> {
+      await request<void>("/comments", {
         method: "POST",
         body: JSON.stringify(comment),
-      });
+      })
     },
 
-    async updateComment(commentId: string, updates: any): Promise<void> {
-      await request(`/comments/${commentId}`, {
+    async updateComment(
+      commentId: string,
+      updates: Partial<Comment>
+    ): Promise<void> {
+      await request<void>(`/comments/${commentId}`, {
         method: "PATCH",
         body: JSON.stringify(updates),
-      });
+      })
     },
 
     async deleteComment(commentId: string): Promise<void> {
-      await request(`/comments/${commentId}`, {
+      await request<void>(`/comments/${commentId}`, {
         method: "DELETE",
-      });
+      })
     },
 
     async addLexicalComment(
       content: string,
       editorState: string,
       author: User,
-      mentions: any[] = [],
-      tags: any[] = [],
+      mentions: MentionUser[] = [],
+      tags: MentionTag[] = [],
       sourceId?: string,
       sourceType?: string,
       parentId?: string
-    ): Promise<any> {
-      return request("/comments/lexical", {
+    ): Promise<Comment> {
+      return request<Comment>("/comments/lexical", {
         method: "POST",
         body: JSON.stringify({
           content,
@@ -191,7 +224,7 @@ export function useTanstackQueryAdapter(config: StorageAdapterConfig = {}) {
           sourceType,
           parentId,
         }),
-      });
+      })
     },
 
     async updateCommentWithEditorState(
@@ -199,26 +232,38 @@ export function useTanstackQueryAdapter(config: StorageAdapterConfig = {}) {
       content: string,
       editorState: string
     ): Promise<void> {
-      await request(`/comments/${commentId}/lexical`, {
+      await request<void>(`/comments/${commentId}/lexical`, {
         method: "PATCH",
         body: JSON.stringify({ content, editorState }),
-      });
+      })
     },
 
-    async getCommentsBySource(sourceId: string, sourceType?: string): Promise<any[]> {
-      const query = `?sourceId=${sourceId}${sourceType ? `&sourceType=${sourceType}` : ''}`;
-      return request(`/comments${query}`);
+    async getCommentsBySource(
+      sourceId: string,
+      sourceType?: string
+    ): Promise<Comment[]> {
+      const query = `?sourceId=${sourceId}${
+        sourceType ? `&sourceType=${sourceType}` : ""
+      }`
+      return request<Comment[]>(`/comments${query}`)
     },
 
-    async getCommentThreads(sourceId?: string, sourceType?: string): Promise<any[]> {
-      const query = sourceId ? `?sourceId=${sourceId}${sourceType ? `&sourceType=${sourceType}` : ''}` : "";
-      return request(`/comments/threads${query}`);
+    async getCommentThreads(
+      sourceId?: string,
+      sourceType?: string
+    ): Promise<CommentThread[]> {
+      const query = sourceId
+        ? `?sourceId=${sourceId}${
+            sourceType ? `&sourceType=${sourceType}` : ""
+          }`
+        : ""
+      return request<CommentThread[]>(`/comments/threads${query}`)
     },
 
     async clearAllStorage(): Promise<void> {
-      await request("/storage/clear", { method: "DELETE" });
+      await request<void>("/storage/clear", { method: "DELETE" })
     },
-  };
+  }
 
-  return adapter;
+  return adapter
 }

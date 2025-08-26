@@ -1,4 +1,10 @@
-import type { Comment, CommentThread, User } from "@/lib/types/comments";
+import type {
+  Comment,
+  CommentThread,
+  User,
+  MentionUser,
+  MentionTag,
+} from "@/lib/types/comments";
 import type {
   CommentStorageAdapter,
   StorageAdapterConfig,
@@ -19,7 +25,7 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     if (!stored) return [];
 
     const comments = JSON.parse(stored);
-    return comments.map((comment: any) => ({
+    return comments.map((comment: Comment) => ({
       ...comment,
       createdAt: new Date(comment.createdAt),
       updatedAt: new Date(comment.updatedAt),
@@ -68,8 +74,8 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     content: string,
     editorState: string,
     author: User,
-    mentions: any[] = [],
-    tags: any[] = [],
+    mentions: MentionUser[] = [],
+    tags: MentionTag[] = [],
     sourceId?: string,
     sourceType?: string,
     parentId?: string
@@ -105,8 +111,8 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     commentId: string,
     content: string,
     editorState: string,
-    mentions?: any[],
-    tags?: any[]
+    mentions?: MentionUser[],
+    tags?: MentionTag[]
   ): Promise<void> {
     const comments = await this.getComments();
     const index = comments.findIndex((c) => c.id === commentId);

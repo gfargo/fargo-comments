@@ -40,10 +40,10 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
 
       try {
         const results = await SearchIndex.search(query)
-        const emojiResults = results.slice(0, 8).map((emoji: any) => ({
+        const emojiResults = results.slice(0, 8).map((emoji: EmojiResult) => ({
           id: emoji.id,
           name: emoji.name,
-          native: emoji.skins[0].native,
+          native: emoji.native,
           keywords: emoji.keywords || [],
         }))
         setEmojiResults(emojiResults)
@@ -102,6 +102,42 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
       console.log("[OKAYD] Position calculation error:", error)
     }
   }, [editor])
+
+  const handleEmojiSelect = useCallback((emoji: EmojiResult) => {
+    console.log("[OKAYD] EmojiPlugin: Emoji selected:", emoji.native)
+
+    editor.update(() => {
+      if (triggerNode && typeof triggerOffset === "number") {
+        try {
+          const textContent = triggerNode.getTextContent()
+          const selection = $getSelection()
+
+          if ($isRangeSelection(selection) && selection.isCollapsed()) {
+            const currentOffset = selection.anchor.offset
+            const beforeTrigger = textContent.substring(0, triggerOffset)
+            const afterSearch = textContent.substring(currentOffset)
+            const newText = beforeTrigger + emoji.native + afterSearch
+
+            triggerNode.setTextContent(newText)
+
+            // Move cursor after the emoji
+            const newOffset = triggerOffset + emoji.native.length
+            selection.anchor.set(triggerNode.getKey(), newOffset, "text")
+            selection.focus.set(triggerNode.getKey(), newOffset, "text")
+
+            console.log("[OKAYD] EmojiPlugin: Emoji inserted successfully")
+          }
+        } catch (error) {
+          console.log("[OKAYD] Emoji insertion error:", error)
+        }
+      }
+    })
+
+    setShowResults(false)
+    setSearchQuery("")
+    setTriggerNode(null)
+    setTimeout(() => editor.focus(), 10)
+  }, [editor, triggerNode, triggerOffset])
 
   const keyDownHandler = useMemo(
     () => (event: KeyboardEvent) => {
@@ -231,7 +267,7 @@ export function EmojiPlugin({ className = "" }: EmojiPluginProps) {
 
       return false
     },
-    [showResults, emojiResults, selectedIndex, triggerNode, triggerOffset, searchEmojis, updateResultsPosition, editor],
+    [showResults, emojiResults, selectedIndex, triggerNode, triggerOffset, searchEmojis, updateResultsPosition, editor, handleEmojiSelect],
   )
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
 import { LexicalReadOnlyRenderer } from "@/lib/components/lexical/lexical-read-only-renderer"

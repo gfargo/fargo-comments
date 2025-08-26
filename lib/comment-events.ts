@@ -1,8 +1,8 @@
 "use client"
 
-import React from "react";
+import React from "react"
 
-import type { Comment, CommentReaction, User } from "@/lib/types/comments";
+import type { Comment, CommentReaction, User } from "@/lib/types/comments"
 
 // Event types that can be emitted
 export interface CommentEventMap {
@@ -17,23 +17,31 @@ export interface CommentEventMap {
 }
 
 // Event listener type
-export type CommentEventListener<T extends keyof CommentEventMap> = (data: CommentEventMap[T]) => void
+export type CommentEventListener<T extends keyof CommentEventMap> = (
+  data: CommentEventMap[T]
+) => void
 
 // Event emitter class for comment system
 export class CommentEventEmitter {
-  private listeners: Map<keyof CommentEventMap, Set<CommentEventListener<any>>> = new Map()
+  private listeners: Map<
+    keyof CommentEventMap,
+    Set<CommentEventListener<keyof CommentEventMap>>
+  > = new Map()
 
   // Subscribe to an event
-  on<T extends keyof CommentEventMap>(event: T, listener: CommentEventListener<T>): () => void {
+  on<T extends keyof CommentEventMap>(
+    event: T,
+    listener: CommentEventListener<T>
+  ): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set())
     }
 
-    this.listeners.get(event)!.add(listener)
+    this.listeners.get(event)!.add(listener as CommentEventListener<keyof CommentEventMap>)
 
     // Return unsubscribe function
     return () => {
-      this.listeners.get(event)?.delete(listener)
+      this.listeners.get(event)?.delete(listener as CommentEventListener<keyof CommentEventMap>)
     }
   }
 
@@ -73,11 +81,10 @@ export const commentEvents = new CommentEventEmitter()
 // Helper hook for subscribing to events in React components
 export function useCommentEvent<T extends keyof CommentEventMap>(
   event: T,
-  listener: CommentEventListener<T>,
-  deps: React.DependencyList = [],
+  listener: CommentEventListener<T>
 ): void {
   React.useEffect(() => {
     const unsubscribe = commentEvents.on(event, listener)
     return unsubscribe
-  }, deps)
+  }, [event, listener])
 }

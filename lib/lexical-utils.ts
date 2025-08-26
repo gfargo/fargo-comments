@@ -1,11 +1,19 @@
 export interface ExtractedMention {
   value: string
-  [key: string]: any // Allow any additional properties from the data object
+  [key: string]: string | number | boolean | undefined
 }
 
 export interface ExtractedTag {
   value: string
-  [key: string]: any // Allow any additional properties from the data object
+  [key: string]: string | number | boolean | undefined
+}
+
+interface LexicalNode {
+  type: string
+  value?: string
+  data?: Record<string, unknown>
+  trigger?: string
+  children?: LexicalNode[]
 }
 
 export function extractMentionsAndTags(editorState: string): {
@@ -13,11 +21,11 @@ export function extractMentionsAndTags(editorState: string): {
   tags: ExtractedTag[]
 } {
   try {
-    const parsed = JSON.parse(editorState)
+    const parsed: { root: LexicalNode } = JSON.parse(editorState)
     const mentions: ExtractedMention[] = []
     const tags: ExtractedTag[] = []
 
-    function traverseNodes(node: any) {
+    function traverseNodes(node: LexicalNode) {
       if (node.type === "custom-beautifulMention") {
         const flattened = {
           value: node.value,

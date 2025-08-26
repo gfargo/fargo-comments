@@ -1,8 +1,6 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink } from "lucide-react"
-import Link from "next/link"
 import type { Comment, User as UserType } from "@/lib/types/comments"
 import { formatTimeAgo } from "@/lib/utils"
 import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"

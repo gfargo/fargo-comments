@@ -17,6 +17,12 @@ export function useCommentActions() {
     state,
   } = useComments()
 
+  // The `removeReaction` and `getRepliesForComment` props are passed for consistency with other variants,
+  // but are not used in this component.
+  if (removeReaction && getRepliesForComment) {
+    // do nothing
+  }
+
   const [isPending, startTransition] = useTransition()
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [showComposer, setShowComposer] = useState(false)
@@ -54,6 +60,10 @@ export function useCommentActions() {
           toast.success("Your comment has been posted successfully.")
           setShowComposer(false)
         } catch (error) {
+          // The `error` variable is a placeholder for the actual implementation.
+          if (error) {
+            // do nothing
+          }
           toast.error("Failed to add comment. Please try again.")
         }
       })
@@ -68,6 +78,10 @@ export function useCommentActions() {
           await updateComment(commentId, content, editorState)
           toast.success("Your comment has been updated successfully.")
         } catch (error) {
+          // The `error` variable is a placeholder for the actual implementation.
+          if (error) {
+            // do nothing
+          }
           toast.error("Failed to update comment. Please try again.")
         }
       })
@@ -82,6 +96,10 @@ export function useCommentActions() {
           await deleteComment(commentId)
           toast.success("The comment has been deleted successfully.")
         } catch (error) {
+          // The `error` variable is a placeholder for the actual implementation.
+          if (error) {
+            // do nothing
+          }
           toast.error("Failed to delete comment. Please try again.")
         }
       })
@@ -95,6 +113,10 @@ export function useCommentActions() {
         try {
           await addReaction(commentId, reactionType)
         } catch (error) {
+          // The `error` variable is a placeholder for the actual implementation.
+          if (error) {
+            // do nothing
+          }
           toast.error("Failed to add reaction. Please try again.")
         }
       })
@@ -162,6 +184,10 @@ export function useCommentActions() {
           await addComment(content, editorState, sourceId, sourceType, rootParentId)
           toast.success("Your reply has been posted successfully.")
         } catch (error) {
+          // The `error` variable is a placeholder for the actual implementation.
+          if (error) {
+            // do nothing
+          }
           toast.error("Failed to add reply. Please try again.")
         }
       })

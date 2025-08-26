@@ -78,7 +78,7 @@ export function CommentSearch({ comments, onFilteredCommentsChange, users }: Com
     return filtered
   }, [comments, filters])
 
-  const handleFilterChange = (key: keyof SearchFilters, value: any) => {
+  const handleFilterChange = (key: keyof SearchFilters, value: string) => {
     const newFilters = { ...filters, [key]: value }
     setFilters(newFilters)
   }
@@ -92,7 +92,9 @@ export function CommentSearch({ comments, onFilteredCommentsChange, users }: Com
     })
   }
 
-  const activeFilterCount = Object.entries(filters).filter(([key, value]) => value !== "" && value !== "any").length
+  const activeFilterCount = Object.values(filters).filter(
+    (value) => value !== "" && value !== "any"
+  ).length
 
   // Update parent component when filtered comments change
   React.useEffect(() => {

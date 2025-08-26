@@ -60,6 +60,11 @@ export function CommentList({
   onReact,
   getRepliesForComment,
 }: CommentListProps) {
+  // The `title` prop is passed for consistency with other variants,
+  // but is not used in this component.
+  if (title) {
+    // do nothing
+  }
   const { config } = useComments() // Import useComments hook to access global config
 
   const {
@@ -82,9 +87,14 @@ export function CommentList({
   const [sortBy, setSortBy] = useState<SortOption>("newest")
   const [filteredComments, setFilteredComments] = useState<Comment[]>(comments)
   const [composerKey, setComposerKey] = useState(0)
-  const [replyComposerKeys, setReplyComposerKeys] = useState<Record<string, number>>({})
+  const [replyComposerKeys, setReplyComposerKeys] = useState<
+    Record<string, number>
+  >({})
 
-  const handleAddCommentWithReset = async (content: string, editorState: string) => {
+  const handleAddCommentWithReset = async (
+    content: string,
+    editorState: string
+  ) => {
     try {
       await finalHandlers.onAddComment(content, editorState, sourceId, sourceType)
       setComposerKey((prev) => prev + 1)
@@ -93,7 +103,11 @@ export function CommentList({
     }
   }
 
-  const handleReplyWithReset = async (content: string, editorState: string, parentId: string) => {
+  const handleReplyWithReset = async (
+    content: string,
+    editorState: string,
+    parentId: string
+  ) => {
     try {
       await finalHandlers.onReply(content, editorState, parentId)
       setReplyComposerKeys((prev) => ({
@@ -109,7 +123,8 @@ export function CommentList({
   const finalHandlers = {
     onAddComment:
       onAddComment ||
-      ((content: string, editorState: string) => handleCommentSubmit(content, editorState, sourceId, sourceType)),
+      ((content: string, editorState: string) =>
+        handleCommentSubmit(content, editorState, sourceId, sourceType)),
     onReply:
       onReply ||
       ((content: string, editorState: string, parentId: string) =>
@@ -136,8 +151,10 @@ export function CommentList({
   }, [comments])
 
   const threadedComments = useMemo(() => {
-    const commentsToSort = enableSearch ? filteredComments || [] : comments || []
-    const topLevelComments = commentsToSort.filter((comment) => !comment.parentId)
+    const commentsToSort = enableSearch ? filteredComments : comments
+    const topLevelComments = commentsToSort.filter(
+      (comment) => !comment.parentId
+    )
 
     const sortedTopLevel = [...topLevelComments].sort((a, b) => {
       switch (sortBy) {
@@ -160,15 +177,19 @@ export function CommentList({
       flatThreads.push(parent)
       // Only get replies for top-level comments (flat threading)
       const replies = getRepliesForComment?.(parent.id) || []
-      const sortedReplies = [...replies].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      const sortedReplies = [...replies].sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+      )
       flatThreads.push(...sortedReplies)
     })
 
     return flatThreads
-  }, [enableSearch ? filteredComments : comments, sortBy, getRepliesForComment])
+  }, [comments, enableSearch, filteredComments, sortBy, getRepliesForComment])
 
   const totalComments = comments?.length || 0
-  const displayedComments = enableSearch ? filteredComments?.length || 0 : totalComments
+  const displayedComments = enableSearch
+    ? filteredComments?.length || 0
+    : totalComments
 
   const shouldShowComposer = showComposerByDefault || hookShowComposer
 
@@ -186,7 +207,8 @@ export function CommentList({
         <div className="flex items-center gap-3">
           {!enableSearch && (
             <Badge variant="secondary" className="text-sm">
-              {displayedComments} {displayedComments === 1 ? "comment" : "comments"}
+              {displayedComments}{" "}
+              {displayedComments === 1 ? "comment" : "comments"}
               {displayedComments !== totalComments && ` of ${totalComments}`}
             </Badge>
           )}
@@ -202,7 +224,10 @@ export function CommentList({
 
         <div className="flex items-center gap-3">
           {enableSorting && (
-            <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+            <Select
+              value={sortBy}
+              onValueChange={(value: SortOption) => setSortBy(value)}
+            >
               <SelectTrigger className="w-36 h-9">
                 <SortAsc className="h-4 w-4 mr-1" />
                 <SelectValue />
@@ -217,7 +242,12 @@ export function CommentList({
           )}
 
           {showAddForm && !showComposerByDefault && (
-            <Button onClick={handleToggleComposer} size="sm" disabled={isPending} className="h-9">
+            <Button
+              onClick={handleToggleComposer}
+              size="sm"
+              disabled={isPending}
+              className="h-9"
+            >
               {hookShowComposer ? (
                 <>
                   <X className="h-4 w-4 mr-1" />
@@ -235,7 +265,11 @@ export function CommentList({
       </div>
 
       {enableSearch && (
-        <CommentSearch comments={comments} users={users} onFilteredCommentsChange={setFilteredComments} />
+        <CommentSearch
+          comments={comments}
+          users={users}
+          onFilteredCommentsChange={setFilteredComments}
+        />
       )}
 
       {/* Comment Composer */}
@@ -245,11 +279,16 @@ export function CommentList({
             key={composerKey}
             onSubmit={handleAddCommentWithReset}
             placeholder={getComposerPlaceholder()}
-            variant={variant as any}
+            variant={variant}
           />
           {!showComposerByDefault && (
             <div className="mt-3">
-              <Button variant="ghost" size="sm" onClick={handleToggleComposer} className="text-xs text-gray-500">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleToggleComposer}
+                className="text-xs text-gray-500"
+              >
                 Cancel
               </Button>
             </div>
@@ -271,7 +310,9 @@ export function CommentList({
         ) : (
           threadedComments.map((comment) => {
             const isReply = !!comment.parentId
-            const commentReplies = !isReply ? getRepliesForComment?.(comment.id) || [] : []
+            const commentReplies = !isReply
+              ? getRepliesForComment?.(comment.id) || []
+              : []
 
             return (
               <div key={comment.id}>
@@ -300,12 +341,19 @@ export function CommentList({
                     </div>
                     <LexicalCommentComposer
                       key={replyComposerKeys[comment.id] || 0}
-                      onSubmit={(content, editorState) => handleReplyWithReset(content, editorState, comment.id)}
+                      onSubmit={(content, editorState) =>
+                        handleReplyWithReset(content, editorState, comment.id)
+                      }
                       placeholder={getComposerPlaceholder(true)}
-                      variant={variant as any}
+                      variant={variant}
                     />
                     <div className="mt-2">
-                      <Button variant="ghost" size="sm" onClick={handleCancelReply} className="text-xs text-gray-500">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCancelReply}
+                        className="text-xs text-gray-500"
+                      >
                         Cancel
                       </Button>
                     </div>

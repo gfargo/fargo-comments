@@ -1,4 +1,4 @@
-import type { Comment, User } from "@/lib/types/comments"
+import type { Comment, User, MentionUser, MentionTag } from "@/lib/types/comments"
 import type { CommentConfig } from "@/lib/hooks/use-comment-config"
 
 // Hook context provided to all hook callbacks
@@ -12,8 +12,8 @@ export interface CommentHookContext {
 export interface AddCommentHookData {
   content: string
   editorState: string
-  mentions: any[]
-  tags: any[]
+  mentions: MentionUser[]
+  tags: MentionTag[]
   sourceId?: string
   sourceType?: string
   parentId?: string
@@ -24,8 +24,8 @@ export interface UpdateCommentHookData {
   commentId: string
   content: string
   editorState: string
-  mentions: any[]
-  tags: any[]
+  mentions: MentionUser[]
+  tags: MentionTag[]
   existingComment: Comment
 }
 
@@ -65,5 +65,9 @@ export interface CommentHooks {
 export interface CommentHookRegistry {
   registerHook: <T extends keyof CommentHooks>(hookName: T, callback: NonNullable<CommentHooks[T]>[0]) => () => void
   unregisterHook: <T extends keyof CommentHooks>(hookName: T, callback: NonNullable<CommentHooks[T]>[0]) => void
-  executeHooks: <T extends keyof CommentHooks>(hookName: T, data: any, context: CommentHookContext) => Promise<any>
+  executeHooks: <T extends keyof CommentHooks>(
+    hookName: T,
+    data: Parameters<NonNullable<CommentHooks[T]>[0]>[0],
+    context: CommentHookContext,
+  ) => Promise<Parameters<NonNullable<CommentHooks[T]>[0]>[0]>
 }

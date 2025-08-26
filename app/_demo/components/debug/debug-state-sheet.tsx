@@ -44,6 +44,7 @@ export function DebugStateSheet() {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       toast.error("Failed to copy debug state to clipboard.");
+      console.log(err);
     }
   };
 

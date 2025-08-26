@@ -34,16 +34,29 @@ import { useMentions } from "@/lib/contexts/mention-context"
 import { useComments } from "@/lib/contexts/comment-context"
 import { lexicalTheme, lexicalNodes, MATCHERS } from "./config/lexical-config"
 
-const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(({ open, loading, ...props }, ref) => (
-  <ul
-    className="absolute z-50 mt-1 max-h-60 w-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-    {...props}
-    ref={ref}
-  />
-))
+const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(({ loading, ...props }, ref) => {
+  // The `loading` prop is passed for consistency with other variants,
+  // but is not used in this component.
+  if (loading) {
+    // do nothing
+  }
+  return (
+    <ul
+      className="absolute z-50 mt-1 max-h-60 w-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      {...props}
+      ref={ref}
+    />
+  )
+})
+CustomMenu.displayName = "BeautifulMentionsCustomMenu"
 
 const CustomMenuItem = forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>(
   ({ selected, item, itemValue, ...props }, ref) => {
+    // The `itemValue` prop is passed for consistency with other variants,
+    // but is not used in this component.
+    if (itemValue) {
+      // do nothing
+    }
     const getIcon = () => {
       if (item.trigger === "@") return <User className="w-4 h-4 text-blue-600" />
       if (item.trigger === "#") {
@@ -76,6 +89,7 @@ const CustomMenuItem = forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>
     )
   },
 )
+CustomMenuItem.displayName = "BeautifulMentionsCustomMenuItem"
 
 function ContentExtractor({
   onContentChange,
@@ -141,7 +155,7 @@ function ContentExtractor({
 interface LexicalCommentComposerProps {
   variant?: CommentVariant
   placeholder?: string
-  onSubmit?: (content: string, editorState: string, mentions: any[], tags: any[]) => void
+  onSubmit?: (content: string, editorState: string, mentions: MentionUser[], tags: MentionTag[]) => void
   className?: string
   initialContent?: string
   initialEditorState?: string

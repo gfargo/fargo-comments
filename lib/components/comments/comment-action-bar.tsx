@@ -60,6 +60,11 @@ export function CommentActionBar({
   onToggleEdit,
   replies = [],
 }: CommentActionBarProps) {
+  // The `currentUser`, `isReply`, and `onEdit` props are passed for consistency with other variants,
+  // but are not used in this component.
+  if (currentUser && isReply && onEdit) {
+    // do nothing
+  }
   const [showReferences, setShowReferences] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 

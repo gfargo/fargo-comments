@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User } from "@/lib/types/comments"
+import type { Comment, CommentThread, User, MentionUser, MentionTag } from "@/lib/types/comments"
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 
 export class ApiAdapter implements CommentStorageAdapter {
@@ -61,8 +61,8 @@ export class ApiAdapter implements CommentStorageAdapter {
     content: string,
     editorState: string,
     author: User,
-    mentions: any[] = [],
-    tags: any[] = [],
+    mentions: MentionUser[] = [],
+    tags: MentionTag[] = [],
     sourceId?: string,
     sourceType?: string,
     parentId?: string,

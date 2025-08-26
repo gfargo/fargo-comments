@@ -1,4 +1,4 @@
-import type { Comment, CommentThread, User } from "@/lib/types/comments"
+import type { Comment, CommentThread, User, MentionUser, MentionTag } from "@/lib/types/comments"
 
 export interface CommentStorageAdapter {
   // Comment operations
@@ -12,8 +12,8 @@ export interface CommentStorageAdapter {
     content: string,
     editorState: string,
     author: User,
-    mentions?: any[],
-    tags?: any[],
+    mentions?: MentionUser[],
+    tags?: MentionTag[],
     sourceId?: string,
     sourceType?: string,
     parentId?: string,
@@ -23,8 +23,8 @@ export interface CommentStorageAdapter {
     commentId: string,
     content: string,
     editorState: string,
-    mentions?: any[],
-    tags?: any[],
+    mentions?: MentionUser[],
+    tags?: MentionTag[],
   ): Promise<void>
 
   getCommentsBySource(sourceId: string, sourceType?: string): Promise<Comment[]>
@@ -46,5 +46,5 @@ export interface StorageAdapterConfig {
   enableDemoData?: boolean
 
   // Custom configuration
-  [key: string]: any
+  [key: string]: string | boolean | undefined | Record<string, string>
 }

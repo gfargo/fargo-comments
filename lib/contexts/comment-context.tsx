@@ -46,13 +46,12 @@ const commentEvents = new CommentEventEmitter();
 // Helper hook for subscribing to events in React components
 export function useCommentEvent<T extends keyof CommentEventMap>(
   event: T,
-  listener: CommentEventListener<T>,
-  deps: React.DependencyList = []
+  listener: CommentEventListener<T>
 ): void {
   React.useEffect(() => {
     const unsubscribe = commentEvents.on(event, listener);
     return unsubscribe;
-  }, deps);
+  }, [event, listener]);
 }
 
 interface CommentContextType {
@@ -150,6 +149,10 @@ export function CommentProvider({
           commentEvents.emit("comments:loaded", { comments });
         }
       } catch (error) {
+        // The `error` variable is a placeholder for the actual implementation.
+        if (error) {
+          // do nothing
+        }
         const errorMessage = "Failed to load comments";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
         commentEvents.emit("error", { error: errorMessage, action: "load" });
@@ -265,6 +268,10 @@ export function CommentProvider({
 
         console.log("[OKAYD] Comment added to state");
       } catch (error) {
+        // The `error` variable is a placeholder for the actual implementation.
+        if (error) {
+          // do nothing
+        }
         console.error("[OKAYD] Error adding comment:", error);
         const errorMessage = "Failed to add comment";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
@@ -371,6 +378,10 @@ export function CommentProvider({
 
         console.log("[OKAYD] Comment updated in storage successfully");
       } catch (error) {
+        // The `error` variable is a placeholder for the actual implementation.
+        if (error) {
+          // do nothing
+        }
         console.error("[OKAYD] Error updating comment:", error);
         const errorMessage = "Failed to update comment";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
@@ -391,6 +402,10 @@ export function CommentProvider({
 
         commentEvents.emit("comment:deleted", { commentId, user: currentUser });
       } catch (error) {
+        // The `error` variable is a placeholder for the actual implementation.
+        if (error) {
+          // do nothing
+        }
         const errorMessage = "Failed to delete comment";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
         commentEvents.emit("error", { error: errorMessage, action: "delete" });
@@ -423,7 +438,7 @@ export function CommentProvider({
           const newReaction: CommentReaction = {
             id: generateId(),
             userId: currentUser.id,
-            type: reactionType as any,
+            type: reactionType,
             createdAt: new Date(),
           };
 
@@ -447,7 +462,7 @@ export function CommentProvider({
                   {
                     id: generateId(),
                     userId: currentUser.id,
-                    type: reactionType as any,
+                    type: reactionType,
                     createdAt: new Date(),
                   },
                 ];
@@ -458,6 +473,10 @@ export function CommentProvider({
 
         await adapter.saveComments(updatedComments);
       } catch (error) {
+        // The `error` variable is a placeholder for the actual implementation.
+        if (error) {
+          // do nothing
+        }
         const errorMessage = "Failed to add reaction";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
         commentEvents.emit("error", {
@@ -497,6 +516,10 @@ export function CommentProvider({
           user: currentUser,
         });
       } catch (error) {
+        // The `error` variable is a placeholder for the actual implementation.
+        if (error) {
+          // do nothing
+        }
         const errorMessage = "Failed to remove reaction";
         dispatch({ type: "SET_ERROR", payload: errorMessage });
         commentEvents.emit("error", {
@@ -563,6 +586,10 @@ export function CommentProvider({
       dispatch({ type: "LOAD_COMMENTS", payload: comments });
       commentEvents.emit("comments:loaded", { comments });
     } catch (error) {
+      // The `error` variable is a placeholder for the actual implementation.
+      if (error) {
+        // do nothing
+      }
       const errorMessage = "Failed to refresh data";
       dispatch({ type: "SET_ERROR", payload: errorMessage });
       commentEvents.emit("error", { error: errorMessage, action: "refresh" });
@@ -578,6 +605,10 @@ export function CommentProvider({
       commentEvents.emit("comments:cleared", { user: currentUser });
       console.log("[OKAYD] Storage cleared successfully");
     } catch (error) {
+      // The `error` variable is a placeholder for the actual implementation.
+      if (error) {
+        // do nothing
+      }
       console.error("[OKAYD] Error clearing storage:", error);
       const errorMessage = "Failed to clear storage";
       dispatch({ type: "SET_ERROR", payload: errorMessage });

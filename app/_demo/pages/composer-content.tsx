@@ -8,18 +8,24 @@ import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment
 import { CommentVariation } from "@/lib/components/comments/comment-variations"
 import { currentUser } from "@/app/_demo/config/comment-data"
 import { useComments } from "@/lib/contexts/comment-context"
+import { Comment, MentionTag, MentionUser } from "@/lib/types/comments"
 
 export default function ComposerPageContent() {
   const { config, addComment } = useComments()
   const selectedVariant = config.variant || "card"
-  const [recentComments, setRecentComments] = useState<any[]>([])
+  const [recentComments, setRecentComments] = useState<Comment[]>([])
 
-  const handleAddComment = async (content: string, mentions: any[], tags: any[]) => {
+  const handleAddComment = async (
+    content: string,
+    editorState: string,
+    mentions: MentionUser[],
+    tags: MentionTag[],
+  ) => {
     console.log("[OKAYD] New comment:", { content, mentions, tags })
 
     const newComment = await addComment(
       content,
-      undefined, // editorState - will be generated from content
+      editorState, // editorState from Lexical
       "composer-demo", // sourceId
       "demo", // sourceType
       undefined, // parentId
@@ -180,7 +186,7 @@ export default function ComposerPageContent() {
           <CardHeader>
             <CardTitle>Recent Comments</CardTitle>
             <p className="text-sm text-gray-600">
-              Comments you've created using the composer above, displayed in the current {selectedVariant} style.
+              Comments you&apos;ve created using the composer above, displayed in the current {selectedVariant} style.
             </p>
           </CardHeader>
           <CardContent>
