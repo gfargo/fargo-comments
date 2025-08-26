@@ -6,7 +6,11 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "gen:registry": "node scripts/gen-registry.mjs",
+    "sync:registry-deps": "node scripts/sync-registry-deps.mjs",
+    "sync:registry-deps:auto": "node scripts/sync-registry-deps.mjs --auto",
+    "prebuild": "npm run sync:registry-deps:auto && npm run gen:registry"
   },
   "dependencies": {
     "@emoji-mart/data": "latest",

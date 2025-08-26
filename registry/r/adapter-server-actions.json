@@ -1,0 +1,32 @@
+{
+  "name": "okayd-comments-adapter-server-actions",
+  "type": "components",
+  "dependencies": {
+    "@emoji-mart/data": "latest",
+    "@lexical/link": "latest",
+    "@lexical/list": "latest",
+    "@lexical/react": "latest",
+    "@lexical/utils": "latest",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "4.1.0",
+    "emoji-mart": "latest",
+    "lexical": "latest",
+    "lexical-beautiful-mentions": "latest",
+    "lucide-react": "^0.454.0",
+    "tailwind-merge": "^2.5.5"
+  },
+  "registryDependencies": [
+    "https://commentsby.okayd.com/r/core"
+  ],
+  "files": [
+    {
+      "from": "lib/comments/adapters/cached-server-action-adapter.ts",
+      "to": "@/lib/comments/adapters/cached-server-action-adapter.ts"
+    },
+    {
+      "from": "lib/comments/adapters/server-action-adapter.ts",
+      "to": "@/lib/comments/adapters/server-action-adapter.ts"
+    }
+  ]
+}

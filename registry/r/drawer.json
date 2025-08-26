@@ -1,0 +1,29 @@
+{
+  "name": "okayd-comments-drawer",
+  "type": "components",
+  "dependencies": {
+    "@emoji-mart/data": "latest",
+    "@lexical/link": "latest",
+    "@lexical/list": "latest",
+    "@lexical/react": "latest",
+    "@lexical/utils": "latest",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "4.1.0",
+    "emoji-mart": "latest",
+    "lexical": "latest",
+    "lexical-beautiful-mentions": "latest",
+    "lucide-react": "^0.454.0",
+    "tailwind-merge": "^2.5.5"
+  },
+  "registryDependencies": [
+    "https://commentsby.okayd.com/r/core",
+    "https://commentsby.okayd.com/r/comment-list"
+  ],
+  "files": [
+    {
+      "from": "lib/comments/components/comments/comment-drawer.tsx",
+      "to": "@/lib/comments/components/comments/comment-drawer.tsx"
+    }
+  ]
+}

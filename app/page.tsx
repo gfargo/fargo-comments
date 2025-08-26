@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CommentProvider } from "@/lib/contexts/comment-context";
+import { CommentProvider } from "@/lib/comments/contexts/comment-context";
 import { CommentLayout } from "@/app/_demo/components/layout/comment-layout";
 import { currentUser } from "@/app/_demo/config/comment-data";
 import MainPageContent from "./_demo/pages/main-page-content";

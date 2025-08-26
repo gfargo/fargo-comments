@@ -4,9 +4,9 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MessageSquare, Users, Clock, CheckCircle2, AlertCircle, Flag } from "lucide-react"
-import { CommentVariation } from "@/lib/components/comments/comment-variations"
+import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
 import { sampleThreadComments, currentUser } from "@/app/_demo/config/comment-data"
-import { useComments } from "@/lib/contexts/comment-context"
+import { useComments } from "@/lib/comments/contexts/comment-context"
 
 export default function ThreadsPageContent() {
   const { config } = useComments()
@@ -211,7 +211,7 @@ export default function ThreadsPageContent() {
           <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
             <h4 className="font-medium text-purple-900 mb-2">Thread Flow Example</h4>
             <p className="text-sm text-purple-800">
-              The "Audit Workflow Example" above demonstrates a complete workflow from issue identification to
+              The &quot;Audit Workflow Example&quot; above demonstrates a complete workflow from issue identification to
               resolution, showing how different team members collaborate using the comment system. Notice how replies
               are visually connected to parent comments and how status changes are reflected throughout the
               conversation.

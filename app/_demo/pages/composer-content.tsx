@@ -4,22 +4,28 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Edit3, User, Hash, FileText, BookOpen, Tag } from "lucide-react"
-import { LexicalCommentComposer } from "@/lib/components/lexical/lexical-comment-composer"
-import { CommentVariation } from "@/lib/components/comments/comment-variations"
+import { LexicalCommentComposer } from "@/lib/comments/components/lexical/lexical-comment-composer"
+import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
 import { currentUser } from "@/app/_demo/config/comment-data"
-import { useComments } from "@/lib/contexts/comment-context"
+import { useComments } from "@/lib/comments/contexts/comment-context"
+import { Comment, MentionTag, MentionUser } from "@/lib/comments/types/comments"
 
 export default function ComposerPageContent() {
   const { config, addComment } = useComments()
   const selectedVariant = config.variant || "card"
-  const [recentComments, setRecentComments] = useState<any[]>([])
+  const [recentComments, setRecentComments] = useState<Comment[]>([])
 
-  const handleAddComment = async (content: string, mentions: any[], tags: any[]) => {
+  const handleAddComment = async (
+    content: string,
+    editorState: string,
+    mentions: MentionUser[],
+    tags: MentionTag[],
+  ) => {
     console.log("[OKAYD] New comment:", { content, mentions, tags })
 
     const newComment = await addComment(
       content,
-      undefined, // editorState - will be generated from content
+      editorState, // editorState from Lexical
       "composer-demo", // sourceId
       "demo", // sourceType
       undefined, // parentId
@@ -180,7 +186,7 @@ export default function ComposerPageContent() {
           <CardHeader>
             <CardTitle>Recent Comments</CardTitle>
             <p className="text-sm text-gray-600">
-              Comments you've created using the composer above, displayed in the current {selectedVariant} style.
+              Comments you&apos;ve created using the composer above, displayed in the current {selectedVariant} style.
             </p>
           </CardHeader>
           <CardContent>

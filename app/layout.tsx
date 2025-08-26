@@ -1,8 +1,8 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { QueryProvider } from "@/app/_demo/providers/query-provider";
-import { MentionProvider } from "@/lib/contexts/mention-context";
-import { CommentProvider } from "@/lib/contexts/comment-context";
+import { MentionProvider } from "@/lib/comments/contexts/mention-context";
+import { CommentProvider } from "@/lib/comments/contexts/comment-context";
 import { mentionTags, mentionUsers } from "./_demo/config/mention-items";
 import { currentUser } from "./_demo/config/comment-data";
 import { Toaster } from "sonner";
