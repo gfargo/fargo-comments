@@ -69,7 +69,7 @@ export default {
         // Utilities
         /^lib\/comments\/comment-events\.ts$/,
         /^lib\/comments\/lexical-utils\.ts$/,
-        /^lib\/comments\/utils\/(formatTimeAgo\.ts|generateId\.ts)$/,
+        /^lib\/comments\/utils\/(formatTimeAgo\.ts|generateId\.ts|debug\.ts)$/,
       ],
       exclude: [
         // Exclude all demo files

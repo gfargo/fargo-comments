@@ -1,42 +1,54 @@
-"use client"
+"use client";
 
-import { useMemo } from "react"
-import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
-import { CommentSearch } from "@/lib/comments/components/comments/comment-search"
-import { LexicalCommentComposer } from "@/lib/comments/components/lexical/lexical-comment-composer"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MessageSquare, Plus, SortAsc, X } from "lucide-react"
-import { useCommentActions } from "@/lib/comments/hooks/use-comment-actions"
+import { useMemo } from "react";
+import { CommentVariation } from "@/lib/comments/components/comments/comment-variations";
+import { type CommentVariant } from "@/lib/comments/types/comments";
+import { CommentSearch } from "@/lib/comments/components/comments/comment-search";
+import { LexicalCommentComposer } from "@/lib/comments/components/lexical/lexical-comment-composer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MessageSquare, Plus, SortAsc, X } from "lucide-react";
+import { useCommentActions } from "@/lib/comments/hooks/use-comment-actions";
 import { useComments } from "@/lib/comments/contexts/comment-context"; // Fixed import path to use correct location
-import type { Comment, User } from "@/lib/comments/types/comments"
-import { useState } from "react"
+import type { Comment, User } from "@/lib/comments/types/comments";
+import { useState } from "react";
 
 interface CommentListProps {
-  comments: Comment[]
-  currentUser: User
-  sourceId?: string
-  sourceType?: string
-  title?: string
-  variant?: string
-  enableSearch?: boolean
-  enableSorting?: boolean
-  showAddForm?: boolean
-  showComposerByDefault?: boolean
-  onAddComment?: (content: string, editorState: string, sourceId?: string, sourceType?: string) => void
-  onReply?: (content: string, editorState: string, parentId: string) => void
-  onEdit?: (commentId: string, content: string, editorState: string) => void
-  onDelete?: (commentId: string) => void
-  onLike?: (commentId: string) => void
-  onShare?: (commentId: string) => void
-  onForward?: (commentId: string) => void
-  onApprove?: (commentId: string) => void
-  onReact?: (commentId: string, reaction: string) => void
-  getRepliesForComment?: (commentId: string) => Comment[]
+  comments: Comment[];
+  currentUser: User;
+  sourceId?: string;
+  sourceType?: string;
+  title?: string;
+  variant?: CommentVariant;
+  enableSearch?: boolean;
+  enableSorting?: boolean;
+  showAddForm?: boolean;
+  showComposerByDefault?: boolean;
+  onAddComment?: (
+    content: string,
+    editorState: string,
+    sourceId?: string,
+    sourceType?: string
+  ) => void;
+  onReply?: (content: string, editorState: string, parentId: string) => void;
+  onEdit?: (commentId: string, content: string, editorState: string) => void;
+  onDelete?: (commentId: string) => void;
+  onLike?: (commentId: string) => void;
+  onShare?: (commentId: string) => void;
+  onForward?: (commentId: string) => void;
+  onApprove?: (commentId: string) => void;
+  onReact?: (commentId: string, reaction: string) => void;
+  getRepliesForComment?: (commentId: string) => Comment[];
 }
 
-type SortOption = "newest" | "oldest" | "most-replies" | "author"
+type SortOption = "newest" | "oldest" | "most-replies" | "author";
 
 export function CommentList({
   comments,
@@ -65,7 +77,7 @@ export function CommentList({
   if (title) {
     // do nothing
   }
-  const { config } = useComments() // Import useComments hook to access global config
+  const { config } = useComments(); // Import useComments hook to access global config
 
   const {
     handleCommentSubmit,
@@ -82,26 +94,31 @@ export function CommentList({
     handleForward: hookHandleForward,
     handleApprove: hookHandleApprove,
     handleReact: hookHandleReact,
-  } = useCommentActions()
+  } = useCommentActions();
 
-  const [sortBy, setSortBy] = useState<SortOption>("newest")
-  const [filteredComments, setFilteredComments] = useState<Comment[]>(comments)
-  const [composerKey, setComposerKey] = useState(0)
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [filteredComments, setFilteredComments] = useState<Comment[]>(comments);
+  const [composerKey, setComposerKey] = useState(0);
   const [replyComposerKeys, setReplyComposerKeys] = useState<
     Record<string, number>
-  >({})
+  >({});
 
   const handleAddCommentWithReset = async (
     content: string,
     editorState: string
   ) => {
     try {
-      await finalHandlers.onAddComment(content, editorState, sourceId, sourceType)
-      setComposerKey((prev) => prev + 1)
+      await finalHandlers.onAddComment(
+        content,
+        editorState,
+        sourceId,
+        sourceType
+      );
+      setComposerKey((prev) => prev + 1);
     } catch (error) {
-      console.error("Failed to add comment:", error)
+      console.error("Failed to add comment:", error);
     }
-  }
+  };
 
   const handleReplyWithReset = async (
     content: string,
@@ -109,16 +126,16 @@ export function CommentList({
     parentId: string
   ) => {
     try {
-      await finalHandlers.onReply(content, editorState, parentId)
+      await finalHandlers.onReply(content, editorState, parentId);
       setReplyComposerKeys((prev) => ({
         ...prev,
         [parentId]: (prev[parentId] || 0) + 1,
-      }))
-      handleCancelReply()
+      }));
+      handleCancelReply();
     } catch (error) {
-      console.error("Failed to add reply:", error)
+      console.error("Failed to add reply:", error);
     }
-  }
+  };
 
   const finalHandlers = {
     onAddComment:
@@ -136,69 +153,69 @@ export function CommentList({
     onForward: onForward || hookHandleForward,
     onApprove: onApprove || hookHandleApprove,
     onReact: onReact || hookHandleReact,
-  }
+  };
 
   const users = useMemo(() => {
-    const userMap = new Map()
+    const userMap = new Map();
     if (comments && Array.isArray(comments)) {
       comments.forEach((comment) => {
         if (!userMap.has(comment.authorId)) {
-          userMap.set(comment.authorId, comment.author)
+          userMap.set(comment.authorId, comment.author);
         }
-      })
+      });
     }
-    return Array.from(userMap.values())
-  }, [comments])
+    return Array.from(userMap.values());
+  }, [comments]);
 
   const threadedComments = useMemo(() => {
-    const commentsToSort = enableSearch ? filteredComments : comments
+    const commentsToSort = enableSearch ? filteredComments : comments;
     const topLevelComments = commentsToSort.filter(
       (comment) => !comment.parentId
-    )
+    );
 
     const sortedTopLevel = [...topLevelComments].sort((a, b) => {
       switch (sortBy) {
         case "oldest":
-          return a.createdAt.getTime() - b.createdAt.getTime()
+          return a.createdAt.getTime() - b.createdAt.getTime();
         case "most-replies":
-          const aReplies = getRepliesForComment?.(a.id)?.length || 0
-          const bReplies = getRepliesForComment?.(b.id)?.length || 0
-          return bReplies - aReplies
+          const aReplies = getRepliesForComment?.(a.id)?.length || 0;
+          const bReplies = getRepliesForComment?.(b.id)?.length || 0;
+          return bReplies - aReplies;
         case "author":
-          return a.author.name.localeCompare(b.author.name)
+          return a.author.name.localeCompare(b.author.name);
         case "newest":
         default:
-          return b.createdAt.getTime() - a.createdAt.getTime()
+          return b.createdAt.getTime() - a.createdAt.getTime();
       }
-    })
+    });
 
-    const flatThreads: Comment[] = []
+    const flatThreads: Comment[] = [];
     sortedTopLevel.forEach((parent) => {
-      flatThreads.push(parent)
+      flatThreads.push(parent);
       // Only get replies for top-level comments (flat threading)
-      const replies = getRepliesForComment?.(parent.id) || []
+      const replies = getRepliesForComment?.(parent.id) || [];
       const sortedReplies = [...replies].sort(
         (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-      )
-      flatThreads.push(...sortedReplies)
-    })
+      );
+      flatThreads.push(...sortedReplies);
+    });
 
-    return flatThreads
-  }, [comments, enableSearch, filteredComments, sortBy, getRepliesForComment])
+    return flatThreads;
+  }, [comments, enableSearch, filteredComments, sortBy, getRepliesForComment]);
 
-  const totalComments = comments?.length || 0
+  const totalComments = comments?.length || 0;
   const displayedComments = enableSearch
     ? filteredComments?.length || 0
-    : totalComments
+    : totalComments;
 
-  const shouldShowComposer = showComposerByDefault || hookShowComposer
+  const shouldShowComposer = showComposerByDefault || hookShowComposer;
 
   const getComposerPlaceholder = (isReply = false) => {
     if (isReply && replyContext) {
-      return `@${replyContext.authorName} `
+      return `@${replyContext.authorName} `;
     }
-    return config.placeholder || "Add a comment..."
-  }
+    return config.placeholder || "Add a comment...";
+  };
 
   return (
     <div className="space-y-6">
@@ -206,14 +223,20 @@ export function CommentList({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {!enableSearch && (
-            <Badge variant="secondary" className="text-sm">
+            <Badge
+              variant="secondary"
+              className="text-sm"
+            >
               {displayedComments}{" "}
               {displayedComments === 1 ? "comment" : "comments"}
               {displayedComments !== totalComments && ` of ${totalComments}`}
             </Badge>
           )}
           {isPending && (
-            <Badge variant="outline" className="text-xs">
+            <Badge
+              variant="outline"
+              className="text-xs"
+            >
               Updating...
             </Badge>
           )}
@@ -309,10 +332,10 @@ export function CommentList({
           </div>
         ) : (
           threadedComments.map((comment) => {
-            const isReply = !!comment.parentId
+            const isReply = !!comment.parentId;
             const commentReplies = !isReply
               ? getRepliesForComment?.(comment.id) || []
-              : []
+              : [];
 
             return (
               <div key={comment.id}>
@@ -337,7 +360,8 @@ export function CommentList({
                 {replyingTo === comment.id && (
                   <div className="mt-3 ml-8 pl-4 p-3">
                     <div className="text-sm text-gray-600 mb-2">
-                      Replying to {replyContext?.authorName || comment.author.name}
+                      Replying to{" "}
+                      {replyContext?.authorName || comment.author.name}
                     </div>
                     <LexicalCommentComposer
                       key={replyComposerKeys[comment.id] || 0}
@@ -360,10 +384,10 @@ export function CommentList({
                   </div>
                 )}
               </div>
-            )
+            );
           })
         )}
       </div>
     </div>
-  )
+  );
 }

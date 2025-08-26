@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import type { Comment, User as UserType } from "@/lib/comments/types/comments"
+import type { Comment, CommentVariant, User as UserType } from "@/lib/comments/types/comments"
 import { CardVariant } from "./variants/card-variant"
 import { GitHubVariant } from "./variants/github-variant"
 import { EmailVariant } from "./variants/email-variant"
@@ -14,21 +14,6 @@ import { NotionVariant } from "./variants/notion-variant"
 import { CleanVariant } from "./variants/clean-variant"
 import { CompactVariant } from "./variants/compact-variant"
 import { PlainVariant } from "./variants/plain-variant"
-
-export type CommentVariant =
-  | "card"
-  | "bubble"
-  | "timeline"
-  | "compact"
-  | "plain"
-  | "social"
-  | "professional"
-  | "clean"
-  | "thread"
-  | "github"
-  | "email"
-  | "notion"
-  | "mobile"
 
 export interface CommentVariationProps {
   comment: Comment
