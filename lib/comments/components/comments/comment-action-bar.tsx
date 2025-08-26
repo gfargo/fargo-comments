@@ -3,21 +3,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-    Heart,
-    MessageCircle,
-    Edit,
-    Trash2,
-    BookText,
-    X,
-    ThumbsUp,
-    Share2Icon,
-    ForwardIcon,
-    CheckCircle2Icon,
-    MessageCircleXIcon,
+  Heart,
+  MessageCircle,
+  Edit,
+  Trash2,
+  BookText,
+  X,
+  ThumbsUp,
+  Share2Icon,
+  ForwardIcon,
+  CheckCircle2Icon,
+  MessageCircleXIcon,
 } from "lucide-react";
 import { DeleteConfirmationDialog } from "@/lib/comments/components/comments/delete-confirmation-dialog";
 import type { Comment, User as UserType } from "@/lib/comments/types/comments";
-import type { CommentVariant } from "@/lib/comments/components/comments/comment-variations";
+import { type CommentVariant } from "@/lib/comments/types/comments";
 
 interface CommentActionBarProps {
   comment: Comment;

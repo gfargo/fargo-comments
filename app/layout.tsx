@@ -6,6 +6,7 @@ import { CommentProvider } from "@/lib/comments/contexts/comment-context";
 import { mentionTags, mentionUsers } from "./_demo/config/mention-items";
 import { currentUser } from "./_demo/config/comment-data";
 import { Toaster } from "sonner";
+import { Analytics } from '@vercel/analytics/react';
 
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
           </CommentProvider>
         </QueryProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );

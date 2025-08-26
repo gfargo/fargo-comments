@@ -1,5 +1,4 @@
 // Core comment system types - generic and reusable
-
 export interface User {
   id: string;
   name: string;
@@ -90,3 +89,19 @@ export interface CommentSystemConfig {
   allowReactions: boolean;
   mentionsEnabled: boolean;
 }
+
+export type CommentVariant =
+  | "card"
+  | "bubble"
+  | "timeline"
+  | "compact"
+  | "plain"
+  | "social"
+  | "professional"
+  | "clean"
+  | "thread"
+  | "github"
+  | "email"
+  | "notion"
+  | "mobile"
+  | "inline"

@@ -1,9 +1,9 @@
 "use client"
 
-import Link from "next/link"
-import { ExternalLink } from "lucide-react"
-import type { Comment } from "@/lib/comments/types/comments"
-import type { CommentVariant } from "./comment-variations"
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
+import type { Comment } from "@/lib/comments/types/comments";
+import { type CommentVariant } from "@/lib/comments/types/comments";
 
 interface CommentSourceReferenceProps {
   sourceReference: Comment["sourceReference"]

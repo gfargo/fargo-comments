@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
+import { track } from '@vercel/analytics/server'
 
 export async function GET(
   request: NextRequest,
@@ -52,6 +53,13 @@ export async function GET(
       ...componentData,
       files: populatedFiles
     }
+    
+    // Track component access
+    await track('component_accessed', {
+      component_name: sanitizedName,
+      type: 'component_download',
+      timestamp: Date.now()
+    })
     
     return NextResponse.json(responseData)
   } catch (error) {

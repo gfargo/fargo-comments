@@ -1,10 +1,20 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { Button } from '@/components/ui/button'
+import { track } from '@vercel/analytics'
 
 export function OpenInV0Button({
   name,
   className,
 }: { name: string } & React.ComponentProps<typeof Button>) {
+  const handleClick = () => {
+    track('open_in_v0_clicked', {
+      component_name: name,
+      timestamp: Date.now()
+    })
+  }
+
   return (
     <Button
       aria-label="Open in v0"
@@ -19,6 +29,7 @@ export function OpenInV0Button({
         href={`https://v0.dev/chat/api/open?url=${process.env.NEXT_PUBLIC_BASE_URL || 'https://commentsby.okayd.com'}api/registry/r/${name}.json`}
         target="_blank"
         rel="noreferrer"
+        onClick={handleClick}
       >
         Open in{" "}
         <svg

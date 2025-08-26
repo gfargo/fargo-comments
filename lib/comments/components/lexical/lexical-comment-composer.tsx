@@ -1,96 +1,123 @@
-"use client"
+"use client";
 
-import { forwardRef, useEffect, useState, useRef } from "react"
-import { debug } from "@/lib/comments/utils/debug"
-import { LexicalComposer } from "@lexical/react/LexicalComposer"
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
-import { ContentEditable } from "@lexical/react/LexicalContentEditable"
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
-import { ListPlugin } from "@lexical/react/LexicalListPlugin"
-import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin"
-import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { $getRoot, $createParagraphNode, $createTextNode } from "lexical"
+import { forwardRef, useEffect, useState, useRef } from "react";
+import { debug } from "@/lib/comments/utils/debug";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $getRoot, $createParagraphNode, $createTextNode } from "lexical";
 import {
-    BeautifulMentionsPlugin,
-    type BeautifulMentionsMenuProps,
-    type BeautifulMentionsMenuItemProps,
-} from "lexical-beautiful-mentions"
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Send, User, Hash, FileText, BookOpen, Tag, HelpCircle } from "lucide-react"
-import { AutoListPlugin } from "./plugins/auto-list-plugin"
-import { EmojiPlugin } from "./plugins/emoji-plugin"
-import { KeyboardShortcutPlugin } from "./plugins/keyboard-shortcut-plugin"
-import { FocusManagementPlugin } from "./plugins/focus-management-plugin"
+  BeautifulMentionsPlugin,
+  type BeautifulMentionsMenuProps,
+  type BeautifulMentionsMenuItemProps,
+} from "lexical-beautiful-mentions";
+import { Button } from "@/components/ui/button";
 import {
-    getContainerStyles,
-    getContentEditableStyles,
-    getPlaceholderPosition,
-    getButtonConfig,
-    type CommentVariant,
-} from "./utils/style-utils"
-import { useMentions } from "@/lib/comments/contexts/mention-context"
-import { useComments } from "@/lib/comments/contexts/comment-context"
-import { lexicalTheme, lexicalNodes, MATCHERS } from "./config/lexical-config"
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Send,
+  User,
+  Hash,
+  FileText,
+  BookOpen,
+  Tag,
+  HelpCircle,
+} from "lucide-react";
+import { AutoListPlugin } from "./plugins/auto-list-plugin";
+import { EmojiPlugin } from "./plugins/emoji-plugin";
+import { KeyboardShortcutPlugin } from "./plugins/keyboard-shortcut-plugin";
+import { FocusManagementPlugin } from "./plugins/focus-management-plugin";
+import {
+  getContainerStyles,
+  getContentEditableStyles,
+  getPlaceholderPosition,
+  getButtonConfig,
+} from "./utils/style-utils";
+import { useMentions } from "@/lib/comments/contexts/mention-context";
+import { useComments } from "@/lib/comments/contexts/comment-context";
+import { lexicalTheme, lexicalNodes, MATCHERS } from "./config/lexical-config";
+import { type CommentVariant } from "@/lib/comments/types/comments";
 
-const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(({ loading, ...props }, ref) => {
-  // The `loading` prop is passed for consistency with other variants,
-  // but is not used in this component.
-  if (loading) {
-    // do nothing
-  }
-  return (
-    <ul
-      className="absolute z-50 mt-1 max-h-60 w-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-      {...props}
-      ref={ref}
-    />
-  )
-})
-CustomMenu.displayName = "BeautifulMentionsCustomMenu"
-
-const CustomMenuItem = forwardRef<HTMLLIElement, BeautifulMentionsMenuItemProps>(
-  ({ selected, item, itemValue, ...props }, ref) => {
-    // The `itemValue` prop is passed for consistency with other variants,
+const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(
+  ({ loading, ...props }, ref) => {
+    // The `loading` prop is passed for consistency with other variants,
     // but is not used in this component.
-    if (itemValue) {
+    if (loading) {
       // do nothing
     }
-    const getIcon = () => {
-      if (item.trigger === "@") return <User className="w-4 h-4 text-blue-600" />
-      if (item.trigger === "#") {
-        if (!item.value) return <Tag className="w-4 h-4 text-gray-600" />
-        if (item.value.startsWith("question")) return <FileText className="w-4 h-4 text-green-600" />
-        if (item.value.startsWith("rule")) return <BookOpen className="w-4 h-4 text-purple-600" />
-        if (item.value.startsWith("section")) return <Hash className="w-4 h-4 text-orange-600" />
-        return <Tag className="w-4 h-4 text-gray-600" />
-      }
-      return null
-    }
-
     return (
-      <li
-        className={`relative cursor-pointer select-none py-2 px-3 ${
-          selected ? "bg-blue-50 text-blue-900" : "text-gray-900"
-        } hover:bg-gray-50`}
+      <ul
+        className="absolute z-50 mt-1 max-h-60 w-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
         {...props}
         ref={ref}
-      >
-        <div className="flex items-center gap-3">
-          {getIcon()}
-          <div className="flex-1 min-w-0">
-            <div className="font-medium truncate">{item.value}</div>
-            {item.data?.email && <div className="text-sm text-gray-500 truncate">{item.data.email}</div>}
-            {item.data?.description && <div className="text-sm text-gray-500 truncate">{item.data.description}</div>}
-          </div>
+      />
+    );
+  }
+);
+CustomMenu.displayName = "BeautifulMentionsCustomMenu";
+
+const CustomMenuItem = forwardRef<
+  HTMLLIElement,
+  BeautifulMentionsMenuItemProps
+>(({ selected, item, itemValue, ...props }, ref) => {
+  // The `itemValue` prop is passed for consistency with other variants,
+  // but is not used in this component.
+  if (itemValue) {
+    // do nothing
+  }
+  const getIcon = () => {
+    if (item.trigger === "@") return <User className="w-4 h-4 text-blue-600" />;
+    if (item.trigger === "#") {
+      if (!item.value) return <Tag className="w-4 h-4 text-gray-600" />;
+      if (item.value.startsWith("question"))
+        return <FileText className="w-4 h-4 text-green-600" />;
+      if (item.value.startsWith("rule"))
+        return <BookOpen className="w-4 h-4 text-purple-600" />;
+      if (item.value.startsWith("section"))
+        return <Hash className="w-4 h-4 text-orange-600" />;
+      return <Tag className="w-4 h-4 text-gray-600" />;
+    }
+    return null;
+  };
+
+  return (
+    <li
+      className={`relative cursor-pointer select-none py-2 px-3 ${
+        selected ? "bg-blue-50 text-blue-900" : "text-gray-900"
+      } hover:bg-gray-50`}
+      {...props}
+      ref={ref}
+    >
+      <div className="flex items-center gap-3">
+        {getIcon()}
+        <div className="flex-1 min-w-0">
+          <div className="font-medium truncate">{item.value}</div>
+          {item.data?.email && (
+            <div className="text-sm text-gray-500 truncate">
+              {item.data.email}
+            </div>
+          )}
+          {item.data?.description && (
+            <div className="text-sm text-gray-500 truncate">
+              {item.data.description}
+            </div>
+          )}
         </div>
-      </li>
-    )
-  },
-)
-CustomMenuItem.displayName = "BeautifulMentionsCustomMenuItem"
+      </div>
+    </li>
+  );
+});
+CustomMenuItem.displayName = "BeautifulMentionsCustomMenuItem";
 
 function ContentExtractor({
   onContentChange,
@@ -98,68 +125,73 @@ function ContentExtractor({
   initialContent,
   initialEditorState,
 }: {
-  onContentChange: (content: string) => void
-  onEditorStateChange: (editorState: string) => void
-  initialContent?: string
-  initialEditorState?: string
+  onContentChange: (content: string) => void;
+  onEditorStateChange: (editorState: string) => void;
+  initialContent?: string;
+  initialEditorState?: string;
 }) {
-  const [editor] = useLexicalComposerContext()
+  const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     if (initialEditorState && initialEditorState.trim()) {
       editor.update(() => {
         try {
-          const editorState = editor.parseEditorState(initialEditorState)
-          editor.setEditorState(editorState)
+          const editorState = editor.parseEditorState(initialEditorState);
+          editor.setEditorState(editorState);
         } catch (error) {
-          debug.error("Failed to parse editor state:", error)
+          debug.error("Failed to parse editor state:", error);
           if (initialContent && initialContent.trim()) {
-            const root = $getRoot()
-            root.clear()
-            const paragraph = $createParagraphNode()
-            const textNode = $createTextNode(initialContent)
-            paragraph.append(textNode)
-            root.append(paragraph)
+            const root = $getRoot();
+            root.clear();
+            const paragraph = $createParagraphNode();
+            const textNode = $createTextNode(initialContent);
+            paragraph.append(textNode);
+            root.append(paragraph);
           }
         }
-      })
+      });
     } else if (initialContent && initialContent.trim()) {
       editor.update(() => {
-        const root = $getRoot()
-        root.clear()
-        const paragraph = $createParagraphNode()
-        const textNode = $createTextNode(initialContent)
-        paragraph.append(textNode)
-        root.append(paragraph)
-      })
+        const root = $getRoot();
+        root.clear();
+        const paragraph = $createParagraphNode();
+        const textNode = $createTextNode(initialContent);
+        paragraph.append(textNode);
+        root.append(paragraph);
+      });
     }
-  }, [editor, initialContent, initialEditorState])
+  }, [editor, initialContent, initialEditorState]);
 
   useEffect(() => {
     const removeListener = editor.registerUpdateListener(({ editorState }) => {
       editorState.read(() => {
-        const root = $getRoot()
-        const textContent = root.getTextContent()
-        onContentChange(textContent)
-      })
+        const root = $getRoot();
+        const textContent = root.getTextContent();
+        onContentChange(textContent);
+      });
 
-      const editorStateJSON = JSON.stringify(editorState.toJSON())
-      onEditorStateChange(editorStateJSON)
-    })
+      const editorStateJSON = JSON.stringify(editorState.toJSON());
+      onEditorStateChange(editorStateJSON);
+    });
 
-    return removeListener
-  }, [editor, onContentChange, onEditorStateChange])
+    return removeListener;
+  }, [editor, onContentChange, onEditorStateChange]);
 
-  return null
+  return null;
 }
 
 interface LexicalCommentComposerProps {
-  variant?: CommentVariant
-  placeholder?: string
-  onSubmit?: (content: string, editorState: string, mentions: MentionUser[], tags: MentionTag[]) => void
-  className?: string
-  initialContent?: string
-  initialEditorState?: string
+  variant?: CommentVariant;
+  placeholder?: string;
+  onSubmit?: (
+    content: string,
+    editorState: string,
+    mentions: MentionUser[],
+    tags: MentionTag[]
+  ) => void;
+  className?: string;
+  initialContent?: string;
+  initialEditorState?: string;
 }
 
 export function LexicalCommentComposer({
@@ -170,41 +202,50 @@ export function LexicalCommentComposer({
   initialContent = "",
   initialEditorState = "",
 }: LexicalCommentComposerProps) {
-  const [currentContent, setCurrentContent] = useState("")
-  const [currentEditorState, setCurrentEditorState] = useState("")
-  const [showTooltip, setShowTooltip] = useState(false)
-  const submitButtonRef = useRef<HTMLButtonElement>(null)
-  const { mentionItems, loading: mentionLoading, error: mentionError } = useMentions()
-  const { config } = useComments()
+  const [currentContent, setCurrentContent] = useState("");
+  const [currentEditorState, setCurrentEditorState] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const {
+    mentionItems,
+    loading: mentionLoading,
+    error: mentionError,
+  } = useMentions();
+  const { config } = useComments();
 
-  const effectiveVariant = variant || config.variant || "default"
-  const effectivePlaceholder = placeholder || config.placeholder || "Add a comment..."
-  const features = config.editorFeatures || {}
+  const effectiveVariant = variant || config.variant || "default";
+  const effectivePlaceholder =
+    placeholder || config.placeholder || "Add a comment...";
+  const features = config.editorFeatures || {};
 
   const initialConfig = {
     namespace: "CommentEditor",
     theme: lexicalTheme,
     nodes: lexicalNodes,
     onError: (error: Error) => {
-      debug.error("Lexical error:", error)
+      debug.error("Lexical error:", error);
     },
-  }
+  };
 
   const handleSubmit = () => {
     if (onSubmit && currentContent.trim()) {
-      onSubmit(currentContent.trim(), currentEditorState, [], [])
+      onSubmit(currentContent.trim(), currentEditorState, [], []);
 
       if (!initialContent && !initialEditorState) {
-        setCurrentContent("")
-        setCurrentEditorState("")
+        setCurrentContent("");
+        setCurrentEditorState("");
       }
     }
-  }
+  };
 
-  const buttonConfig = getButtonConfig(effectiveVariant)
+  const buttonConfig = getButtonConfig(effectiveVariant);
 
   return (
-    <div className={`relative ${getContainerStyles(effectiveVariant)} ${className}`}>
+    <div
+      className={`relative ${getContainerStyles(
+        effectiveVariant
+      )} ${className}`}
+    >
       <LexicalComposer initialConfig={initialConfig}>
         <div className="relative">
           <RichTextPlugin
@@ -214,7 +255,9 @@ export function LexicalCommentComposer({
                 aria-placeholder={effectivePlaceholder}
                 placeholder={
                   <div
-                    className={`absolute ${getPlaceholderPosition(effectiveVariant)} text-gray-400 pointer-events-none select-none`}
+                    className={`absolute ${getPlaceholderPosition(
+                      effectiveVariant
+                    )} text-gray-400 pointer-events-none select-none`}
                   >
                     {effectivePlaceholder}
                   </div>
@@ -244,7 +287,10 @@ export function LexicalCommentComposer({
         {effectiveVariant !== "inline" && (
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
             <TooltipProvider>
-              <Tooltip open={showTooltip} onOpenChange={setShowTooltip}>
+              <Tooltip
+                open={showTooltip}
+                onOpenChange={setShowTooltip}
+              >
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
@@ -252,15 +298,19 @@ export function LexicalCommentComposer({
                     className="h-7 w-7 p-1 text-gray-500 hover:text-gray-700"
                     onTouchStart={() => setShowTooltip(true)}
                     onTouchEnd={(e) => {
-                      e.preventDefault()
-                      setTimeout(() => setShowTooltip(false), 3000)
+                      e.preventDefault();
+                      setTimeout(() => setShowTooltip(false), 3000);
                     }}
                     onClick={() => setShowTooltip(!showTooltip)}
                   >
                     <HelpCircle className="w-4 h-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="top" align="start" className="max-w-xs">
+                <TooltipContent
+                  side="top"
+                  align="start"
+                  className="max-w-xs"
+                >
                   <div className="text-sm">
                     <p className="font-medium mb-2">Start typing...</p>
                     <ul className="space-y-1 text-xs">
@@ -276,11 +326,21 @@ export function LexicalCommentComposer({
                           <li>• 1. for numbered lists</li>
                         </>
                       )}
-                      {features.autoLink !== false && <li>• URLs will auto-link</li>}
+                      {features.autoLink !== false && (
+                        <li>• URLs will auto-link</li>
+                      )}
                       {features.emoji !== false && <li>• : for emojis</li>}
                     </ul>
-                    {mentionLoading && <p className="text-xs text-amber-600 mt-2">Loading mentions...</p>}
-                    {mentionError && <p className="text-xs text-red-600 mt-2">Mention loading failed</p>}
+                    {mentionLoading && (
+                      <p className="text-xs text-amber-600 mt-2">
+                        Loading mentions...
+                      </p>
+                    )}
+                    {mentionError && (
+                      <p className="text-xs text-red-600 mt-2">
+                        Mention loading failed
+                      </p>
+                    )}
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -289,7 +349,9 @@ export function LexicalCommentComposer({
               ref={submitButtonRef}
               onClick={handleSubmit}
               size={buttonConfig.size}
-              className={`flex items-center gap-2 ${buttonConfig.className || ""}`}
+              className={`flex items-center gap-2 ${
+                buttonConfig.className || ""
+              }`}
               disabled={!currentContent.trim()}
             >
               {buttonConfig.showIcon && <Send className="w-4 h-4" />}
@@ -304,7 +366,7 @@ export function LexicalCommentComposer({
         <FocusManagementPlugin submitButtonRef={submitButtonRef} />
       </LexicalComposer>
     </div>
-  )
+  );
 }
 
-export default LexicalCommentComposer
+export default LexicalCommentComposer;
