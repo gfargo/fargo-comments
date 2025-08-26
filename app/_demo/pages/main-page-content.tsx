@@ -11,7 +11,7 @@ import { useCommentActions } from '@/lib/comments/hooks/use-comment-actions'
 
 function LiveCommentDemo() {
   const { config, getCommentsBySource, getRepliesForComment } = useComments()
-  const selectedVariant = config.variant || "compact" 
+  const selectedVariant = config.variant || "card" 
   const { handleAddComment, handleUpdateComment, handleDeleteComment, handleReply } = useCommentActions()
 
   const sourceId = "test-source-id"
