@@ -22,7 +22,7 @@ export function InstallationCard() {
   }
 
   return (
-    <Card className="border border-blue-200 shadow-sm bg-blue-50/30">
+    <Card id="install" className="border border-blue-200 shadow-sm bg-blue-50/30">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Package className="h-5 w-5 text-blue-600" />
