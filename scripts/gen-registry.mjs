@@ -53,8 +53,21 @@ function buildItemJSON(allFiles, itemCfg, items) {
   // Convert matched files into { from, to } with path rewriting
   const files = [...matches].sort().map((from) => {
     const toRaw = config.pathRewriter(from);
-    // Use the original lib/ path as the source
-    return { from: from, to: toRaw };
+    // Determine file type based on extension and content
+    let fileType = "registry:lib";
+    if (from.endsWith(".tsx")) {
+      if (from.includes("/components/")) fileType = "registry:component";
+    } else if (from.endsWith(".ts")) {
+      if (from.includes("/hooks/")) fileType = "registry:hook";
+      else if (from.includes("/types/")) fileType = "registry:lib";
+    }
+    
+    return { 
+      type: fileType,
+      path: toRaw,
+      content: "", // Will be populated by ShadcnUI CLI
+      target: toRaw
+    };
   });
 
   // Merge dependencies: defaults + item-specific
@@ -62,7 +75,10 @@ function buildItemJSON(allFiles, itemCfg, items) {
     ...(config.defaults?.dependencies ?? {}),
     ...(itemCfg.dependencies ?? {}),
   };
-  const dependencies = Object.keys(deps).length ? deps : undefined;
+  // Convert to array format for ShadcnUI schema
+  const dependencies = Object.keys(deps).length 
+    ? Object.entries(deps).map(([name, version]) => `${name}@${version}`)
+    : [];
 
   // Resolve registryDependencies → full URLs
   const registryDependencies =
@@ -70,8 +86,8 @@ function buildItemJSON(allFiles, itemCfg, items) {
 
   return {
     name: itemCfg.name,
-    type: itemCfg.type || "components",
-    ...(dependencies ? { dependencies } : {}),
+    type: itemCfg.type || "registry:lib",
+    ...(dependencies.length ? { dependencies } : {}),
     ...(registryDependencies.length ? { registryDependencies } : {}),
     files,
   };

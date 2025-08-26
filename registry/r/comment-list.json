@@ -1,32 +1,36 @@
 {
   "name": "okayd-comments-comment-list",
-  "type": "components",
-  "dependencies": {
-    "@emoji-mart/data": "latest",
-    "@lexical/link": "latest",
-    "@lexical/list": "latest",
-    "@lexical/react": "latest",
-    "@lexical/utils": "latest",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "date-fns": "4.1.0",
-    "emoji-mart": "latest",
-    "lexical": "latest",
-    "lexical-beautiful-mentions": "latest",
-    "lucide-react": "^0.454.0",
-    "tailwind-merge": "^2.5.5"
-  },
+  "type": "registry:lib",
+  "dependencies": [
+    "@emoji-mart/data@latest",
+    "@lexical/link@latest",
+    "@lexical/list@latest",
+    "@lexical/react@latest",
+    "@lexical/utils@latest",
+    "class-variance-authority@^0.7.1",
+    "clsx@^2.1.1",
+    "date-fns@4.1.0",
+    "emoji-mart@latest",
+    "lexical@latest",
+    "lexical-beautiful-mentions@latest",
+    "lucide-react@^0.454.0",
+    "tailwind-merge@^2.5.5"
+  ],
   "registryDependencies": [
     "https://commentsby.okayd.com/r/core"
   ],
   "files": [
     {
-      "from": "lib/comments/components/comments/comment-list.tsx",
-      "to": "@/lib/comments/components/comments/comment-list.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/comment-list.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/comment-list.tsx"
     },
     {
-      "from": "lib/comments/components/comments/comment-search.tsx",
-      "to": "@/lib/comments/components/comments/comment-search.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/comment-search.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/comment-search.tsx"
     }
   ]
 }

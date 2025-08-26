@@ -1,193 +1,279 @@
 {
   "name": "okayd-comments-core",
-  "type": "components",
-  "dependencies": {
-    "@emoji-mart/data": "latest",
-    "@lexical/link": "latest",
-    "@lexical/list": "latest",
-    "@lexical/react": "latest",
-    "@lexical/utils": "latest",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "date-fns": "4.1.0",
-    "emoji-mart": "latest",
-    "lexical": "latest",
-    "lexical-beautiful-mentions": "latest",
-    "lucide-react": "^0.454.0",
-    "tailwind-merge": "^2.5.5"
-  },
+  "type": "registry:lib",
+  "dependencies": [
+    "@emoji-mart/data@latest",
+    "@lexical/link@latest",
+    "@lexical/list@latest",
+    "@lexical/react@latest",
+    "@lexical/utils@latest",
+    "class-variance-authority@^0.7.1",
+    "clsx@^2.1.1",
+    "date-fns@4.1.0",
+    "emoji-mart@latest",
+    "lexical@latest",
+    "lexical-beautiful-mentions@latest",
+    "lucide-react@^0.454.0",
+    "tailwind-merge@^2.5.5"
+  ],
   "files": [
     {
-      "from": "lib/comments/adapters/comment-storage-adapter.ts",
-      "to": "@/lib/comments/adapters/comment-storage-adapter.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/adapters/comment-storage-adapter.ts",
+      "content": "",
+      "target": "@/lib/comments/adapters/comment-storage-adapter.ts"
     },
     {
-      "from": "lib/comments/adapters/index.ts",
-      "to": "@/lib/comments/adapters/index.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/adapters/index.ts",
+      "content": "",
+      "target": "@/lib/comments/adapters/index.ts"
     },
     {
-      "from": "lib/comments/adapters/local-storage-adapter.ts",
-      "to": "@/lib/comments/adapters/local-storage-adapter.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/adapters/local-storage-adapter.ts",
+      "content": "",
+      "target": "@/lib/comments/adapters/local-storage-adapter.ts"
     },
     {
-      "from": "lib/comments/comment-events.ts",
-      "to": "@/lib/comments/comment-events.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/comment-events.ts",
+      "content": "",
+      "target": "@/lib/comments/comment-events.ts"
     },
     {
-      "from": "lib/comments/components/comments/comment-action-bar.tsx",
-      "to": "@/lib/comments/components/comments/comment-action-bar.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/comment-action-bar.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/comment-action-bar.tsx"
     },
     {
-      "from": "lib/comments/components/comments/comment-source-reference.tsx",
-      "to": "@/lib/comments/components/comments/comment-source-reference.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/comment-source-reference.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/comment-source-reference.tsx"
     },
     {
-      "from": "lib/comments/components/comments/comment-variations.tsx",
-      "to": "@/lib/comments/components/comments/comment-variations.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/comment-variations.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/comment-variations.tsx"
     },
     {
-      "from": "lib/comments/components/comments/delete-confirmation-dialog.tsx",
-      "to": "@/lib/comments/components/comments/delete-confirmation-dialog.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/delete-confirmation-dialog.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/delete-confirmation-dialog.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/bubble-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/bubble-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/bubble-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/bubble-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/card-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/card-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/card-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/card-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/clean-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/clean-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/clean-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/clean-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/compact-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/compact-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/compact-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/compact-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/email-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/email-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/email-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/email-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/github-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/github-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/github-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/github-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/mobile-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/mobile-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/mobile-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/mobile-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/notion-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/notion-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/notion-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/notion-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/plain-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/plain-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/plain-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/plain-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/professional-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/professional-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/professional-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/professional-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/social-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/social-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/social-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/social-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/thread-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/thread-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/thread-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/thread-variant.tsx"
     },
     {
-      "from": "lib/comments/components/comments/variants/timeline-variant.tsx",
-      "to": "@/lib/comments/components/comments/variants/timeline-variant.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/comments/variants/timeline-variant.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/comments/variants/timeline-variant.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/config/lexical-config.ts",
-      "to": "@/lib/comments/components/lexical/config/lexical-config.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/components/lexical/config/lexical-config.ts",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/config/lexical-config.ts"
     },
     {
-      "from": "lib/comments/components/lexical/lexical-comment-composer.tsx",
-      "to": "@/lib/comments/components/lexical/lexical-comment-composer.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/lexical-comment-composer.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/lexical-comment-composer.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/lexical-read-only-renderer.tsx",
-      "to": "@/lib/comments/components/lexical/lexical-read-only-renderer.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/lexical-read-only-renderer.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/lexical-read-only-renderer.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/mention-component.tsx",
-      "to": "@/lib/comments/components/lexical/mention-component.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/mention-component.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/mention-component.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/plugins/auto-list-plugin.tsx",
-      "to": "@/lib/comments/components/lexical/plugins/auto-list-plugin.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/plugins/auto-list-plugin.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/plugins/auto-list-plugin.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/plugins/emoji-plugin.tsx",
-      "to": "@/lib/comments/components/lexical/plugins/emoji-plugin.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/plugins/emoji-plugin.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/plugins/emoji-plugin.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/plugins/focus-management-plugin.tsx",
-      "to": "@/lib/comments/components/lexical/plugins/focus-management-plugin.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/plugins/focus-management-plugin.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/plugins/focus-management-plugin.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/plugins/keyboard-shortcut-plugin.tsx",
-      "to": "@/lib/comments/components/lexical/plugins/keyboard-shortcut-plugin.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/plugins/keyboard-shortcut-plugin.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/plugins/keyboard-shortcut-plugin.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/utils/mention-utils.tsx",
-      "to": "@/lib/comments/components/lexical/utils/mention-utils.tsx"
+      "type": "registry:component",
+      "path": "@/lib/comments/components/lexical/utils/mention-utils.tsx",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/utils/mention-utils.tsx"
     },
     {
-      "from": "lib/comments/components/lexical/utils/style-utils.ts",
-      "to": "@/lib/comments/components/lexical/utils/style-utils.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/components/lexical/utils/style-utils.ts",
+      "content": "",
+      "target": "@/lib/comments/components/lexical/utils/style-utils.ts"
     },
     {
-      "from": "lib/comments/contexts/comment-context.tsx",
-      "to": "@/lib/comments/contexts/comment-context.tsx"
+      "type": "registry:lib",
+      "path": "@/lib/comments/contexts/comment-context.tsx",
+      "content": "",
+      "target": "@/lib/comments/contexts/comment-context.tsx"
     },
     {
-      "from": "lib/comments/contexts/mention-context.tsx",
-      "to": "@/lib/comments/contexts/mention-context.tsx"
+      "type": "registry:lib",
+      "path": "@/lib/comments/contexts/mention-context.tsx",
+      "content": "",
+      "target": "@/lib/comments/contexts/mention-context.tsx"
     },
     {
-      "from": "lib/comments/hooks/use-comment-actions.ts",
-      "to": "@/lib/comments/hooks/use-comment-actions.ts"
+      "type": "registry:hook",
+      "path": "@/lib/comments/hooks/use-comment-actions.ts",
+      "content": "",
+      "target": "@/lib/comments/hooks/use-comment-actions.ts"
     },
     {
-      "from": "lib/comments/hooks/use-comment-config.ts",
-      "to": "@/lib/comments/hooks/use-comment-config.ts"
+      "type": "registry:hook",
+      "path": "@/lib/comments/hooks/use-comment-config.ts",
+      "content": "",
+      "target": "@/lib/comments/hooks/use-comment-config.ts"
     },
     {
-      "from": "lib/comments/hooks/use-comment-context-hooks.ts",
-      "to": "@/lib/comments/hooks/use-comment-context-hooks.ts"
+      "type": "registry:hook",
+      "path": "@/lib/comments/hooks/use-comment-context-hooks.ts",
+      "content": "",
+      "target": "@/lib/comments/hooks/use-comment-context-hooks.ts"
     },
     {
-      "from": "lib/comments/hooks/use-comments-from-source.ts",
-      "to": "@/lib/comments/hooks/use-comments-from-source.ts"
+      "type": "registry:hook",
+      "path": "@/lib/comments/hooks/use-comments-from-source.ts",
+      "content": "",
+      "target": "@/lib/comments/hooks/use-comments-from-source.ts"
     },
     {
-      "from": "lib/comments/lexical-utils.ts",
-      "to": "@/lib/comments/lexical-utils.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/lexical-utils.ts",
+      "content": "",
+      "target": "@/lib/comments/lexical-utils.ts"
     },
     {
-      "from": "lib/comments/reducers/comment-reducer.ts",
-      "to": "@/lib/comments/reducers/comment-reducer.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/reducers/comment-reducer.ts",
+      "content": "",
+      "target": "@/lib/comments/reducers/comment-reducer.ts"
     },
     {
-      "from": "lib/comments/types/comment-hooks.ts",
-      "to": "@/lib/comments/types/comment-hooks.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/types/comment-hooks.ts",
+      "content": "",
+      "target": "@/lib/comments/types/comment-hooks.ts"
     },
     {
-      "from": "lib/comments/types/comments.ts",
-      "to": "@/lib/comments/types/comments.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/types/comments.ts",
+      "content": "",
+      "target": "@/lib/comments/types/comments.ts"
     },
     {
-      "from": "lib/comments/utils/formatTimeAgo.ts",
-      "to": "@/lib/comments/utils/formatTimeAgo.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/utils/formatTimeAgo.ts",
+      "content": "",
+      "target": "@/lib/comments/utils/formatTimeAgo.ts"
     },
     {
-      "from": "lib/comments/utils/generateId.ts",
-      "to": "@/lib/comments/utils/generateId.ts"
+      "type": "registry:lib",
+      "path": "@/lib/comments/utils/generateId.ts",
+      "content": "",
+      "target": "@/lib/comments/utils/generateId.ts"
     }
   ]
 }

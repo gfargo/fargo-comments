@@ -37,7 +37,7 @@ export default {
     {
       name: "okayd-comments-core",
       fileName: "core.json",
-      type: "components",
+      type: "registry:lib",
       dependencies: null, // merges defaults
       // Collect files for core system
       include: [
@@ -81,7 +81,7 @@ export default {
     {
       name: "okayd-comments-comment-list",
       fileName: "comment-list.json",
-      type: "components",
+      type: "registry:lib",
       dependencies: null,
       include: [
         /^lib\/comments\/components\/comments\/comment-list\.tsx$/,
@@ -96,7 +96,7 @@ export default {
     {
       name: "okayd-comments-drawer",
       fileName: "drawer.json",
-      type: "components",
+      type: "registry:lib",
       dependencies: null,
       include: [
         /^lib\/comments\/components\/comments\/comment-drawer\.tsx$/,
@@ -111,7 +111,7 @@ export default {
     {
       name: "okayd-comments-adapter-server-actions",
       fileName: "adapter-server-actions.json",
-      type: "components",
+      type: "registry:lib",
       dependencies: null,
       include: [
         /^lib\/comments\/adapters\/server-action-adapter\.ts$/,
@@ -125,7 +125,7 @@ export default {
     {
       name: "okayd-comments-adapter-api",
       fileName: "adapter-api.json",
-      type: "components",
+      type: "registry:lib",
       dependencies: null,
       include: [/^lib\/comments\/adapters\/api-adapter\.ts$/],
       exclude: [
@@ -136,7 +136,7 @@ export default {
     {
       name: "okayd-comments-adapter-tanstack-query",
       fileName: "adapter-tanstack-query.json",
-      type: "components",
+      type: "registry:lib",
       dependencies: { "@tanstack/react-query": "^5.0.0" },
       include: [/^lib\/comments\/adapters\/tanstack-query-adapter\.ts$/],
       exclude: [

@@ -4,37 +4,37 @@
       "name": "okayd-comments-core",
       "item": "https://commentsby.okayd.com/r/core",
       "file": "r/core.json",
-      "type": "components"
+      "type": "registry:lib"
     },
     {
       "name": "okayd-comments-comment-list",
       "item": "https://commentsby.okayd.com/r/comment-list",
       "file": "r/comment-list.json",
-      "type": "components"
+      "type": "registry:lib"
     },
     {
       "name": "okayd-comments-drawer",
       "item": "https://commentsby.okayd.com/r/drawer",
       "file": "r/drawer.json",
-      "type": "components"
+      "type": "registry:lib"
     },
     {
       "name": "okayd-comments-adapter-server-actions",
       "item": "https://commentsby.okayd.com/r/adapter-server-actions",
       "file": "r/adapter-server-actions.json",
-      "type": "components"
+      "type": "registry:lib"
     },
     {
       "name": "okayd-comments-adapter-api",
       "item": "https://commentsby.okayd.com/r/adapter-api",
       "file": "r/adapter-api.json",
-      "type": "components"
+      "type": "registry:lib"
     },
     {
       "name": "okayd-comments-adapter-tanstack-query",
       "item": "https://commentsby.okayd.com/r/adapter-tanstack-query",
       "file": "r/adapter-tanstack-query.json",
-      "type": "components"
+      "type": "registry:lib"
     }
   ]
 }
