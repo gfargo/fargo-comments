@@ -7,9 +7,23 @@ import { Copy, Package, Terminal, ExternalLink, CheckCircle } from "lucide-react
 import { useState } from "react"
 import Link from "next/link"
 import { installationConfig } from "@/app/_demo/config/installation-data"
+import { OpenInV0Button } from "@/components/open-in-v0-button"
 
 export function InstallationCard() {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null)
+
+  // Map installation item names to registry file names
+  const getRegistryName = (itemName: string): string => {
+    const mappings: Record<string, string> = {
+      "Core System": "core",
+      "Comment List": "comment-list", 
+      "Comment Drawer": "drawer",
+      "Server Actions Adapter": "adapter-server-actions",
+      "API Adapter": "adapter-api",
+      "TanStack Query Adapter": "adapter-tanstack-query"
+    }
+    return mappings[itemName] || itemName.toLowerCase().replace(/\s+/g, '-')
+  }
 
   const copyToClipboard = async (command: string) => {
     try {
@@ -79,18 +93,26 @@ export function InstallationCard() {
                   <div className="bg-gray-50 rounded p-3 font-mono text-xs">
                     <div className="flex items-center justify-between">
                       <span className="break-all">{item.command}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(item.command)}
-                        className="h-6 w-6 p-0 flex-shrink-0 ml-2"
-                      >
-                        {copiedCommand === item.command ? (
-                          <CheckCircle className="h-3 w-3 text-green-600" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
-                        )}
-                      </Button>
+                      <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(item.command)}
+                          className="h-6 w-6 p-0"
+                        >
+                          {copiedCommand === item.command ? (
+                            <CheckCircle className="h-3 w-3 text-green-600" />
+                          ) : (
+                            <Copy className="h-3 w-3" />
+                          )}
+                        </Button>
+                        <OpenInV0Button
+                          name={getRegistryName(item.name)}
+                          variant="ghost"
+                          size="sm"
+                          // className="h-6 w-6 p-0"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -145,18 +167,26 @@ export function InstallationCard() {
                   <div className="bg-gray-50 rounded p-3 font-mono text-xs">
                     <div className="flex items-center justify-between">
                       <span>{adapter.command}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(adapter.command)}
-                        className="h-6 w-6 p-0"
-                      >
-                        {copiedCommand === adapter.command ? (
-                          <CheckCircle className="h-3 w-3 text-green-600" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
-                        )}
-                      </Button>
+                      <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(adapter.command)}
+                          className="h-6 w-6 p-0"
+                        >
+                          {copiedCommand === adapter.command ? (
+                            <CheckCircle className="h-3 w-3 text-green-600" />
+                          ) : (
+                            <Copy className="h-3 w-3" />
+                          )}
+                        </Button>
+                        <OpenInV0Button
+                          name={getRegistryName(adapter.name)}
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
