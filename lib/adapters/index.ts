@@ -1,18 +1,20 @@
 import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-storage-adapter"
 import { LocalStorageAdapter } from "./local-storage-adapter"
 import { ServerActionAdapter } from "./server-action-adapter"
+import { CachedServerActionAdapter, type ServerActionSet, type CachedServerActionAdapterConfig } from "./cached-server-action-adapter"
 import { ApiAdapter } from "./api-adapter"
 import { useTanstackQueryAdapter } from "./tanstack-query-adapter"
 
-export type { CommentStorageAdapter, StorageAdapterConfig }
+export type { CommentStorageAdapter, StorageAdapterConfig, ServerActionSet, CachedServerActionAdapterConfig }
 export { LocalStorageAdapter }
 export { ServerActionAdapter }
+export { CachedServerActionAdapter }
 export { ApiAdapter }
 export { useTanstackQueryAdapter }
 
 export function createStorageAdapter(
-  type: "localStorage" | "serverActions" | "api" | "custom",
-  config: StorageAdapterConfig = {},
+  type: "localStorage" | "serverActions" | "cachedServerActions" | "api" | "custom",
+  config: StorageAdapterConfig | CachedServerActionAdapterConfig = {},
   customAdapter?: CommentStorageAdapter,
 ): CommentStorageAdapter {
   switch (type) {
@@ -20,6 +22,8 @@ export function createStorageAdapter(
       return new LocalStorageAdapter(config)
     case "serverActions":
       return new ServerActionAdapter(config)
+    case "cachedServerActions":
+      return new CachedServerActionAdapter(config as CachedServerActionAdapterConfig)
     case "api":
       return new ApiAdapter(config)
     case "custom":

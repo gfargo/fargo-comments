@@ -51,6 +51,36 @@ export async function addLexicalCommentAction(/*...args*/): Promise<Comment> {
 // ... other actions
 \`\`\`
 
+### 3.1. CachedServerActionAdapter
+**File:** `cached-server-action-adapter.ts`  
+**Use Case:** Enhanced server action adapter that uses React's `cache()` to deduplicate read operations within a single request. Perfect for server-side rendering and preventing duplicate database queries.
+
+\`\`\`typescript
+import { CachedServerActionAdapter, type ServerActionSet } from '@/lib/adapters'
+import { serverActions } from '@/app/actions/comments' // Your implementations
+
+const adapter = new CachedServerActionAdapter({
+  serverActions,
+  enableCaching: true, // default: true
+})
+
+// In your app/actions/comments.ts
+'use server'
+export const serverActions: ServerActionSet = {
+  getCommentsAction: async () => {
+    // This will be cached by React cache()
+    return db.comment.findMany(/* ... */)
+  },
+  // ... other actions
+}
+\`\`\`
+
+**Benefits:**
+- Automatic deduplication of read operations within a single request
+- Plays well with TanStack Query for client-side caching
+- Zero configuration caching for server-side operations
+- Maintains the same interface as other adapters
+
 ### 4. TanstackQueryAdapter
 **File:** `tanstack-query-adapter.ts`  
 **Use Case:** For applications using TanStack Query for advanced data fetching, caching, and state management. It provides hooks for queries and mutations.
@@ -71,9 +101,16 @@ To activate an adapter, pass an instance of it to the `CommentProvider`.
 
 \`\`\`typescript
 import { CommentProvider } from '@/lib/contexts/comment-context'
-import { ApiAdapter } from '@/lib/adapters'
+import { ApiAdapter, CachedServerActionAdapter } from '@/lib/adapters'
+import { serverActions } from '@/app/actions/comments'
 
+// Using API adapter
 <CommentProvider storageAdapter={new ApiAdapter({ apiEndpoint: '/api' })}>
+  <YourApp />
+</CommentProvider>
+
+// Using cached server actions (recommended for Next.js)
+<CommentProvider storageAdapter={new CachedServerActionAdapter({ serverActions })}>
   <YourApp />
 </CommentProvider>
 \`\`\`
