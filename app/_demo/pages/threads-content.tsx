@@ -7,6 +7,7 @@ import { MessageSquare, Users, Clock, CheckCircle2, AlertCircle, Flag } from "lu
 import { CommentVariation } from "@/lib/comments/components/comments/comment-variations"
 import { sampleThreadComments, currentUser } from "@/app/_demo/config/comment-data"
 import { useComments } from "@/lib/comments/contexts/comment-context"
+import { InstallationCard } from "@/app/_demo/components/installation-card"
 
 export default function ThreadsPageContent() {
   const { config } = useComments()
@@ -219,6 +220,9 @@ export default function ThreadsPageContent() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Installation Instructions */}
+      <InstallationCard />
     </div>
   )
 }

@@ -9,6 +9,7 @@ import { CommentVariation } from "@/lib/comments/components/comments/comment-var
 import { currentUser } from "@/app/_demo/config/comment-data"
 import { useComments } from "@/lib/comments/contexts/comment-context"
 import { Comment, MentionTag, MentionUser } from "@/lib/comments/types/comments"
+import { InstallationCard } from "@/app/_demo/components/installation-card"
 
 export default function ComposerPageContent() {
   const { config, addComment } = useComments()
@@ -203,6 +204,9 @@ export default function ComposerPageContent() {
           </CardContent>
         </Card>
       )}
+
+      {/* Installation Instructions */}
+      <InstallationCard />
     </div>
   )
 }

@@ -4,10 +4,12 @@ import { CommentDrawer } from "@/lib/comments/components/comments/comment-drawer
 import { useComments } from "@/lib/comments/contexts/comment-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, Edit3, FileText } from "lucide-react"
+import { MessageSquare, Edit3 } from "lucide-react"
 import Link from "next/link"
 import { currentUser } from "@/app/_demo/config/comment-data"
 import { useCommentActions } from '@/lib/comments/hooks/use-comment-actions'
+import { InstallationCard } from "@/app/_demo/components/installation-card"
+import { SystemFeaturesCard } from "@/app/_demo/components/system-features-card"
 
 function LiveCommentDemo() {
   const { config, getCommentsBySource, getRepliesForComment } = useComments()
@@ -139,74 +141,10 @@ export default function MainPageContent() {
       <LiveCommentDemo />
 
       {/* Features Overview */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            System Features
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Advanced Rich Text Editing</h4>
-              <p className="text-sm text-gray-600">
-                Powered by Lexical with @mentions, #tags, auto-list creation, emoji search, and automatic URL/email
-                detection. Centralized configuration ensures consistency across editing and read-only modes.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Flexible Storage Architecture</h4>
-              <p className="text-sm text-gray-600">
-                Pluggable storage adapters support localStorage, REST APIs, server actions, and Tanstack Query. Switch
-                between storage backends without changing your components.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">12+ Design Variants</h4>
-              <p className="text-sm text-gray-600">
-                From card and bubble styles to timeline and GitHub variants - each with unique visual identity and user
-                experience.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Generic Source Association</h4>
-              <p className="text-sm text-gray-600">
-                Comments can be associated with any entity type using sourceId/sourceType patterns. Perfect for audits,
-                projects, documents, or custom domain objects.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Flat Thread Architecture</h4>
-              <p className="text-sm text-gray-600">
-                Smart reply system with improved flat threading that prevents deep nesting while maintaining visual
-                hierarchy and proper reply associations.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Search & Storage Management</h4>
-              <p className="text-sm text-gray-600">
-                Full-text comment search with filtering, adapter-based storage persistence, and easy data management
-                tools.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Seamless Inline Editing</h4>
-              <p className="text-sm text-gray-600">
-                Edit comments in-place with auto-clearing composers, save/cancel controls, and consistent UX across all
-                variants.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-900 mb-2">Context-Aware UI</h4>
-              <p className="text-sm text-gray-600">
-                Adaptive composer styling, variant-specific button configurations, and intelligent placeholder
-                positioning with centralized Lexical configuration.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <SystemFeaturesCard />
+
+      {/* Installation Instructions */}
+      <InstallationCard />
     </div>
   )
 }
