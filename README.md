@@ -8,8 +8,9 @@ This repository contains several specialized README files for different aspects 
 
 - **[Context Providers Guide](lib/contexts/README.md)** - A guide to the core state management providers, including the event and hook systems.
 - **[Custom Hooks Guide](lib/hooks/README.md)** - An overview of the custom React hooks.
-- **[Lexical Editor Documentation](lib/components/lexical/README.md)** - Complete guide to rich text editing, plugins, and customizations.
-- **[Storage Adapters Documentation](lib/adapters/README.md)** - Comprehensive guide to all storage adapter implementations.
+- **[Comment Components Guide](lib/components/comments/README.md)** - An overview of the core UI components for rendering comments.
+- **[Lexical Editor Guide](lib/components/lexical/README.md)** - Complete guide to rich text editing, plugins, and customizations.
+- **[Storage Adapters Guide](lib/adapters/README.md)** - Comprehensive guide to all storage adapter implementations.
 - **[Database Schema Guide](README-SCHEMA.md)** - Database requirements and Prisma schema for production deployment.
 
 ## 🚀 Features
@@ -51,7 +52,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-\`\`\`plaintext
+```plaintext
 ├── app/
 │   ├── _demo/                   # Demo components and data
 │   └── ...                      # Other demo pages (composer, threads)
@@ -85,11 +86,11 @@ This repository contains several specialized README files for different aspects 
 │   ├── lexical-utils.ts         # Utilities for working with Lexical editor state.
 │   └── utils.ts                 # General utility functions.
 └── public/                      # Static assets
-\`\`\`
+```
 
 ## 🎯 Usage Example
 
-\`\`\`tsx
+```tsx
 import { CommentList } from '@/lib/components/comments/comment-list';
 import { CommentProvider } from '@/lib/contexts/comment-context';
 import { MentionProvider } from '@/lib/contexts/mention-context';
@@ -121,7 +122,7 @@ function MyApp() {
     </MentionProvider>
   );
 }
-\`\`\`
+```
 
 ## 🔧 Installation & Setup
 
@@ -132,17 +133,17 @@ function MyApp() {
 
 ### Quick Start
 
-\`\`\``bash
+```bash
 # Clone the repository
 git clone <repository-url>
 cd okayd-comments
 
 # Install dependencies
-npm install
+pnpm install
 
 # Run development server
 npm run dev
-\`\`\``
+```
 
 ## 🚀 Production Deployment
 
