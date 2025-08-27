@@ -17,7 +17,7 @@ export function OpenInV0Button({
 
   return (
     <Button
-      aria-label="Open in v0"
+      aria-label={`Open in v0 for ${name}`}
       size="sm"
       className={cn(
         "shadow-none bg-black text-white hover:bg-black hover:text-white dark:bg-white dark:text-black",
