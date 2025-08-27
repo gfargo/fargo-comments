@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { useComments } from "@/lib/comments/contexts/comment-context";
 import { toast } from "sonner";
 import { DebugStateSheet } from "@/app/_demo/components/debug/debug-state-sheet";
+import { track } from '@vercel/analytics';
 import {
     Tooltip,
     TooltipContent,
@@ -92,6 +93,13 @@ export function CommentLayout({
   const handleVariantChange = (variant: CommentVariant) => {
     console.log(variant);
     updateConfig({ variant });
+    
+    // Track variant change
+    track('variant_changed', {
+      variant: variant,
+      previous_variant: config.variant || 'card',
+      timestamp: Date.now()
+    });
   };
 
   return (
