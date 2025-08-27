@@ -50,11 +50,11 @@ export function ProfessionalVariant({
   return (
     <>
       <div
-        className={`border border-slate-200 rounded-lg bg-white shadow-sm ${isReply ? "ml-8 border-l-4 border-l-slate-400 bg-slate-50/30" : ""}`}
+        className={`border border-slate-200 rounded bg-white shadow-sm ${isReply ? "ml-8 border-l-4 border-l-slate-300 bg-slate-50" : ""}`}
       >
-        <div className="flex items-center justify-between p-4 bg-slate-50 border-b border-slate-200 rounded-t-lg">
+        <div className="flex items-center justify-between p-4 bg-slate-50 border-b border-slate-200 rounded-t">
           <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9 ring-2 ring-slate-200">
+            <Avatar className="h-9 w-9 ring-2 ring-white">
               <AvatarImage src={comment.author.avatar || "/placeholder.svg"} alt={comment.author.name} />
               <AvatarFallback className="bg-slate-200 text-slate-700 text-sm font-medium">
                 {getInitials(comment.author.name)}
@@ -70,14 +70,6 @@ export function ProfessionalVariant({
               </div>
               <div className="text-xs text-slate-500 mt-0.5">{formatTimeAgo(comment.createdAt)}</div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border border-blue-200">
-              Review
-            </Badge>
-            <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
-              Approved
-            </Badge>
           </div>
         </div>
 
