@@ -22,6 +22,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# macOS
+.DS_Store
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
