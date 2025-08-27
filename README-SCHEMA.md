@@ -5,12 +5,14 @@ This document outlines the database requirements and recommended schema for depl
 ## 🗄️ Database Requirements
 
 ### Supported Databases
+
 - **PostgreSQL** (Recommended)
-- **MySQL** 
+- **MySQL**
 - **SQLite** (Development only)
 - **MongoDB** (with adapter modifications)
 
 ### Minimum Requirements
+
 - Database version supporting JSON fields
 - UUID support (recommended)
 - Full-text search capabilities (optional but recommended)
@@ -18,6 +20,7 @@ This document outlines the database requirements and recommended schema for depl
 ## 📋 Prisma Schema
 
 ### Core Schema
+
 ```prisma
 // schema.prisma
 generator client {
@@ -192,23 +195,27 @@ model CommentHistory {
 ## 🔧 Setup Instructions
 
 ### 1. Install Dependencies
+
 ```bash
 npm install prisma @prisma/client
 npm install -D prisma
 ```
 
 ### 2. Initialize Prisma
+
 ```bash
 npx prisma init
 ```
 
 ### 3. Configure Environment
+
 ```env
 # .env
 DATABASE_URL="postgresql://username:password@localhost:5432/comments_db"
 ```
 
 ### 4. Apply Schema
+
 ```bash
 # Generate Prisma client
 npx prisma generate
@@ -221,6 +228,7 @@ npx prisma db seed
 ```
 
 ### 5. Create Prisma Adapter
+
 ```typescript
 // lib/comments/adapters/prisma-adapter.ts
 import { PrismaClient } from '@prisma/client'
@@ -266,6 +274,7 @@ export class PrismaAdapter implements CommentStorageAdapter {
 ## 🚀 Production Deployment
 
 ### Database Optimization
+
 ```sql
 -- Additional indexes for performance
 CREATE INDEX CONCURRENTLY idx_comments_source_created 
@@ -283,6 +292,7 @@ ON comments USING gin(to_tsvector('english', content));
 ```
 
 ### Environment Variables
+
 ```env
 # Production
 DATABASE_URL="postgresql://user:pass@host:5432/db?sslmode=require"
@@ -294,6 +304,7 @@ DIRECT_URL="postgresql://user:pass@host:5432/db"
 ```
 
 ### Migration Strategy
+
 ```bash
 # Production migrations
 npx prisma migrate deploy
@@ -305,6 +316,7 @@ pg_dump $DATABASE_URL > backup.sql
 ## 🔍 Query Examples
 
 ### Common Queries
+
 ```typescript
 // Get comments with reply counts (Relational Approach)
 const commentsWithCounts = await prisma.comment.findMany({
@@ -336,6 +348,7 @@ const stats = await prisma.comment.aggregate({
 ## 🛡️ Security Considerations
 
 ### Row Level Security (RLS)
+
 ```sql
 -- Enable RLS
 ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
@@ -349,6 +362,7 @@ CREATE POLICY "Users can edit own comments" ON comments
 ```
 
 ### Data Validation
+
 - Validate `sourceId` and `sourceType` combinations
 - Sanitize rich text content
 - Implement rate limiting for comment creation
@@ -357,12 +371,14 @@ CREATE POLICY "Users can edit own comments" ON comments
 ## 📊 Monitoring & Analytics
 
 ### Useful Metrics
+
 - Comments per source
 - User engagement rates
 - Response times
 - Storage growth
 
 ### Recommended Tools
+
 - **Prisma Pulse** - Real-time database events
 - **Prisma Accelerate** - Connection pooling and caching
 - **Database monitoring** - Query performance tracking
@@ -370,6 +386,7 @@ CREATE POLICY "Users can edit own comments" ON comments
 ## 📋 JSON Field Structures
 
 ### Mentions Array Format
+
 ```json
 {
   "mentions": [
@@ -389,6 +406,7 @@ CREATE POLICY "Users can edit own comments" ON comments
 ```
 
 ### Tags Array Format
+
 ```json
 {
   "tags": [
@@ -408,6 +426,7 @@ CREATE POLICY "Users can edit own comments" ON comments
 ```
 
 ### Reactions Array Format
+
 ```json
 {
   "reactions": [
@@ -426,6 +445,7 @@ CREATE POLICY "Users can edit own comments" ON comments
 ```
 
 ### Source Reference Format
+
 ```json
 {
   "sourceReference": {
