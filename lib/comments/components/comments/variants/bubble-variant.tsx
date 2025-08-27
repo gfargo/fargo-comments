@@ -40,13 +40,13 @@ export function BubbleVariant({
   const styles = {
     container: "max-w-md",
     replyContainer: "ml-12 mt-2",
-    content: "bg-blue-500 text-white rounded-2xl rounded-bl-sm px-4 py-3 inline-block",
-    replyContent: "bg-gray-100 text-gray-900 rounded-2xl rounded-br-sm px-4 py-3 inline-block",
+    content: "bg-blue-600 text-white rounded-2xl rounded-bl-sm px-4 py-3 inline-block",
+    replyContent: "bg-gray-100 text-gray-800 rounded-2xl rounded-br-sm px-4 py-3 inline-block",
     avatar: "h-8 w-8 flex-shrink-0",
     avatarFallback: "bg-blue-100 text-blue-700 text-sm font-medium",
     name: "font-medium text-white mb-1",
     replyName: "font-medium text-gray-900 mb-1",
-    timestamp: "text-xs text-blue-100 mt-1",
+    timestamp: "text-xs text-blue-200 mt-1",
     replyTimestamp: "text-xs text-gray-500 mt-1",
     actions: "flex items-center gap-2 mt-2 justify-end",
     actionButton: "text-blue-500 hover:text-blue-700 text-xs",
@@ -73,7 +73,7 @@ export function BubbleVariant({
     <>
       <div className={`flex ${isReply ? "justify-start" : "justify-end"} mb-4`}>
         <div className={`${styles.container} ${isReply ? styles.replyContainer : ""}`}>
-          <div className="flex gap-2 items-end">
+          <div className="flex gap-2 items-start">
             {isReply && (
               <Avatar className={styles.avatar}>
                 <AvatarImage src={comment.author.avatar || "/placeholder.svg"} alt={comment.author.name} />
@@ -97,7 +97,7 @@ export function BubbleVariant({
                     <LexicalReadOnlyRenderer
                       editorState={comment.editorState}
                       content={comment.content}
-                      className="text-sm text-gray-800 leading-relaxed"
+                      className={`text-sm leading-relaxed ${isReply ? 'text-gray-800' : 'text-white'}`}
                     />
                     <div className={isReply ? styles.replyTimestamp : styles.timestamp}>
                       {formatTimeAgo(comment.createdAt)}
