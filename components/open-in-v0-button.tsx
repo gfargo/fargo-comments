@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Button } from '@/components/ui/button'
-import { track } from '@vercel/analytics'
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { track } from "@vercel/analytics";
 
 export function OpenInV0Button({
   name,
   className,
 }: { name: string } & React.ComponentProps<typeof Button>) {
   const handleClick = () => {
-    track('open_in_v0_clicked', {
+    track("open_in_v0_clicked", {
       component_name: name,
-      timestamp: Date.now()
-    })
-  }
+      timestamp: Date.now(),
+    });
+  };
 
   return (
     <Button
@@ -26,7 +26,9 @@ export function OpenInV0Button({
       asChild
     >
       <a
-        href={`https://v0.dev/chat/api/open?url=${process.env.NEXT_PUBLIC_BASE_URL || 'https://commentsby.okayd.com'}api/registry/r/${name}.json`}
+        href={`https://v0.dev/chat/api/open?url=${
+          process.env.NEXT_PUBLIC_BASE_URL || "https://commentsby.okayd.com"
+        }/api/registry/r/${name}`}
         target="_blank"
         rel="noreferrer"
         onClick={handleClick}
@@ -49,5 +51,5 @@ export function OpenInV0Button({
         </svg>
       </a>
     </Button>
-  )
+  );
 }
