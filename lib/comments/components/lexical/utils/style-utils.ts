@@ -106,8 +106,8 @@ export const getButtonConfig = (variant: CommentVariant) => {
         size: "default" as const,
         showIcon: false,
         showText: true,
-        text: "Post",
-        className: "px-6",
+        text: "Post Comment",
+        className: "px-6 flex-grow ml-1",
       };
     case "inline":
       return {

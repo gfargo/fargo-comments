@@ -3,26 +3,23 @@
 import type React from "react"
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 import { debug } from "@/lib/comments/utils/debug"
+import { BeautifulMentionsItem } from 'lexical-beautiful-mentions'
 
-interface MentionUser {
-  id: string
-  value: string
+type MentionItemUser = BeautifulMentionsItem & {
   email?: string
   avatar?: string
   role?: string
 }
 
-interface MentionTag {
-  id: string
-  value: string
+type MentionItemTag = BeautifulMentionsItem & {
   description?: string
   type: "resource" | "rule" | "section" | "question"
   url?: string
 }
 
-interface MentionItems {
-  "@": MentionUser[]
-  "#": MentionTag[]
+type MentionItems = {
+  "@": MentionItemUser[]
+  "#": MentionItemTag[]
 }
 
 interface MentionContextType {
@@ -36,10 +33,10 @@ const MentionContext = createContext<MentionContextType | undefined>(undefined)
 
 interface MentionProviderProps {
   children: React.ReactNode
-  initialUsers?: MentionUser[]
-  initialTags?: MentionTag[]
-  getUsersCallback?: () => Promise<MentionUser[]>
-  getTagsCallback?: () => Promise<MentionTag[]>
+  initialUsers?: MentionItemUser[]
+  initialTags?: MentionItemTag[]
+  getUsersCallback?: () => Promise<MentionItemUser[]>
+  getTagsCallback?: () => Promise<MentionItemTag[]>
 }
 
 export function MentionProvider({ children, initialUsers, initialTags, getUsersCallback, getTagsCallback }: MentionProviderProps) {
@@ -101,4 +98,4 @@ export function useMentions() {
   return context
 }
 
-export type { MentionUser, MentionTag, MentionItems }
+export type { MentionItemUser as MentionUser, MentionItemTag as MentionTag, MentionItems }

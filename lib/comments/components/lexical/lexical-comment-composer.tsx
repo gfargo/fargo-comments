@@ -46,7 +46,7 @@ import {
 import { useMentions } from "@/lib/comments/contexts/mention-context";
 import { useComments } from "@/lib/comments/contexts/comment-context";
 import { lexicalTheme, lexicalNodes, MATCHERS } from "./config/lexical-config";
-import { type CommentVariant } from "@/lib/comments/types/comments";
+import { CommentVariant, MentionTag, MentionUser } from "@/lib/comments/types/comments";
 
 const CustomMenu = forwardRef<HTMLUListElement, BeautifulMentionsMenuProps>(
   ({ loading, ...props }, ref) => {
@@ -195,7 +195,7 @@ interface LexicalCommentComposerProps {
 }
 
 export function LexicalCommentComposer({
-  variant = "default",
+  variant = "card",
   placeholder,
   onSubmit,
   className = "",

@@ -100,7 +100,7 @@ export function CommentActionBar({
       case "notion":
         return "flex items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity";
       case "mobile":
-        return "flex items-center gap-4 mt-4";
+        return "flex items-center gap-2 mt-4";
       case "thread":
         return "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150";
       case "plain":
@@ -139,7 +139,7 @@ export function CommentActionBar({
       case "notion":
         return "h-6 px-2 text-xs";
       case "mobile":
-        return "h-10 px-4 text-base";
+        return "h-9 px-3 text-sm rounded-full flex-grow";
       case "thread":
         return "h-6 px-2 text-xs";
       case "plain":
@@ -208,7 +208,18 @@ export function CommentActionBar({
       case "email":
         return "text-gray-600 hover:text-gray-800";
       case "mobile":
-        return "text-gray-600 hover:text-gray-800";
+        switch (action) {
+          case "like":
+            return "text-gray-600 hover:text-pink-600 hover:bg-pink-50";
+          case "reply":
+            return "text-gray-600 hover:text-blue-600 hover:bg-blue-50";
+          case "edit":
+            return "text-gray-600 hover:text-gray-800 hover:bg-gray-100";
+          case "delete":
+            return "text-gray-600 hover:text-red-600 hover:bg-red-50";
+          default:
+            return "text-gray-600 hover:text-gray-800 hover:bg-gray-100";
+        }
       case "plain":
         return "text-gray-500 hover:text-gray-700";
       default:
@@ -219,7 +230,7 @@ export function CommentActionBar({
   const getIconSize = () => {
     switch (variant) {
       case "mobile":
-        return "w-4 h-4";
+        return "w-5 h-5";
       case "social":
         return "w-4 h-4";
       case "professional":
