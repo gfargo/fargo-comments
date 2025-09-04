@@ -10,7 +10,10 @@
     "gen:registry": "node scripts/gen-registry.mjs",
     "sync:registry-deps": "node scripts/sync-registry-deps.mjs",
     "sync:registry-deps:auto": "node scripts/sync-registry-deps.mjs --auto",
-    "prebuild": "npm run sync:registry-deps:auto && npm run gen:registry"
+    "prebuild": "npm run sync:registry-deps:auto && npm run gen:registry",
+    "firewall:list": "vercel-doorman list",
+    "firewall:download": "vercel-doorman download",
+    "firewall:sync": "vercel-doorman sync"
   },
   "dependencies": {
     "@emoji-mart/data": "latest",
@@ -72,9 +75,12 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
+    "vercel-doorman": "^1.5.7",
     "zod": "3.25.67"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^19",

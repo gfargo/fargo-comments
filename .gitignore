@@ -31,3 +31,5 @@ next-env.d.ts
 
 GEMINI.md
 CLAUDE.md
+
+.coco.config.json
