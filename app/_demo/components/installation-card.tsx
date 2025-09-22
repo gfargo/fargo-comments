@@ -48,7 +48,7 @@ export function InstallationCard() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Package className="h-5 w-5 text-blue-600" />
-          Install Okayd Comments
+          Install Fargo Comments
         </CardTitle>
         <p className="text-sm text-gray-600 mt-2">
           Add commenting functionality to your project using our ShadcnUI-compatible component registry.

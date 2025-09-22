@@ -27,7 +27,7 @@ export function OpenInV0Button({
     >
       <a
         href={`https://v0.dev/chat/api/open?url=${
-          process.env.NEXT_PUBLIC_BASE_URL || "https://commentsby.okayd.com"
+          process.env.NEXT_PUBLIC_BASE_URL || "https://commentsby.fargo.com"
         }/api/registry/r/${name}`}
         target="_blank"
         rel="noreferrer"

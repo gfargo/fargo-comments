@@ -1,6 +1,6 @@
 # Comment Storage Adapters
 
-This document provides a comprehensive overview of the storage adapter pattern used in the Okayd Comment System. The adapters provide a unified interface for data persistence, allowing developers to easily integrate their preferred backend.
+This document provides a comprehensive overview of the storage adapter pattern used in the Fargo Comment System. The adapters provide a unified interface for data persistence, allowing developers to easily integrate their preferred backend.
 
 ## Architecture Overview
 

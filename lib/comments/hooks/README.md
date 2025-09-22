@@ -1,6 +1,6 @@
 # Custom Hooks
 
-This document provides an overview of the custom React hooks used within the Okayd Comment System. These hooks encapsulate logic for state management, user actions, and data retrieval, promoting code reuse and separation of concerns.
+This document provides an overview of the custom React hooks used within the Fargo Comment System. These hooks encapsulate logic for state management, user actions, and data retrieval, promoting code reuse and separation of concerns.
 
 ## 📁 Directory Structure
 

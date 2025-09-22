@@ -1,5 +1,5 @@
 {
-  "name": "okayd-comments-comment-list",
+  "name": "fargo-comments-comment-list",
   "type": "registry:lib",
   "dependencies": [
     "@emoji-mart/data@latest",
@@ -17,7 +17,7 @@
     "tailwind-merge@^2.5.5"
   ],
   "registryDependencies": [
-    "https://commentsby.okayd.com/api/registry/r/core"
+    "https://commentsby.fargo.com/api/registry/r/core"
   ],
   "files": [
     {

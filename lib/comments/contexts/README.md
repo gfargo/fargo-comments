@@ -1,6 +1,6 @@
 # Context Providers
 
-This document provides a detailed overview of the React Context providers that power the Okayd Comment System. These providers are the primary mechanism for managing state and injecting application-specific data into the comment components.
+This document provides a detailed overview of the React Context providers that power the Fargo Comment System. These providers are the primary mechanism for managing state and injecting application-specific data into the comment components.
 
 ## Architecture Overview
 

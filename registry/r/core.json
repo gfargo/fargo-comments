@@ -1,5 +1,5 @@
 {
-  "name": "okayd-comments-core",
+  "name": "fargo-comments-core",
   "type": "registry:lib",
   "dependencies": [
     "@emoji-mart/data@latest",
@@ -262,6 +262,12 @@
       "path": "lib/comments/types/comments.ts",
       "content": "",
       "target": "lib/comments/types/comments.ts"
+    },
+    {
+      "type": "registry:lib",
+      "path": "lib/comments/utils/debug.ts",
+      "content": "",
+      "target": "lib/comments/utils/debug.ts"
     },
     {
       "type": "registry:lib",

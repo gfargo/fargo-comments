@@ -27,24 +27,24 @@ function LiveCommentDemo() {
   const comments = getCommentsBySource(sourceId, sourceType);
 
   const handleLike = (commentId: string) => {
-    console.log("[OKAYD] Like button pressed for comment:", commentId);
+    console.log("[FARGO] Like button pressed for comment:", commentId);
   };
 
   const handleShare = (commentId: string) => {
-    console.log("[OKAYD] Share button pressed for comment:", commentId);
+    console.log("[FARGO] Share button pressed for comment:", commentId);
   };
 
   const handleForward = (commentId: string) => {
-    console.log("[OKAYD] Forward button pressed for comment:", commentId);
+    console.log("[FARGO] Forward button pressed for comment:", commentId);
   };
 
   const handleApprove = (commentId: string) => {
-    console.log("[OKAYD] Approve button pressed for comment:", commentId);
+    console.log("[FARGO] Approve button pressed for comment:", commentId);
   };
 
   const handleReact = (commentId: string, reaction: string) => {
     console.log(
-      "[OKAYD] React button pressed for comment:",
+      "[FARGO] React button pressed for comment:",
       commentId,
       "with reaction:",
       reaction

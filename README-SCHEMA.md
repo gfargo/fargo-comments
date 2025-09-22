@@ -1,6 +1,6 @@
 # Database Schema Guide
 
-This document outlines the database requirements and recommended schema for deploying the Okayd Comment System in production with persistent storage.
+This document outlines the database requirements and recommended schema for deploying the Fargo Comment System in production with persistent storage.
 
 ## 🗄️ Database Requirements
 

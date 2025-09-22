@@ -82,17 +82,17 @@ export function createDebugLogger(config: CommentConfig) {
   return {
     log: (...args: any[]) => {
       if (config.debug) {
-        console.log("[OKAYD]", ...args)
+        console.log("[FARGO]", ...args)
       }
     },
     error: (...args: any[]) => {
       if (config.debug) {
-        console.error("[OKAYD]", ...args)
+        console.error("[FARGO]", ...args)
       }
     },
     warn: (...args: any[]) => {
       if (config.debug) {
-        console.warn("[OKAYD]", ...args)
+        console.warn("[FARGO]", ...args)
       }
     }
   }
