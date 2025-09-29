@@ -146,14 +146,14 @@ Add Fargo Comments to your existing application using our ShadcnUI-compatible re
 
 ```bash
 # Install the core commenting system
-npx shadcn@latest add https://commentsby.fargo.com/r/core
+npx shadcn@latest add https://commentsby.griffen.codes/r/core
 
 # Add the comment list component
-npx shadcn@latest add https://commentsby.fargo.com/r/comment-list
+npx shadcn@latest add https://commentsby.griffen.codes/r/comment-list
 
 # Optional: Add specific storage adapters
-npx shadcn@latest add https://commentsby.fargo.com/r/adapter-server-actions
-npx shadcn@latest add https://commentsby.fargo.com/r/adapter-api
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-server-actions
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-api
 ```
 
 **Available Components:**
