@@ -11,17 +11,17 @@ export function setDebugMode(enabled: boolean) {
 export const debug = {
   log: (...args: any[]) => {
     if (isDebugEnabled) {
-      console.log("[OKAYD]", ...args);
+      console.log("[FARGO]", ...args);
     }
   },
   error: (...args: any[]) => {
     if (isDebugEnabled) {
-      console.error("[OKAYD]", ...args);
+      console.error("[FARGO]", ...args);
     }
   },
   warn: (...args: any[]) => {
     if (isDebugEnabled) {
-      console.warn("[OKAYD]", ...args);
+      console.warn("[FARGO]", ...args);
     }
   },
 };

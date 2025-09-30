@@ -4,7 +4,7 @@
 
 export default {
   outDir: "registry",
-  baseUrl: "https://commentsby.okayd.com/api/registry", // used in registry.json manifest
+  baseUrl: "https://commentsby.griffen.codes/api/registry", // used in registry.json manifest
   // Global dependency defaults (merged into items; item-specific deps win)
   defaults: {
     dependencies: {
@@ -35,7 +35,7 @@ export default {
 
   items: [
     {
-      name: "okayd-comments-core",
+      name: "fargo-comments-core",
       fileName: "core.json",
       type: "registry:lib",
       dependencies: null, // merges defaults
@@ -79,7 +79,7 @@ export default {
     },
 
     {
-      name: "okayd-comments-comment-list",
+      name: "fargo-comments-comment-list",
       fileName: "comment-list.json",
       type: "registry:lib",
       dependencies: null,
@@ -94,7 +94,7 @@ export default {
     },
 
     {
-      name: "okayd-comments-drawer",
+      name: "fargo-comments-drawer",
       fileName: "drawer.json",
       type: "registry:lib",
       dependencies: null,
@@ -107,9 +107,9 @@ export default {
       registryDependencies: ["core", "comment-list"],
     },
 
-    // Adapters with consistent okayd-comments namespace
+    // Adapters with consistent fargo-comments namespace
     {
-      name: "okayd-comments-adapter-server-actions",
+      name: "fargo-comments-adapter-server-actions",
       fileName: "adapter-server-actions.json",
       type: "registry:lib",
       dependencies: null,
@@ -123,7 +123,7 @@ export default {
       registryDependencies: ["core"],
     },
     {
-      name: "okayd-comments-adapter-api",
+      name: "fargo-comments-adapter-api",
       fileName: "adapter-api.json",
       type: "registry:lib",
       dependencies: null,
@@ -134,7 +134,7 @@ export default {
       registryDependencies: ["core"],
     },
     {
-      name: "okayd-comments-adapter-tanstack-query",
+      name: "fargo-comments-adapter-tanstack-query",
       fileName: "adapter-tanstack-query.json",
       type: "registry:lib",
       dependencies: { "@tanstack/react-query": "^5.0.0" },

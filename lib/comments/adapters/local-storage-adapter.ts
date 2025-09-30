@@ -1,13 +1,13 @@
 import type {
-  Comment,
-  CommentThread,
-  User,
-  MentionUser,
-  MentionTag,
+    Comment,
+    CommentThread,
+    User,
+    MentionUser,
+    MentionTag,
 } from "@/lib/comments/types/comments";
 import type {
-  CommentStorageAdapter,
-  StorageAdapterConfig,
+    CommentStorageAdapter,
+    StorageAdapterConfig,
 } from "./comment-storage-adapter";
 import { generateId } from "@/lib/comments/utils/generateId";
 import { extractMentionsAndTags } from "@/lib/comments/lexical-utils";
@@ -15,7 +15,7 @@ import { debug } from "@/lib/comments/utils/debug";
 
 export class LocalStorageAdapter implements CommentStorageAdapter {
   private readonly STORAGE_KEYS = {
-    COMMENTS: "okayd_comment_store",
+    COMMENTS: "fargo_comment_store",
   } as const;
 
   constructor(private config: StorageAdapterConfig = {}) {}

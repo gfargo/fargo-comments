@@ -12,8 +12,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Okayd Comments",
-    template: "%s | Okayd Comments",
+    default: "Fargo Comments",
+    template: "%s | Fargo Comments",
   },
   description:
     "An open-source React commenting system with rich text editing, multiple design variants, and flexible storage adapters.",

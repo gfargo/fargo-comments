@@ -1,10 +1,10 @@
 # Component Registry Guide
 
-This guide covers the comprehensive component registry system for Okayd Comments, which allows users to install components into their projects using the ShadcnUI CLI pattern.
+This guide covers the comprehensive component registry system for Fargo Comments, which allows users to install components into their projects using the ShadcnUI CLI pattern.
 
 ## 📦 Overview
 
-The Okayd Comments registry provides a ShadcnUI-compatible component distribution system that allows developers to:
+The Fargo Comments registry provides a ShadcnUI-compatible component distribution system that allows developers to:
 - Install specific components rather than the entire library
 - Get automatic dependency management
 - Maintain consistent import paths across projects
@@ -36,23 +36,23 @@ Your `components.json` should include the following aliases:
 
 ```bash
 # Core commenting system (required first)
-npx shadcn@latest add https://commentsby.okayd.com/r/core
+npx shadcn@latest add https://commentsby.griffen.codes/r/core
 
 # Comment list with search functionality
-npx shadcn@latest add https://commentsby.okayd.com/r/comment-list
+npx shadcn@latest add https://commentsby.griffen.codes/r/comment-list
 
 # Comment drawer/sidebar component
-npx shadcn@latest add https://commentsby.okayd.com/r/drawer
+npx shadcn@latest add https://commentsby.griffen.codes/r/drawer
 
 # Storage adapters (choose based on your backend)
-npx shadcn@latest add https://commentsby.okayd.com/r/adapter-server-actions
-npx shadcn@latest add https://commentsby.okayd.com/r/adapter-api
-npx shadcn@latest add https://commentsby.okayd.com/r/adapter-tanstack-query
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-server-actions
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-api
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-tanstack-query
 ```
 
 ## 📚 Available Components
 
-### Core System (`okayd-comments-core`)
+### Core System (`fargo-comments-core`)
 
 **What it includes:**
 - Context providers (`CommentProvider`, `MentionProvider`)
@@ -83,7 +83,7 @@ npx shadcn@latest add https://commentsby.okayd.com/r/adapter-tanstack-query
 }
 ```
 
-### Comment List (`okayd-comments-comment-list`)
+### Comment List (`fargo-comments-comment-list`)
 
 **What it includes:**
 - `CommentList` component with full functionality
@@ -93,7 +93,7 @@ npx shadcn@latest add https://commentsby.okayd.com/r/adapter-tanstack-query
 
 **Registry dependencies:** `core`
 
-### Comment Drawer (`okayd-comments-drawer`)
+### Comment Drawer (`fargo-comments-drawer`)
 
 **What it includes:**
 - `CommentDrawer` sidebar component
@@ -104,7 +104,7 @@ npx shadcn@latest add https://commentsby.okayd.com/r/adapter-tanstack-query
 
 ### Storage Adapters
 
-#### Server Actions Adapter (`okayd-comments-adapter-server-actions`)
+#### Server Actions Adapter (`fargo-comments-adapter-server-actions`)
 
 **What it includes:**
 - `ServerActionAdapter` for Next.js Server Actions
@@ -113,7 +113,7 @@ npx shadcn@latest add https://commentsby.okayd.com/r/adapter-tanstack-query
 
 **Registry dependencies:** `core`
 
-#### API Adapter (`okayd-comments-adapter-api`)
+#### API Adapter (`fargo-comments-adapter-api`)
 
 **What it includes:**
 - `ApiAdapter` for REST API integration
@@ -121,7 +121,7 @@ npx shadcn@latest add https://commentsby.okayd.com/r/adapter-tanstack-query
 
 **Registry dependencies:** `core`
 
-#### TanStack Query Adapter (`okayd-comments-adapter-tanstack-query`)
+#### TanStack Query Adapter (`fargo-comments-adapter-tanstack-query`)
 
 **What it includes:**
 - `TanstackQueryAdapter` with caching and optimistic updates
@@ -379,7 +379,7 @@ The registry configuration is defined in `scripts/registry.config.mjs`:
 ```javascript
 export default {
   outDir: "registry",
-  baseUrl: "https://commentsby.okayd.com",
+  baseUrl: "https://commentsby.griffen.codes",
   defaults: {
     dependencies: {
       // Shared dependencies across all components
@@ -395,9 +395,9 @@ export default {
 
 The registry is served through Next.js API routes:
 
-- **Registry Manifest**: `https://commentsby.okayd.com/api/registry`
-- **Component Definitions**: `https://commentsby.okayd.com/api/registry/r/{component}`
-- **Source Files**: `https://commentsby.okayd.com/api/templates/{filepath}`
+- **Registry Manifest**: `https://commentsby.griffen.codes/api/registry`
+- **Component Definitions**: `https://commentsby.griffen.codes/api/registry/r/{component}`
+- **Source Files**: `https://commentsby.griffen.codes/api/templates/{filepath}`
 
 ### Example Responses
 
@@ -406,8 +406,8 @@ The registry is served through Next.js API routes:
 {
   "registry": [
     {
-      "name": "okayd-comments-core",
-      "item": "https://commentsby.okayd.com/r/core",
+      "name": "fargo-comments-core",
+      "item": "https://commentsby.griffen.codes/r/core",
       "file": "r/core.json",
       "type": "components"
     }
@@ -418,7 +418,7 @@ The registry is served through Next.js API routes:
 **Component Definition** (`/api/registry/r/core`):
 ```json
 {
-  "name": "okayd-comments-core",
+  "name": "fargo-comments-core",
   "type": "components",
   "dependencies": {
     "lexical": "latest",
@@ -486,4 +486,4 @@ The registry automatically manages component versions, but ensure compatibility:
 
 ---
 
-Built with ❤️ by [Okayd](https://okayd.com) for modern applications requiring sophisticated commenting systems.
+Built with ❤️ by [Fargo](https://fargo.com) for modern applications requiring sophisticated commenting systems.

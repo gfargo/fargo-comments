@@ -1,4 +1,4 @@
-# Okayd Comments
+# Fargo Comments
 
 An open source, production-ready React commenting system built with Next.js, TypeScript, and Lexical editor. Batteries not included - bring your own storage, authentication, and styling preferences. Perfect for modern web applications requiring sophisticated commenting functionality.
 
@@ -142,18 +142,18 @@ function MyApp() {
 
 ### For Users: Install into Your Project
 
-Add Okayd Comments to your existing application using our ShadcnUI-compatible registry:
+Add Fargo Comments to your existing application using our ShadcnUI-compatible registry:
 
 ```bash
 # Install the core commenting system
-npx shadcn@latest add https://commentsby.okayd.com/r/core
+npx shadcn@latest add https://commentsby.griffen.codes/r/core
 
 # Add the comment list component
-npx shadcn@latest add https://commentsby.okayd.com/r/comment-list
+npx shadcn@latest add https://commentsby.griffen.codes/r/comment-list
 
 # Optional: Add specific storage adapters
-npx shadcn@latest add https://commentsby.okayd.com/r/adapter-server-actions
-npx shadcn@latest add https://commentsby.okayd.com/r/adapter-api
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-server-actions
+npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-api
 ```
 
 **Available Components:**
@@ -171,7 +171,7 @@ For detailed registry usage, configuration, and integration examples, see the **
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd okayd-comments
+cd fargo-comments
 
 # Install dependencies
 pnpm install
@@ -189,11 +189,11 @@ npm run dev
 
 For production deployment with database integration, see the [Database Schema Guide](README-SCHEMA.md) for complete setup instructions.
 
-## 🏢 About Okayd
+## 🏢 About Fargo
 
-Okayd builds modern tools for regulatory compliance and brand protection. Our flagship product, **Auditor**, helps CPG brands achieve regulatory compliance, examine label elements for accuracy, and use best practices to protect brand equity.
+Fargo builds modern tools for regulatory compliance and brand protection. Our flagship product, **Auditor**, helps CPG brands achieve regulatory compliance, examine label elements for accuracy, and use best practices to protect brand equity.
 
-**Okayd Comments** was born from our need for a flexible, domain-agnostic commenting system that could work across different types of content - from audit findings to project discussions to document reviews.
+**Fargo Comments** was born from our need for a flexible, domain-agnostic commenting system that could work across different types of content - from audit findings to project discussions to document reviews.
 
 ## 📝 Contributing
 
@@ -217,4 +217,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Built with ❤️ by [Okayd](https://okayd.com) for modern web applications requiring sophisticated commenting systems.
+Built with ❤️ by [Fargo](https://fargo.com) for modern web applications requiring sophisticated commenting systems.

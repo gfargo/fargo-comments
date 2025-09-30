@@ -22,7 +22,7 @@ export default function ComposerPageContent() {
     mentions: MentionUser[],
     tags: MentionTag[],
   ) => {
-    console.log("[OKAYD] New comment:", { content, mentions, tags })
+    console.log("[FARGO] New comment:", { content, mentions, tags })
 
     const newComment = await addComment(
       content,

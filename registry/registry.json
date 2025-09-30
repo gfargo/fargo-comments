@@ -1,38 +1,38 @@
 {
   "registry": [
     {
-      "name": "okayd-comments-core",
-      "item": "https://commentsby.okayd.com/api/registry/r/core",
+      "name": "fargo-comments-core",
+      "item": "https://commentsby.fargo.com/api/registry/r/core",
       "file": "r/core.json",
       "type": "registry:lib"
     },
     {
-      "name": "okayd-comments-comment-list",
-      "item": "https://commentsby.okayd.com/api/registry/r/comment-list",
+      "name": "fargo-comments-comment-list",
+      "item": "https://commentsby.fargo.com/api/registry/r/comment-list",
       "file": "r/comment-list.json",
       "type": "registry:lib"
     },
     {
-      "name": "okayd-comments-drawer",
-      "item": "https://commentsby.okayd.com/api/registry/r/drawer",
+      "name": "fargo-comments-drawer",
+      "item": "https://commentsby.fargo.com/api/registry/r/drawer",
       "file": "r/drawer.json",
       "type": "registry:lib"
     },
     {
-      "name": "okayd-comments-adapter-server-actions",
-      "item": "https://commentsby.okayd.com/api/registry/r/adapter-server-actions",
+      "name": "fargo-comments-adapter-server-actions",
+      "item": "https://commentsby.fargo.com/api/registry/r/adapter-server-actions",
       "file": "r/adapter-server-actions.json",
       "type": "registry:lib"
     },
     {
-      "name": "okayd-comments-adapter-api",
-      "item": "https://commentsby.okayd.com/api/registry/r/adapter-api",
+      "name": "fargo-comments-adapter-api",
+      "item": "https://commentsby.fargo.com/api/registry/r/adapter-api",
       "file": "r/adapter-api.json",
       "type": "registry:lib"
     },
     {
-      "name": "okayd-comments-adapter-tanstack-query",
-      "item": "https://commentsby.okayd.com/api/registry/r/adapter-tanstack-query",
+      "name": "fargo-comments-adapter-tanstack-query",
+      "item": "https://commentsby.fargo.com/api/registry/r/adapter-tanstack-query",
       "file": "r/adapter-tanstack-query.json",
       "type": "registry:lib"
     }
