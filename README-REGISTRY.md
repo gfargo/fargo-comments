@@ -36,18 +36,18 @@ Your `components.json` should include the following aliases:
 
 ```bash
 # Core commenting system (required first)
-npx shadcn@latest add https://commentsby.griffen.codes/r/core
+npx shadcn@latest add https://comments.griffen.codes/r/core
 
 # Comment list with search functionality
-npx shadcn@latest add https://commentsby.griffen.codes/r/comment-list
+npx shadcn@latest add https://comments.griffen.codes/r/comment-list
 
 # Comment drawer/sidebar component
-npx shadcn@latest add https://commentsby.griffen.codes/r/drawer
+npx shadcn@latest add https://comments.griffen.codes/r/drawer
 
 # Storage adapters (choose based on your backend)
-npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-server-actions
-npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-api
-npx shadcn@latest add https://commentsby.griffen.codes/r/adapter-tanstack-query
+npx shadcn@latest add https://comments.griffen.codes/r/adapter-server-actions
+npx shadcn@latest add https://comments.griffen.codes/r/adapter-api
+npx shadcn@latest add https://comments.griffen.codes/r/adapter-tanstack-query
 ```
 
 ## 📚 Available Components
@@ -379,7 +379,7 @@ The registry configuration is defined in `scripts/registry.config.mjs`:
 ```javascript
 export default {
   outDir: "registry",
-  baseUrl: "https://commentsby.griffen.codes",
+  baseUrl: "https://comments.griffen.codes",
   defaults: {
     dependencies: {
       // Shared dependencies across all components
@@ -395,9 +395,9 @@ export default {
 
 The registry is served through Next.js API routes:
 
-- **Registry Manifest**: `https://commentsby.griffen.codes/api/registry`
-- **Component Definitions**: `https://commentsby.griffen.codes/api/registry/r/{component}`
-- **Source Files**: `https://commentsby.griffen.codes/api/templates/{filepath}`
+- **Registry Manifest**: `https://comments.griffen.codes/api/registry`
+- **Component Definitions**: `https://comments.griffen.codes/api/registry/r/{component}`
+- **Source Files**: `https://comments.griffen.codes/api/templates/{filepath}`
 
 ### Example Responses
 
@@ -407,7 +407,7 @@ The registry is served through Next.js API routes:
   "registry": [
     {
       "name": "fargo-comments-core",
-      "item": "https://commentsby.griffen.codes/r/core",
+      "item": "https://comments.griffen.codes/r/core",
       "file": "r/core.json",
       "type": "components"
     }

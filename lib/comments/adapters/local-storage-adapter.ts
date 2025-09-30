@@ -135,7 +135,7 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     }
   }
 
-  async getCommentsBySource(
+  async getcommentsSource(
     sourceId: string,
     sourceType?: string
   ): Promise<Comment[]> {
@@ -153,7 +153,7 @@ export class LocalStorageAdapter implements CommentStorageAdapter {
     sourceType?: string
   ): Promise<CommentThread[]> {
     const comments = sourceId
-      ? await this.getCommentsBySource(sourceId, sourceType)
+      ? await this.getcommentsSource(sourceId, sourceType)
       : await this.getComments();
 
     const rootComments = comments.filter((c) => !c.parentId);

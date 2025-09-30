@@ -17,8 +17,8 @@
     "tailwind-merge@^2.5.5"
   ],
   "registryDependencies": [
-    "https://commentsby.fargo.com/api/registry/r/core",
-    "https://commentsby.fargo.com/api/registry/r/comment-list"
+    "https://comments.fargo.com/api/registry/r/core",
+    "https://comments.fargo.com/api/registry/r/comment-list"
   ],
   "files": [
     {

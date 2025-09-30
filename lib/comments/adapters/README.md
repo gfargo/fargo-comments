@@ -132,7 +132,7 @@ await adapter.addLexicalComment(
 );
 
 // Retrieve all comments for that document
-const documentComments = await adapter.getCommentsBySource('doc-123', 'document');
+const documentComments = await adapter.getcommentsSource('doc-123', 'document');
 ```
 
 ## Creating a Custom Adapter

@@ -238,7 +238,7 @@ export function useTanstackQueryAdapter(config: StorageAdapterConfig = {}) {
       })
     },
 
-    async getCommentsBySource(
+    async getcommentsSource(
       sourceId: string,
       sourceType?: string
     ): Promise<Comment[]> {

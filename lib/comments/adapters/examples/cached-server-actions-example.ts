@@ -32,7 +32,7 @@ export async function getCommentsAction(): Promise<Comment[]> {
   throw new Error("Please implement getCommentsAction with your database logic")
 }
 
-export async function getCommentsBySourceAction(
+export async function getcommentsSourceAction(
   sourceId: string, 
   sourceType?: string
 ): Promise<Comment[]> {
@@ -53,7 +53,7 @@ export async function getCommentsBySourceAction(
   // })
   
   console.log("Getting comments for:", { sourceId, sourceType })
-  throw new Error("Please implement getCommentsBySourceAction with your database logic")
+  throw new Error("Please implement getcommentsSourceAction with your database logic")
 }
 
 export async function getCommentThreadsAction(
@@ -330,7 +330,7 @@ export async function clearAllStorageAction(): Promise<void> {
 // Export as ServerActionSet for easy import
 export const serverActions: ServerActionSet = {
   getCommentsAction,
-  getCommentsBySourceAction,
+  getcommentsSourceAction,
   getCommentThreadsAction,
   addCommentAction,
   addLexicalCommentAction,

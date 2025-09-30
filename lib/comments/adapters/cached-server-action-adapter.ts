@@ -6,7 +6,7 @@ import type { CommentStorageAdapter, StorageAdapterConfig } from "./comment-stor
 export type ServerActionSet = {
   // Cached read operations
   getCommentsAction: () => Promise<Comment[]>
-  getCommentsBySourceAction: (sourceId: string, sourceType?: string) => Promise<Comment[]>
+  getcommentsSourceAction: (sourceId: string, sourceType?: string) => Promise<Comment[]>
   getCommentThreadsAction: (sourceId?: string, sourceType?: string) => Promise<CommentThread[]>
   
   // Non-cached write operations
@@ -43,7 +43,7 @@ export interface CachedServerActionAdapterConfig extends StorageAdapterConfig {
 export class CachedServerActionAdapter implements CommentStorageAdapter {
   // Cached versions of read operations using React cache()
   private cachedGetComments: () => Promise<Comment[]>
-  private cachedGetCommentsBySource: (sourceId: string, sourceType?: string) => Promise<Comment[]>
+  private cachedGetcommentsSource: (sourceId: string, sourceType?: string) => Promise<Comment[]>
   private cachedGetCommentThreads: (sourceId?: string, sourceType?: string) => Promise<CommentThread[]>
 
   constructor(private config: CachedServerActionAdapterConfig) {
@@ -57,12 +57,12 @@ export class CachedServerActionAdapter implements CommentStorageAdapter {
     
     if (enableCaching) {
       this.cachedGetComments = cache(config.serverActions.getCommentsAction)
-      this.cachedGetCommentsBySource = cache(config.serverActions.getCommentsBySourceAction)
+      this.cachedGetcommentsSource = cache(config.serverActions.getcommentsSourceAction)
       this.cachedGetCommentThreads = cache(config.serverActions.getCommentThreadsAction)
     } else {
       // Direct pass-through if caching is disabled
       this.cachedGetComments = config.serverActions.getCommentsAction
-      this.cachedGetCommentsBySource = config.serverActions.getCommentsBySourceAction
+      this.cachedGetcommentsSource = config.serverActions.getcommentsSourceAction
       this.cachedGetCommentThreads = config.serverActions.getCommentThreadsAction
     }
   }
@@ -72,8 +72,8 @@ export class CachedServerActionAdapter implements CommentStorageAdapter {
     return this.cachedGetComments()
   }
 
-  async getCommentsBySource(sourceId: string, sourceType?: string): Promise<Comment[]> {
-    return this.cachedGetCommentsBySource(sourceId, sourceType)
+  async getcommentsSource(sourceId: string, sourceType?: string): Promise<Comment[]> {
+    return this.cachedGetcommentsSource(sourceId, sourceType)
   }
 
   async getCommentThreads(sourceId?: string, sourceType?: string): Promise<CommentThread[]> {

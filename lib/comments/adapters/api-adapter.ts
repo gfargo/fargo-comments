@@ -89,7 +89,7 @@ export class ApiAdapter implements CommentStorageAdapter {
     })
   }
 
-  async getCommentsBySource(sourceId: string, sourceType?: string): Promise<Comment[]> {
+  async getcommentsSource(sourceId: string, sourceType?: string): Promise<Comment[]> {
     const query = `?sourceId=${sourceId}${sourceType ? `&sourceType=${sourceType}` : ''}`;
     return this.request<Comment[]>(`/comments${query}`);
   }

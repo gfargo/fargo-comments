@@ -2,37 +2,37 @@
   "registry": [
     {
       "name": "fargo-comments-core",
-      "item": "https://commentsby.fargo.com/api/registry/r/core",
+      "item": "https://comments.fargo.com/api/registry/r/core",
       "file": "r/core.json",
       "type": "registry:lib"
     },
     {
       "name": "fargo-comments-comment-list",
-      "item": "https://commentsby.fargo.com/api/registry/r/comment-list",
+      "item": "https://comments.fargo.com/api/registry/r/comment-list",
       "file": "r/comment-list.json",
       "type": "registry:lib"
     },
     {
       "name": "fargo-comments-drawer",
-      "item": "https://commentsby.fargo.com/api/registry/r/drawer",
+      "item": "https://comments.fargo.com/api/registry/r/drawer",
       "file": "r/drawer.json",
       "type": "registry:lib"
     },
     {
       "name": "fargo-comments-adapter-server-actions",
-      "item": "https://commentsby.fargo.com/api/registry/r/adapter-server-actions",
+      "item": "https://comments.fargo.com/api/registry/r/adapter-server-actions",
       "file": "r/adapter-server-actions.json",
       "type": "registry:lib"
     },
     {
       "name": "fargo-comments-adapter-api",
-      "item": "https://commentsby.fargo.com/api/registry/r/adapter-api",
+      "item": "https://comments.fargo.com/api/registry/r/adapter-api",
       "file": "r/adapter-api.json",
       "type": "registry:lib"
     },
     {
       "name": "fargo-comments-adapter-tanstack-query",
-      "item": "https://commentsby.fargo.com/api/registry/r/adapter-tanstack-query",
+      "item": "https://comments.fargo.com/api/registry/r/adapter-tanstack-query",
       "file": "r/adapter-tanstack-query.json",
       "type": "registry:lib"
     }

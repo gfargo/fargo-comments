@@ -13,7 +13,7 @@ import { SystemFeaturesCard } from "@/app/_demo/components/system-features-card"
 import { CommentVariant } from "@/lib/comments/types/comments";
 
 function LiveCommentDemo() {
-  const { config, getCommentsBySource, getRepliesForComment } = useComments();
+  const { config, getcommentsSource, getRepliesForComment } = useComments();
   const selectedVariant = config.variant || "card";
   const {
     handleAddComment,
@@ -24,7 +24,7 @@ function LiveCommentDemo() {
 
   const sourceId = "test-source-id";
   const sourceType = "demo";
-  const comments = getCommentsBySource(sourceId, sourceType);
+  const comments = getcommentsSource(sourceId, sourceType);
 
   const handleLike = (commentId: string) => {
     console.log("[FARGO] Like button pressed for comment:", commentId);

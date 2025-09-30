@@ -79,13 +79,13 @@ export class ServerActionAdapter implements CommentStorageAdapter {
     )
   }
 
-  async getCommentsBySource(sourceId: string, sourceType: string): Promise<Comment[]> {
+  async getcommentsSource(sourceId: string, sourceType: string): Promise<Comment[]> {
     // The `sourceId` and `sourceType` parameters are placeholders for the actual implementation.
     if (sourceId && sourceType) {
       // do nothing
     }
     throw new Error(
-      "ServerActionAdapter: Please implement getCommentsBySourceAction in your app/actions/comments.ts file",
+      "ServerActionAdapter: Please implement getcommentsSourceAction in your app/actions/comments.ts file",
     )
   }
 

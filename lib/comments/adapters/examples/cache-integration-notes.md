@@ -8,7 +8,7 @@ The `CachedServerActionAdapter` and TanStack Query adapter are designed to be co
 - **Scope**: Single request deduplication
 - **Duration**: Request lifetime only  
 - **Purpose**: Prevent duplicate database calls during SSR/RSC
-- **Example**: Multiple components calling `getCommentsBySource()` with same params
+- **Example**: Multiple components calling `getcommentsSource()` with same params
 
 ### Client-Side (TanStack Query)
 - **Scope**: Client-side caching across requests
@@ -77,7 +77,7 @@ Ensure cache keys align between server and client:
 
 ```typescript
 // Server action cache key (implicit)
-getCommentsBySource(sourceId, sourceType)
+getcommentsSource(sourceId, sourceType)
 
 // TanStack Query cache key (explicit)  
 queryKey: ['comments', 'bySource', sourceId, sourceType]

@@ -32,7 +32,7 @@ export function CommentDrawer({
   triggerLabel = "All Comments",
   width = "700px",
 }: CommentDrawerProps) {
-  const { state, currentUser, getCommentsBySource, getRepliesForComment } = useComments()
+  const { state, currentUser, getcommentsSource, getRepliesForComment } = useComments()
   const {
     handleAddComment,
     handleUpdateComment,
@@ -44,7 +44,7 @@ export function CommentDrawer({
     handleReact,
   } = useCommentActions()
 
-  const comments = sourceId ? getCommentsBySource(sourceId, sourceType) : state.comments
+  const comments = sourceId ? getcommentsSource(sourceId, sourceType) : state.comments
 
   return (
     <Sheet>

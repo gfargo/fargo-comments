@@ -19,32 +19,32 @@ export interface InstallationConfig {
 }
 
 export const installationConfig: InstallationConfig = {
-  baseUrl: "https://commentsby.griffen.codes",
-  registryUrl: "https://commentsby.griffen.codes/api/registry",
+  baseUrl: "https://comments.griffen.codes",
+  registryUrl: "https://comments.griffen.codes/api/registry",
   prerequisiteCommand: "npx shadcn@latest init",
   
   coreCommands: [
     {
       name: "Core System",
-      command: "npx shadcn@latest add https://commentsby.griffen.codes/api/registry/r/core",
+      command: "npx shadcn@latest add https://comments.griffen.codes/api/registry/r/core",
       description: "Essential commenting system with contexts, hooks, types, and Lexical editor",
       required: true
     },
     {
       name: "Comment List",
-      command: "npx shadcn@latest add https://commentsby.griffen.codes/api/registry/r/comment-list",
+      command: "npx shadcn@latest add https://comments.griffen.codes/api/registry/r/comment-list",
       description: "Main comment listing component with search functionality",
       required: false
     },
     {
       name: "Comment Drawer",
-      command: "npx shadcn@latest add https://commentsby.griffen.codes/api/registry/r/drawer",
+      command: "npx shadcn@latest add https://comments.griffen.codes/api/registry/r/drawer",
       description: "Sidebar/drawer component for centralized comment management",
       required: false
     },
     {
       name: "Server Actions Adapter",
-      command: "npx shadcn@latest add https://commentsby.griffen.codes/api/registry/r/adapter-server-actions",
+      command: "npx shadcn@latest add https://comments.griffen.codes/api/registry/r/adapter-server-actions",
       description: "Next.js Server Actions storage adapter with React cache integration",
       required: false
     }
@@ -53,13 +53,13 @@ export const installationConfig: InstallationConfig = {
   additionalAdapters: [
     {
       name: "API Adapter",
-      command: "npx shadcn@latest add https://commentsby.griffen.codes/api/registry/r/adapter-api",
+      command: "npx shadcn@latest add https://comments.griffen.codes/api/registry/r/adapter-api",
       description: "REST API integration for external services",
       required: false
     },
     {
       name: "TanStack Query Adapter",
-      command: "npx shadcn@latest add https://commentsby.griffen.codes/api/registry/r/adapter-tanstack-query",
+      command: "npx shadcn@latest add https://comments.griffen.codes/api/registry/r/adapter-tanstack-query",
       description: "React Query integration with caching and optimistic updates",
       required: false
     }

@@ -1,46 +1,46 @@
 "use client";
 
 import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useCallback,
-  useMemo,
+    createContext,
+    useContext,
+    useReducer,
+    useEffect,
+    useCallback,
+    useMemo,
 } from "react";
 import type {
-  Comment,
-  CommentThread,
-  User,
-  CommentReaction,
+    Comment,
+    CommentThread,
+    User,
+    CommentReaction,
 } from "@/lib/comments/types/comments";
 import type { CommentStorageAdapter } from "@/lib/comments/adapters";
 import { LocalStorageAdapter } from "@/lib/comments/adapters";
 import { generateId } from "@/lib/comments/utils/generateId";
 import {
-  commentReducer,
-  initialCommentState,
-  type CommentState,
+    commentReducer,
+    initialCommentState,
+    type CommentState,
 } from "@/lib/comments/reducers/comment-reducer";
 import {
-  CommentEventEmitter,
-  type CommentEventMap,
-  type CommentEventListener,
+    CommentEventEmitter,
+    type CommentEventMap,
+    type CommentEventListener,
 } from "@/lib/comments/comment-events";
 import {
-  useCommentConfig,
-  type CommentConfig,
-  createDebugLogger,
+    useCommentConfig,
+    type CommentConfig,
+    createDebugLogger,
 } from "@/lib/comments/hooks/use-comment-config";
 import { useCommentContextHooks } from "@/lib/comments/hooks/use-comment-context-hooks";
 import { extractMentionsAndTags } from "@/lib/comments/lexical-utils";
 import { setDebugMode } from "@/lib/comments/utils/debug";
 import type {
-  CommentHooks,
-  CommentHookRegistry,
-  AddCommentHookData,
-  UpdateCommentHookData,
-  CommentHookData,
+    CommentHooks,
+    CommentHookRegistry,
+    AddCommentHookData,
+    UpdateCommentHookData,
+    CommentHookData,
 } from "@/lib/comments/types/comment-hooks";
 
 const commentEvents = new CommentEventEmitter();
@@ -84,7 +84,7 @@ interface CommentContextType {
     sourceId?: string,
     sourceType?: string
   ) => Promise<CommentThread[]>;
-  getCommentsBySource: (sourceId: string, sourceType?: string) => Comment[];
+  getcommentsSource: (sourceId: string, sourceType?: string) => Comment[];
   getRepliesForComment: (parentId: string) => Comment[];
 
   refreshData: () => Promise<void>;
@@ -554,7 +554,7 @@ export function CommentProvider({
     [adapter]
   );
 
-  const getCommentsBySource = useCallback(
+  const getcommentsSource = useCallback(
     (sourceId: string, sourceType?: string): Comment[] => {
       const topLevelComments = state.comments.filter(
         (comment) =>
@@ -563,7 +563,7 @@ export function CommentProvider({
           !comment.parentId
       );
       debug.log(
-        "getCommentsBySource found",
+        "getcommentsSource found",
         topLevelComments.length,
         "top-level comments for sourceId:",
         sourceId,
@@ -641,7 +641,7 @@ export function CommentProvider({
     addReaction,
     removeReaction,
     getCommentThreads,
-    getCommentsBySource,
+    getcommentsSource,
     getRepliesForComment,
     refreshData,
     updateConfig,

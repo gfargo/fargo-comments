@@ -4,11 +4,11 @@ import { useMemo } from "react"
 import { useComments } from "@/lib/comments/contexts/comment-context"
 
 export function useCommentsFromSource(sourceId: string, sourceType?: string) {
-  const { state, getCommentsBySource } = useComments()
+  const { state, getcommentsSource } = useComments()
 
   const comments = useMemo(() => {
-    return getCommentsBySource(sourceId, sourceType)
-  }, [getCommentsBySource, sourceId, sourceType])
+    return getcommentsSource(sourceId, sourceType)
+  }, [getcommentsSource, sourceId, sourceType])
 
   const commentStats = useMemo(() => {
     const unresolvedComments = comments.filter((comment) => !comment.reactions.some((r) => r.type === "resolved"))

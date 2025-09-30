@@ -27,7 +27,7 @@ export interface CommentStorageAdapter {
     tags?: MentionTag[],
   ): Promise<void>
 
-  getCommentsBySource(sourceId: string, sourceType?: string): Promise<Comment[]>
+  getcommentsSource(sourceId: string, sourceType?: string): Promise<Comment[]>
   getCommentThreads(sourceId?: string, sourceType?: string): Promise<CommentThread[]>
 
   // Utility operations
