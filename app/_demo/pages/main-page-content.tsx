@@ -95,22 +95,22 @@ export default function MainPageContent() {
           href="/composer"
           className="flex"
         >
-          <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+          <Card className="border-2 border-primary/10 rounded-2xl p-8 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-200 cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Edit3 className="h-5 w-5 text-green-600" />
-                Comment Composer
+                <Edit3 className="h-5 w-5 text-primary" />
+                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Comment Composer</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 Test the Lexical-based comment composer with mentions and tags
                 functionality.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full bg-transparent"
+                className="w-full bg-primary/20 text-primary hover:bg-primary/30 border-primary/20"
               >
                 Try Composer →
               </Button>
@@ -122,22 +122,22 @@ export default function MainPageContent() {
           href="/threads"
           className="flex"
         >
-          <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+          <Card className="border-2 border-primary/10 rounded-2xl p-8 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-200 cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-purple-600" />
-                Thread Examples
+                <MessageSquare className="h-5 w-5 text-primary" />
+                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Thread Examples</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 See how full conversation threads look in different design
                 styles.
               </p>
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full bg-transparent"
+                className="w-full bg-primary/20 text-primary hover:bg-primary/30 border-primary/20"
               >
                 View Threads →
               </Button>
@@ -145,15 +145,15 @@ export default function MainPageContent() {
           </Card>
         </Link>
 
-        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+        <Card className="border-2 border-primary/10 rounded-2xl p-8 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-200 cursor-pointer">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-orange-600" />
-              Global Comments
+              <MessageSquare className="h-5 w-5 text-primary" />
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Global Comments</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               View all comments in a centralized slide-out drawer with search
               and filtering.
             </p>

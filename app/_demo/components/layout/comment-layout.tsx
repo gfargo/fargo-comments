@@ -4,21 +4,21 @@ import type React from "react";
 import { useState } from "react";
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Palette, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,9 +27,9 @@ import { toast } from "sonner";
 import { DebugStateSheet } from "@/app/_demo/components/debug/debug-state-sheet";
 import { track } from '@vercel/analytics';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 
 type CommentVariant =
@@ -103,25 +103,25 @@ export function CommentLayout({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-card/50 backdrop-blur-sm border-b border-border px-6 py-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 {title || "Flexible Comment System"}
               </h1>
               {description && (
-                <p className="text-gray-600 mt-1 text-sm">{description}</p>
+                <p className="text-muted-foreground mt-1 text-sm">{description}</p>
               )}
             </div>
 
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {/* Variant Selector */}
-              <div className="flex items-center gap-2 px-2 py-1 bg-gray-50 rounded-md border">
-                <Palette className="h-3 w-3 text-gray-500" />
-                <span className="text-xs font-medium text-gray-600 hidden sm:inline">
+              <div className="flex items-center gap-2 px-2 py-1 bg-primary/10 rounded-md border border-primary/20">
+                <Palette className="h-3 w-3 text-primary" />
+                <span className="text-xs font-medium text-primary hidden sm:inline">
                   Style:
                 </span>
                 <Select
@@ -156,7 +156,7 @@ export function CommentLayout({
                       variant="outline"
                       size="sm"
                       onClick={handleClearStorageClick}
-                      className="h-8 px-2 sm:px-3 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 bg-transparent"
+                      className="h-8 px-2 sm:px-3 text-xs text-destructive hover:text-destructive/80 hover:bg-destructive/10 border-destructive/20 bg-transparent"
                     >
                       <Trash2 className="h-3 w-3" />
                       <span className="sr-only">Clear Local Data</span>
@@ -192,7 +192,7 @@ export function CommentLayout({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmedClear}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
             >
               Clear All Data
             </AlertDialogAction>
