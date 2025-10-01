@@ -18,9 +18,9 @@ export default function CommentSystemDemo() {
       <CommentLayout
         title={
           <div className="flex items-baseline gap-2">
-            <span className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Fargo</span>
-            <span className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Comments</span>
-            <MessageSquareDot className="h-8 w-8 text-primary" />
+            <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Fargo</span>
+            <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Comments</span>
+            <MessageSquareDot className="h-6 w-6 text-primary" />
           </div>
         }
         description="Open source React commenting system with rich text editing, multiple design variants, and flexible storage adapters"
