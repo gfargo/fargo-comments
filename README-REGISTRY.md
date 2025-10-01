@@ -486,4 +486,4 @@ The registry automatically manages component versions, but ensure compatibility:
 
 ---
 
-Built with ❤️ by [Fargo](https://fargo.com) for modern applications requiring sophisticated commenting systems.
+Built with ❤️ by [Fargo](https://griffen.codes) for modern applications requiring sophisticated commenting systems.

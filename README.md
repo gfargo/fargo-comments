@@ -217,4 +217,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Built with ❤️ by [Fargo](https://fargo.com) for modern web applications requiring sophisticated commenting systems.
+Built with ❤️ by [gfargo](https://griffen.codes) for modern web applications requiring sophisticated commenting systems.
