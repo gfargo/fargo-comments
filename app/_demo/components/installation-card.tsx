@@ -8,16 +8,18 @@ import { useState } from "react"
 import Link from "next/link"
 import { installationConfig } from "@/app/_demo/config/installation-data"
 import { OpenInV0Button } from "@/components/open-in-v0-button"
-import { track } from '@vercel/analytics'
+import { useAnalytics } from "@/lib/hooks/use-analytics"
+import { AnalyticsEvents } from "@/lib/analytics"
 
 export function InstallationCard() {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null)
+  const { trackEvent } = useAnalytics()
 
   // Map installation item names to registry file names
   const getRegistryName = (itemName: string): string => {
     const mappings: Record<string, string> = {
       "Core System": "core",
-      "Comment List": "comment-list", 
+      "Comment List": "comment-list",
       "Comment Drawer": "drawer",
       "Server Actions Adapter": "adapter-server-actions",
       "API Adapter": "adapter-api",
@@ -31,12 +33,17 @@ export function InstallationCard() {
       await navigator.clipboard.writeText(command)
       setCopiedCommand(command)
       setTimeout(() => setCopiedCommand(null), 2000)
-      
-      // Track copy action
-      track('install_command_copied', {
-        command: command.split(' ')[command.split(' ').length - 1], // Get just the component name
-        item_name: itemName || 'unknown',
-        timestamp: Date.now()
+
+      // Track copy action with enhanced metadata
+      const componentName = command.split(' ')[command.split(' ').length - 1]
+      const registryName = getRegistryName(itemName || 'unknown')
+
+      trackEvent(AnalyticsEvents.INSTALLATION_COMMAND_COPIED, {
+        component_name: componentName,
+        demo_type: 'installation-card',
+        action: 'copy',
+        feature: itemName || 'unknown',
+        adapter: registryName.includes('adapter') ? registryName : undefined,
       })
     } catch (err) {
       console.error('Failed to copy command:', err)
@@ -133,19 +140,35 @@ export function InstallationCard() {
             <h4 className="font-medium text-primary mb-3">Learn More</h4>
             <div className="flex flex-wrap gap-2">
               {installationConfig.quickLinks.map((link, index) => {
-                const LinkComponent = link.external ? 
+                const LinkComponent = link.external ?
                   ({ children }: { children: React.ReactNode }) => (
                     <Button
                       variant="outline"
                       size="sm"
                       className="h-8 text-xs"
-                      onClick={() => window.open(link.url, "_blank")}
+                      onClick={() => {
+                        trackEvent(link.name.toLowerCase().includes('github')
+                          ? AnalyticsEvents.GITHUB_CLICKED
+                          : AnalyticsEvents.DOCUMENTATION_OPENED, {
+                          demo_type: 'installation-card',
+                          action: 'external-link',
+                          feature: link.name,
+                        });
+                        window.open(link.url, "_blank");
+                      }}
                     >
                       {children}
                     </Button>
                   ) :
                   ({ children }: { children: React.ReactNode }) => (
-                    <Link href={link.url}>
+                    <Link
+                      href={link.url}
+                      onClick={() => trackEvent(AnalyticsEvents.DOCUMENTATION_OPENED, {
+                        demo_type: 'installation-card',
+                        action: 'internal-link',
+                        feature: link.name,
+                      })}
+                    >
                       <Button variant="outline" size="sm" className="h-8 text-xs">
                         {children}
                       </Button>

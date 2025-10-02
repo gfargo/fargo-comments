@@ -11,10 +11,13 @@ import { useCommentActions } from "@/lib/comments/hooks/use-comment-actions";
 import { InstallationCard } from "@/app/_demo/components/installation-card";
 import { SystemFeaturesCard } from "@/app/_demo/components/system-features-card";
 import { CommentVariant } from "@/lib/comments/types/comments";
+import { useAnalytics } from "@/lib/hooks/use-analytics";
+import { AnalyticsEvents } from "@/lib/analytics";
 
 function LiveCommentDemo() {
   const { config, getcommentsSource, getRepliesForComment } = useComments();
   const selectedVariant = config.variant || "card";
+  const { trackEvent } = useAnalytics();
   const {
     handleAddComment,
     handleUpdateComment,
@@ -28,18 +31,38 @@ function LiveCommentDemo() {
 
   const handleLike = (commentId: string) => {
     console.log("[FARGO] Like button pressed for comment:", commentId);
+    trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+      demo_type: 'live-demo',
+      action: 'like',
+      variant: selectedVariant,
+    });
   };
 
   const handleShare = (commentId: string) => {
     console.log("[FARGO] Share button pressed for comment:", commentId);
+    trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+      demo_type: 'live-demo',
+      action: 'share',
+      variant: selectedVariant,
+    });
   };
 
   const handleForward = (commentId: string) => {
     console.log("[FARGO] Forward button pressed for comment:", commentId);
+    trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+      demo_type: 'live-demo',
+      action: 'forward',
+      variant: selectedVariant,
+    });
   };
 
   const handleApprove = (commentId: string) => {
     console.log("[FARGO] Approve button pressed for comment:", commentId);
+    trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+      demo_type: 'live-demo',
+      action: 'approve',
+      variant: selectedVariant,
+    });
   };
 
   const handleReact = (commentId: string, reaction: string) => {
@@ -49,6 +72,12 @@ function LiveCommentDemo() {
       "with reaction:",
       reaction
     );
+    trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+      demo_type: 'live-demo',
+      action: 'react',
+      variant: selectedVariant,
+      feature: reaction,
+    });
   };
 
   return (
@@ -65,14 +94,38 @@ function LiveCommentDemo() {
       enableSearch={true}
       enableSorting={true}
       showAddForm={true}
-      onAddComment={(content, editorState, sourceId, sourceType) =>
-        handleAddComment(content, editorState, sourceId, sourceType)
-      }
-      onReply={(content, editorState, parentId) =>
-        handleReply(content, editorState, parentId)
-      }
-      onEdit={handleUpdateComment}
-      onDelete={handleDeleteComment}
+      onAddComment={(content, editorState, sourceId, sourceType) => {
+        trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+          demo_type: 'live-demo',
+          action: 'add',
+          variant: selectedVariant,
+        });
+        return handleAddComment(content, editorState, sourceId, sourceType);
+      }}
+      onReply={(content, editorState, parentId) => {
+        trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+          demo_type: 'live-demo',
+          action: 'reply',
+          variant: selectedVariant,
+        });
+        return handleReply(content, editorState, parentId);
+      }}
+      onEdit={(commentId, content, editorState) => {
+        trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+          demo_type: 'live-demo',
+          action: 'edit',
+          variant: selectedVariant,
+        });
+        return handleUpdateComment(commentId, content, editorState);
+      }}
+      onDelete={(commentId) => {
+        trackEvent(AnalyticsEvents.COMMENT_ACTION, {
+          demo_type: 'live-demo',
+          action: 'delete',
+          variant: selectedVariant,
+        });
+        return handleDeleteComment(commentId);
+      }}
       onLike={handleLike}
       onShare={handleShare}
       onForward={handleForward}
@@ -86,6 +139,7 @@ function LiveCommentDemo() {
 export default function MainPageContent() {
   const { config } = useComments();
   const selectedVariant = (config.variant || "card") as CommentVariant;
+  const { trackEvent } = useAnalytics();
 
   return (
     <div className="space-y-6">
@@ -94,6 +148,10 @@ export default function MainPageContent() {
         <Link
           href="/composer"
           className="flex"
+          onClick={() => trackEvent(AnalyticsEvents.DEMO_PAGE_VISITED, {
+            demo_type: 'composer',
+            action: 'navigate',
+          })}
         >
           <Card className="border-2 border-primary/10 rounded-2xl p-8 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-200 cursor-pointer">
             <CardHeader>
@@ -121,6 +179,10 @@ export default function MainPageContent() {
         <Link
           href="/threads"
           className="flex"
+          onClick={() => trackEvent(AnalyticsEvents.DEMO_PAGE_VISITED, {
+            demo_type: 'threads',
+            action: 'navigate',
+          })}
         >
           <Card className="border-2 border-primary/10 rounded-2xl p-8 bg-card/50 backdrop-blur-sm hover:bg-card/70 transition-all duration-200 cursor-pointer">
             <CardHeader>
