@@ -7,6 +7,7 @@ import { mentionTags, mentionUsers } from "./_demo/config/mention-items";
 import { currentUser } from "./_demo/config/comment-data";
 import { Toaster } from "sonner";
 import { Analytics } from '@vercel/analytics/react';
+import { GlobalErrorTracker } from "@/app/_demo/components/global-error-tracker";
 
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
+        <GlobalErrorTracker />
         <QueryProvider>
           <CommentProvider currentUser={currentUser}>
             <MentionProvider
