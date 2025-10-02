@@ -32,5 +32,6 @@ next-env.d.ts
 GEMINI.md
 CLAUDE.md
 AGENTS.md
+.kiro
 
 .coco.config.json
