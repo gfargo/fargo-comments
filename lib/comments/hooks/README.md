@@ -4,13 +4,13 @@ This document provides an overview of the custom React hooks used within the Far
 
 ## 📁 Directory Structure
 
-```plaintext
+\`\`\`plaintext
 hooks/
 ├── use-comment-actions.ts      # Manages all user interactions and comment-related side effects.
 ├── use-comment-config.ts       # Manages the configuration state for the comment system.
 ├── use-comment-context-hooks.ts# Manages the registration and execution of lifecycle hooks.
 └── use-comments-from-source.ts # A data-fetching hook to retrieve comments for a specific source.
-```
+\`\`\`
 
 ## Hook Breakdown
 
@@ -35,9 +35,9 @@ A data-fetching hook that simplifies retrieving comments associated with a speci
 -   Returns derived statistics, such as `totalComments` and `unresolvedCount`.
 
 **Usage Example:**
-```tsx
+\`\`\`tsx
 const { comments, totalComments, loading } = useCommentsFromSource('document-123');
-```
+\`\`\`
 
 ### `useCommentConfig`
 

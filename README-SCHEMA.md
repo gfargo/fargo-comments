@@ -21,7 +21,7 @@ This document outlines the database requirements and recommended schema for depl
 
 ### Core Schema
 
-```prisma
+\`\`\`prisma
 // schema.prisma
 generator client {
   provider = "prisma-client-js"
@@ -128,11 +128,11 @@ model TaggableEntity {
   
   @@map("taggable_entities")
 }
-```
+\`\`\`
 
 ### Extended Schema (Optional Features)
 
-```prisma
+\`\`\`prisma
 // Additional models for advanced features
 
 model CommentReaction {
@@ -190,33 +190,33 @@ model CommentHistory {
   
   @@map("comment_history")
 }
-```
+\`\`\`
 
 ## 🔧 Setup Instructions
 
 ### 1. Install Dependencies
 
-```bash
+\`\`\`bash
 npm install prisma @prisma/client
 npm install -D prisma
-```
+\`\`\`
 
 ### 2. Initialize Prisma
 
-```bash
+\`\`\`bash
 npx prisma init
-```
+\`\`\`
 
 ### 3. Configure Environment
 
-```env
+\`\`\`env
 # .env
 DATABASE_URL="postgresql://username:password@localhost:5432/comments_db"
-```
+\`\`\`
 
 ### 4. Apply Schema
 
-```bash
+\`\`\`bash
 # Generate Prisma client
 npx prisma generate
 
@@ -225,11 +225,11 @@ npx prisma migrate dev --name init
 
 # Seed database (optional)
 npx prisma db seed
-```
+\`\`\`
 
 ### 5. Create Prisma Adapter
 
-```typescript
+\`\`\`typescript
 // lib/comments/adapters/prisma-adapter.ts
 import { PrismaClient } from '@prisma/client'
 import { CommentStorageAdapter } from './comment-storage-adapter'
@@ -269,13 +269,13 @@ export class PrismaAdapter implements CommentStorageAdapter {
     };
   }
 }
-```
+\`\`\`
 
 ## 🚀 Production Deployment
 
 ### Database Optimization
 
-```sql
+\`\`\`sql
 -- Additional indexes for performance
 CREATE INDEX CONCURRENTLY idx_comments_source_created 
 ON comments (source_id, source_type, created_at DESC);
@@ -289,11 +289,11 @@ ON comments (author_id, created_at DESC);
 -- Full-text search (PostgreSQL)
 CREATE INDEX CONCURRENTLY idx_comments_content_search 
 ON comments USING gin(to_tsvector('english', content));
-```
+\`\`\`
 
 ### Environment Variables
 
-```env
+\`\`\`env
 # Production
 DATABASE_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 DIRECT_URL="postgresql://user:pass@host:5432/db?sslmode=require"
@@ -301,23 +301,23 @@ DIRECT_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 # Connection pooling (recommended)
 DATABASE_URL="postgresql://user:pass@pooler:5432/db?pgbouncer=true"
 DIRECT_URL="postgresql://user:pass@host:5432/db"
-```
+\`\`\`
 
 ### Migration Strategy
 
-```bash
+\`\`\`bash
 # Production migrations
 npx prisma migrate deploy
 
 # Backup before major changes
 pg_dump $DATABASE_URL > backup.sql
-```
+\`\`\`
 
 ## 🔍 Query Examples
 
 ### Common Queries
 
-```typescript
+\`\`\`typescript
 // Get comments with reply counts (Relational Approach)
 const commentsWithCounts = await prisma.comment.findMany({
   where: { sourceId: 'doc-123', sourceType: 'document' },
@@ -343,13 +343,13 @@ const stats = await prisma.comment.aggregate({
   _min: { createdAt: true },
   _max: { createdAt: true }
 })
-```
+\`\`\`
 
 ## 🛡️ Security Considerations
 
 ### Row Level Security (RLS)
 
-```sql
+\`\`\`sql
 -- Enable RLS
 ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
 
@@ -359,7 +359,7 @@ CREATE POLICY "Users can view active comments" ON comments
 
 CREATE POLICY "Users can edit own comments" ON comments
   FOR UPDATE USING (author_id = auth.uid());
-```
+\`\`\`
 
 ### Data Validation
 
@@ -387,7 +387,7 @@ CREATE POLICY "Users can edit own comments" ON comments
 
 ### Mentions Array Format
 
-```json
+\`\`\`json
 {
   "mentions": [
     {
@@ -403,11 +403,11 @@ CREATE POLICY "Users can edit own comments" ON comments
     }
   ]
 }
-```
+\`\`\`
 
 ### Tags Array Format
 
-```json
+\`\`\`json
 {
   "tags": [
     {
@@ -423,11 +423,11 @@ CREATE POLICY "Users can edit own comments" ON comments
     }
   ]
 }
-```
+\`\`\`
 
 ### Reactions Array Format
 
-```json
+\`\`\`json
 {
   "reactions": [
     {
@@ -442,11 +442,11 @@ CREATE POLICY "Users can edit own comments" ON comments
     }
   ]
 }
-```
+\`\`\`
 
 ### Source Reference Format
 
-```json
+\`\`\`json
 {
   "sourceReference": {
     "type": "document",
@@ -456,7 +456,7 @@ CREATE POLICY "Users can edit own comments" ON comments
     "url": "/documents/doc-123#section-3.1.2"
   }
 }
-```
+\`\`\`
 
 ---
 

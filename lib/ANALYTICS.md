@@ -21,7 +21,7 @@ The analytics system tracks user interactions, component usage, performance metr
 
 Track component registry access and installations:
 
-```typescript
+\`\`\`typescript
 // Registry index access
 Analytics.trackRegistryAccess('registry_index', request, {
   file_count: components.length
@@ -35,7 +35,7 @@ Analytics.trackComponentAccess('component-name', request, {
 
 // Component not found (404)
 Analytics.trackComponentNotFound('invalid-component', request)
-```
+\`\`\`
 
 **Events:**
 - `registry_accessed` - Registry index viewed
@@ -54,7 +54,7 @@ Analytics.trackComponentNotFound('invalid-component', request)
 
 Track user engagement with demo features:
 
-```typescript
+\`\`\`typescript
 // Client-side tracking
 const { trackEvent } = useAnalytics()
 
@@ -68,7 +68,7 @@ trackEvent(AnalyticsEvents.COMMENT_ACTION, {
   action: 'add',
   variant: 'card'
 })
-```
+\`\`\`
 
 **Events:**
 - `variant_viewed` - Design variant demonstrations
@@ -87,7 +87,7 @@ trackEvent(AnalyticsEvents.COMMENT_ACTION, {
 
 Track user engagement and conversion signals:
 
-```typescript
+\`\`\`typescript
 // Installation command copied
 trackEvent(AnalyticsEvents.INSTALLATION_COMMAND_COPIED, {
   component_name: 'core',
@@ -105,7 +105,7 @@ trackEvent(AnalyticsEvents.GITHUB_CLICKED, {
   demo_type: 'installation-card',
   action: 'external-link'
 })
-```
+\`\`\`
 
 **Events:**
 - `getting_started_clicked` - CTA clicks
@@ -118,7 +118,7 @@ trackEvent(AnalyticsEvents.GITHUB_CLICKED, {
 
 Track component load times and bundle sizes:
 
-```typescript
+\`\`\`typescript
 // Server-side performance tracking
 const startTime = Date.now()
 // ... perform operation ...
@@ -138,7 +138,7 @@ Analytics.trackPerformance(
   'bytes',
   { component_name: 'core' }
 )
-```
+\`\`\`
 
 **Events:**
 - `component_load_time` - How long components take to load
@@ -153,7 +153,7 @@ Analytics.trackPerformance(
 
 Comprehensive error tracking across the application:
 
-```typescript
+\`\`\`typescript
 // Server-side errors
 Analytics.trackError(
   'registry_not_found',
@@ -165,7 +165,7 @@ Analytics.trackError(
 // Client-side errors (automatic)
 // GlobalErrorTracker catches unhandled errors
 // AnalyticsErrorBoundary catches React errors
-```
+\`\`\`
 
 **Events:**
 - `registry_error` - All error types
@@ -183,7 +183,7 @@ Analytics.trackError(
 
 ### Server-Side API Routes
 
-```typescript
+\`\`\`typescript
 import { Analytics } from '@/lib/analytics'
 
 export async function GET(request: NextRequest) {
@@ -217,11 +217,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed' }, { status: 500 })
   }
 }
-```
+\`\`\`
 
 ### Client-Side Components
 
-```typescript
+\`\`\`typescript
 'use client'
 
 import { useAnalytics } from '@/lib/hooks/use-analytics'
@@ -243,11 +243,11 @@ function MyComponent() {
 
   return <button onClick={handleAction}>Click me</button>
 }
-```
+\`\`\`
 
 ### Error Boundaries
 
-```typescript
+\`\`\`typescript
 import { AnalyticsErrorBoundary } from '@/app/_demo/components/analytics-error-boundary'
 
 function MyApp() {
@@ -257,7 +257,7 @@ function MyApp() {
     </AnalyticsErrorBoundary>
   )
 }
-```
+\`\`\`
 
 ## Data Privacy
 
@@ -301,7 +301,7 @@ The tracked events enable you to answer key questions:
 
 All events follow a consistent schema:
 
-```typescript
+\`\`\`typescript
 interface BaseEventProperties {
   timestamp: number        // Automatic
   user_agent?: string     // Automatic (server)
@@ -317,7 +317,7 @@ interface RegistryEventProperties extends BaseEventProperties {
   file_count?: number
   dependency_count?: number
 }
-```
+\`\`\`
 
 ## Best Practices
 

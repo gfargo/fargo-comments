@@ -4,7 +4,7 @@ This directory contains the core React components responsible for rendering and 
 
 ## 📁 Directory Structure
 
-```plaintext
+\`\`\`plaintext
 ├── variants/                       # Directory for all visual styles of a single comment
 ├── comment-action-bar.tsx          # Renders the row of buttons (Like, Reply, Edit, etc.)
 ├── comment-drawer.tsx              # A slide-out panel for displaying a global comment list
@@ -13,7 +13,7 @@ This directory contains the core React components responsible for rendering and 
 ├── comment-source-reference.tsx    # Renders the "Referenced" block within a comment
 ├── comment-variations.tsx          # A wrapper that dynamically renders the correct comment variant
 └── delete-confirmation-dialog.tsx  # A modal dialog for confirming comment deletion
-```
+\`\`\`
 
 ## Component Breakdown
 

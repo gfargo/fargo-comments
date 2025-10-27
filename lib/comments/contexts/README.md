@@ -30,7 +30,7 @@ The `CommentProvider` is the central hub for the entire comment system. It is **
 
 ### Usage Example
 
-```tsx
+\`\`\`tsx
 import { CommentProvider } from '@/lib/contexts/comment-context';
 import { LocalStorageAdapter } from '@/lib/comments/adapters';
 import { CommentList } from '@/lib/components/comments/comment-list';
@@ -48,20 +48,20 @@ function App() {
     </CommentProvider>
   );
 }
-```
+\`\`\`
 
 ### Interacting with the Context
 
 Use the `useComments()` hook to access the context's state and methods from any child component.
 
-```tsx
+\`\`\`tsx
 import { useComments } from '@/lib/contexts/comment-context';
 
 function MyComponent() {
   const { state, currentUser, addComment } = useComments();
   // ...
 }
-```
+\`\`\`
 
 ---
 
@@ -86,7 +86,7 @@ The event system allows you to listen for actions that have occurred within the 
 
 Use the `useCommentEvent` hook to subscribe to an event within any component wrapped by `CommentProvider`.
 
-```tsx
+\`\`\`tsx
 import { useCommentEvent } from '@/lib/contexts/comment-context';
 
 function NotificationPlugin() {
@@ -97,7 +97,7 @@ function NotificationPlugin() {
 
   return null; // This component does not render anything
 }
-```
+\`\`\`
 
 ### Hook System
 
@@ -115,7 +115,7 @@ The hook system allows you to intercept and modify data at key points in the com
 
 Pass a `hooks` object to the `CommentProvider`. Each hook is an async function that receives the data and a context object, and can return modified data.
 
-```tsx
+\`\`\`tsx
 import { CommentProvider } from '@/lib/contexts/comment-context';
 
 const myCommentHooks = {
@@ -136,7 +136,7 @@ function App() {
     </CommentProvider>
   );
 }
-```
+\`\`\`
 
 ---
 
@@ -162,7 +162,7 @@ The `MentionProvider` is responsible for supplying the data used in the Lexical 
 
 ### Usage Example
 
-```tsx
+\`\`\`tsx
 import { MentionProvider } from '@/lib/contexts/mention-context';
 
 // Example functions to fetch your application's data
@@ -190,4 +190,4 @@ function App() {
     </MentionProvider>
   );
 }
-```
+\`\`\`

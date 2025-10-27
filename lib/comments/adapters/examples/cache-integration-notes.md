@@ -18,7 +18,7 @@ The `CachedServerActionAdapter` and TanStack Query adapter are designed to be co
 
 ## Integration Benefits
 
-```typescript
+\`\`\`typescript
 // Server action with React cache (server-side)
 export const getCommentsAction = cache(async (sourceId: string) => {
   // This will be called once per request, even if multiple components need it
@@ -31,35 +31,35 @@ const { data } = useQuery({
   queryFn: () => fetch(`/api/comments?sourceId=${sourceId}`).then(r => r.json()),
   staleTime: 5 * 60 * 1000, // 5 minutes client cache
 })
-```
+\`\`\`
 
 ## Performance Impact
 
 ### Without React Cache
-```
+\`\`\`
 Request 1: Component A calls getComments() → DB Query
 Request 1: Component B calls getComments() → DB Query (duplicate!)  
 Request 1: Component C calls getComments() → DB Query (duplicate!)
-```
+\`\`\`
 
 ### With React Cache  
-```
+\`\`\`
 Request 1: Component A calls getComments() → DB Query  
 Request 1: Component B calls getComments() → Cached result
 Request 1: Component C calls getComments() → Cached result
-```
+\`\`\`
 
 ### With Both React Cache + TanStack Query
-```
+\`\`\`
 Request 1: SSR components → Single DB query (React cache)
 Request 2: Client navigation → Cached response (TanStack Query)  
 Request 3: After staleTime → Fresh fetch, single DB query (React cache)
-```
+\`\`\`
 
 ## Configuration Recommendations
 
 ### For Next.js Apps with Server Actions
-```typescript
+\`\`\`typescript
 // Recommended: Use both for optimal caching
 const serverAdapter = new CachedServerActionAdapter({
   serverActions,
@@ -70,18 +70,18 @@ const clientHooks = useTanstackQueryAdapter({
   apiEndpoint: '/api',
   // TanStack Query handles client-side caching
 })
-```
+\`\`\`
 
 ### Cache Key Strategy
 Ensure cache keys align between server and client:
 
-```typescript
+\`\`\`typescript
 // Server action cache key (implicit)
 getcommentsSource(sourceId, sourceType)
 
 // TanStack Query cache key (explicit)  
 queryKey: ['comments', 'bySource', sourceId, sourceType]
-```
+\`\`\`
 
 ## Testing Compatibility
 

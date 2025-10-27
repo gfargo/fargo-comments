@@ -16,13 +16,13 @@ The Fargo Comments registry provides a ShadcnUI-compatible component distributio
 
 Ensure your project has ShadcnUI configured:
 
-```bash
+\`\`\`bash
 # Initialize ShadcnUI in your project (if not already done)
 npx shadcn@latest init
-```
+\`\`\`
 
 Your `components.json` should include the following aliases:
-```json
+\`\`\`json
 {
   "aliases": {
     "components": "@/components",
@@ -30,11 +30,11 @@ Your `components.json` should include the following aliases:
     "lib": "@/lib"
   }
 }
-```
+\`\`\`
 
 ### Installation Commands
 
-```bash
+\`\`\`bash
 # Core commenting system (required first)
 npx shadcn@latest add https://comments.griffen.codes/r/core
 
@@ -48,7 +48,7 @@ npx shadcn@latest add https://comments.griffen.codes/r/drawer
 npx shadcn@latest add https://comments.griffen.codes/r/adapter-server-actions
 npx shadcn@latest add https://comments.griffen.codes/r/adapter-api
 npx shadcn@latest add https://comments.griffen.codes/r/adapter-tanstack-query
-```
+\`\`\`
 
 ## 📚 Available Components
 
@@ -65,7 +65,7 @@ npx shadcn@latest add https://comments.griffen.codes/r/adapter-tanstack-query
 - Utility functions
 
 **Dependencies installed:**
-```json
+\`\`\`json
 {
   "lexical": "latest",
   "@lexical/react": "latest",
@@ -81,7 +81,7 @@ npx shadcn@latest add https://comments.griffen.codes/r/adapter-tanstack-query
   "lucide-react": "^0.454.0",
   "date-fns": "4.1.0"
 }
-```
+\`\`\`
 
 ### Comment List (`fargo-comments-comment-list`)
 
@@ -136,7 +136,7 @@ npx shadcn@latest add https://comments.griffen.codes/r/adapter-tanstack-query
 
 After installing the core system and comment list:
 
-```tsx
+\`\`\`tsx
 // app/page.tsx
 import { CommentProvider } from "@/lib/comments/contexts/comment-context";
 import { MentionProvider } from "@/lib/comments/contexts/mention-context";
@@ -182,13 +182,13 @@ async function fetchTags(query: string) {
   // Return tags matching the query
   return tags.filter(t => t.name.toLowerCase().includes(query.toLowerCase()));
 }
-```
+\`\`\`
 
 ### With Server Actions
 
 After installing the server actions adapter:
 
-```tsx
+\`\`\`tsx
 // app/actions/comments.ts
 "use server";
 
@@ -222,13 +222,13 @@ export default function Page() {
     </CommentProvider>
   );
 }
-```
+\`\`\`
 
 ### With API Integration
 
 After installing the API adapter:
 
-```tsx
+\`\`\`tsx
 import { ApiAdapter } from "@/lib/comments/adapters";
 
 const apiAdapter = new ApiAdapter({
@@ -251,7 +251,7 @@ export default function Page() {
     </CommentProvider>
   );
 }
-```
+\`\`\`
 
 ## 🎨 Customization
 
@@ -259,18 +259,18 @@ export default function Page() {
 
 The core system includes 12+ pre-built design variants:
 
-```tsx
+\`\`\`tsx
 <CommentList variant="card" />      {/* Card-based design */}
 <CommentList variant="bubble" />    {/* Chat bubble style */}
 <CommentList variant="github" />    {/* GitHub-style comments */}
 <CommentList variant="notion" />    {/* Notion-style design */}
 <CommentList variant="timeline" />  {/* Timeline layout */}
 <CommentList variant="mobile" />    {/* Mobile-optimized */}
-```
+\`\`\`
 
 ### Event System Integration
 
-```tsx
+\`\`\`tsx
 import { useCommentEvent } from "@/lib/comments/hooks/use-comment-context-hooks";
 
 function MyComponent() {
@@ -292,11 +292,11 @@ function MyComponent() {
 
   return <CommentList />;
 }
-```
+\`\`\`
 
 ### Hook System for Validation
 
-```tsx
+\`\`\`tsx
 const hooks = {
   beforeAddComment: async (data, context) => {
     // Custom validation
@@ -320,7 +320,7 @@ const hooks = {
 <CommentProvider hooks={hooks}>
   {/* Components */}
 </CommentProvider>
-```
+\`\`\`
 
 ## 🔧 Registry Architecture
 
@@ -328,7 +328,7 @@ const hooks = {
 
 All registry components are installed under the `@/lib/comments/` directory:
 
-```
+\`\`\`
 @/lib/comments/
 ├── adapters/           # Storage adapters
 ├── components/
@@ -339,7 +339,7 @@ All registry components are installed under the `@/lib/comments/` directory:
 ├── types/              # TypeScript definitions
 ├── reducers/           # State management
 └── utils/              # Utility functions
-```
+\`\`\`
 
 ### Dependency Management
 
@@ -353,7 +353,7 @@ The registry automatically:
 
 For maintainers working on the registry:
 
-```bash
+\`\`\`bash
 # Sync registry dependencies with package.json
 npm run sync:registry-deps
 
@@ -365,7 +365,7 @@ npm run gen:registry
 
 # Build (includes registry generation)
 npm run build
-```
+\`\`\`
 
 The registry is automatically generated and kept in sync with the codebase through:
 - Pre-build hooks that update dependencies
@@ -376,7 +376,7 @@ The registry is automatically generated and kept in sync with the codebase throu
 
 The registry configuration is defined in `scripts/registry.config.mjs`:
 
-```javascript
+\`\`\`javascript
 export default {
   outDir: "registry",
   baseUrl: "https://comments.griffen.codes",
@@ -389,7 +389,7 @@ export default {
     // Component definitions with include/exclude patterns
   ]
 };
-```
+\`\`\`
 
 ## 🚀 API Endpoints
 
@@ -402,7 +402,7 @@ The registry is served through Next.js API routes:
 ### Example Responses
 
 **Registry Manifest** (`/api/registry`):
-```json
+\`\`\`json
 {
   "registry": [
     {
@@ -413,10 +413,10 @@ The registry is served through Next.js API routes:
     }
   ]
 }
-```
+\`\`\`
 
 **Component Definition** (`/api/registry/r/core`):
-```json
+\`\`\`json
 {
   "name": "fargo-comments-core",
   "type": "components",
@@ -431,14 +431,14 @@ The registry is served through Next.js API routes:
     }
   ]
 }
-```
+\`\`\`
 
 ## 🛠️ Troubleshooting
 
 ### Common Issues
 
 **Import Resolution Errors**
-```bash
+\`\`\`bash
 # Ensure your components.json has the correct aliases
 {
   "aliases": {
@@ -447,16 +447,16 @@ The registry is served through Next.js API routes:
     "lib": "@/lib"
   }
 }
-```
+\`\`\`
 
 **Missing Dependencies**
-```bash
+\`\`\`bash
 # Install peer dependencies manually if needed
 npm install @radix-ui/react-dialog @radix-ui/react-select
-```
+\`\`\`
 
 **TypeScript Errors**
-```bash
+\`\`\`bash
 # Ensure TypeScript paths are configured in tsconfig.json
 {
   "compilerOptions": {
@@ -465,7 +465,7 @@ npm install @radix-ui/react-dialog @radix-ui/react-select
     }
   }
 }
-```
+\`\`\`
 
 ### Version Compatibility
 

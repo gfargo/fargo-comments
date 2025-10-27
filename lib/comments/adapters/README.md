@@ -18,28 +18,28 @@ The core responsibilities defined by the interface are:
 **File:** `local-storage-adapter.ts`  
 **Use Case:** Ideal for client-side persistence, demos, prototypes, and offline-first applications. It requires no backend setup.
 
-```typescript
+\`\`\`typescript
 import { LocalStorageAdapter } from '@/lib/comments/adapters'
 const adapter = new LocalStorageAdapter();
-```
+\`\`\`
 
 ### 2. ApiAdapter
 **File:** `api-adapter.ts`  
 **Use Case:** For applications with a traditional REST or GraphQL API backend.
 
-```typescript
+\`\`\`typescript
 import { ApiAdapter } from '@/lib/comments/adapters'
 const adapter = new ApiAdapter({
   apiEndpoint: 'https://api.example.com/comments',
   headers: { 'Authorization': 'Bearer your_token' }
 });
-```
+\`\`\`
 
 ### 3. ServerActionAdapter
 **File:** `server-action-adapter.ts`  
 **Use Case:** For Next.js applications utilizing Server Actions for data mutations. This adapter serves as a template, and you must implement the actual server action functions.
 
-```typescript
+\`\`\`typescript
 // In your app/actions/comments.ts
 'use server'
 import type { Comment } from '@/lib/types/comments'
@@ -49,13 +49,13 @@ export async function addLexicalCommentAction(/*...args*/): Promise<Comment> {
 }
 
 // ... other actions
-```
+\`\`\`
 
 ### 3.1. CachedServerActionAdapter
 **File:** `cached-server-action-adapter.ts`  
 **Use Case:** Enhanced server action adapter that uses React's `cache()` to deduplicate read operations within a single request. Perfect for server-side rendering and preventing duplicate database queries.
 
-```typescript
+\`\`\`typescript
 import { CachedServerActionAdapter, type ServerActionSet } from '@/lib/comments/adapters'
 import { serverActions } from '@/app/actions/comments' // Your implementations
 
@@ -73,7 +73,7 @@ export const serverActions: ServerActionSet = {
   },
   // ... other actions
 }
-```
+\`\`\`
 
 **Benefits:**
 - Automatic deduplication of read operations within a single request
@@ -85,7 +85,7 @@ export const serverActions: ServerActionSet = {
 **File:** `tanstack-query-adapter.ts`  
 **Use Case:** For applications using TanStack Query for advanced data fetching, caching, and state management. It provides hooks for queries and mutations.
 
-```typescript
+\`\`\`typescript
 import { useTanstackQueryAdapter } from '@/lib/comments/adapters'
 
 function MyComponent() {
@@ -93,13 +93,13 @@ function MyComponent() {
   const { data: comments } = adapter.hooks.useComments();
   const addComment = adapter.mutations.addComment;
 }
-```
+\`\`\`
 
 ## Usage with CommentProvider
 
 To activate an adapter, pass an instance of it to the `CommentProvider`.
 
-```typescript
+\`\`\`typescript
 import { CommentProvider } from '@/lib/contexts/comment-context'
 import { ApiAdapter, CachedServerActionAdapter } from '@/lib/comments/adapters'
 import { serverActions } from '@/app/actions/comments'
@@ -113,13 +113,13 @@ import { serverActions } from '@/app/actions/comments'
 <CommentProvider storageAdapter={new CachedServerActionAdapter({ serverActions })}>
   <YourApp />
 </CommentProvider>
-```
+\`\`\`
 
 ## Generic Source System
 
 All adapters use a generic source system to associate comments with any entity in your application. This is achieved with `sourceId` and `sourceType`.
 
-```typescript
+\`\`\`typescript
 // Associate a comment with a specific project document
 await adapter.addLexicalComment(
   content,
@@ -133,13 +133,13 @@ await adapter.addLexicalComment(
 
 // Retrieve all comments for that document
 const documentComments = await adapter.getcommentsSource('doc-123', 'document');
-```
+\`\`\`
 
 ## Creating a Custom Adapter
 
 You can create your own adapter by implementing the `CommentStorageAdapter` interface. This is useful for connecting to different database types, GraphQL, or other backend services.
 
-```typescript
+\`\`\`typescript
 import { CommentStorageAdapter } from './comment-storage-adapter'
 
 export class MyCustomAdapter implements CommentStorageAdapter {
@@ -149,4 +149,4 @@ export class MyCustomAdapter implements CommentStorageAdapter {
   
   // ... implement all other required methods
 }
-```
+\`\`\`

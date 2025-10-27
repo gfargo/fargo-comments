@@ -52,7 +52,7 @@ This repository contains several specialized README files for different aspects 
 
 ## 📁 Project Structure
 
-```plaintext
+\`\`\`plaintext
 ├── app/
 │   ├── _demo/                   # Demo components and data
 │   ├── api/                     # Component registry API routes
@@ -100,11 +100,11 @@ This repository contains several specialized README files for different aspects 
 │   ├── gen-registry.mjs         # Registry generator
 │   └── sync-registry-deps.mjs   # Dependency synchronization
 └── public/                      # Static assets
-```
+\`\`\`
 
 ## 🎯 Usage Example
 
-```tsx
+\`\`\`tsx
 import { CommentList } from '@/lib/components/comments/comment-list';
 import { CommentProvider } from '@/lib/contexts/comment-context';
 import { MentionProvider } from '@/lib/contexts/mention-context';
@@ -136,7 +136,7 @@ function MyApp() {
     </MentionProvider>
   );
 }
-```
+\`\`\`
 
 ## 🔧 Installation & Setup
 
@@ -144,7 +144,7 @@ function MyApp() {
 
 Add Fargo Comments to your existing application using our ShadcnUI-compatible registry:
 
-```bash
+\`\`\`bash
 # Install the core commenting system
 npx shadcn@latest add https://comments.griffen.codes/r/core
 
@@ -154,7 +154,7 @@ npx shadcn@latest add https://comments.griffen.codes/r/comment-list
 # Optional: Add specific storage adapters
 npx shadcn@latest add https://comments.griffen.codes/r/adapter-server-actions
 npx shadcn@latest add https://comments.griffen.codes/r/adapter-api
-```
+\`\`\`
 
 **Available Components:**
 - `core` - Essential commenting system (contexts, hooks, types, lexical editor)
@@ -168,7 +168,7 @@ For detailed registry usage, configuration, and integration examples, see the **
 
 ### For Developers: Contributing to the Project
 
-```bash
+\`\`\`bash
 # Clone the repository
 git clone <repository-url>
 cd fargo-comments
@@ -178,7 +178,7 @@ pnpm install
 
 # Run development server
 npm run dev
-```
+\`\`\`
 
 ### Prerequisites
 
