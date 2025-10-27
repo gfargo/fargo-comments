@@ -18,9 +18,8 @@ export const metadata: Metadata = {
     template: "%s | Fargo Comments",
   },
   description:
-    "An open-source React commenting system with rich text editing, multiple design variants, and flexible storage adapters.",,
-  // generator: "Next.js",
-    generator: 'v0.app'
+    "An open-source React commenting system with rich text editing, multiple design variants, and flexible storage adapters.",
+  generator: "Next.js",
 }
 
 export default function RootLayout({
