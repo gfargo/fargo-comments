@@ -23,13 +23,20 @@ export default {
       "tailwind-merge": "^2.5.5",
     }
   },
-  // Path rewriter: convert to installation paths without @/ alias
+  // Path rewriter: convert source paths to relative installation paths
   pathRewriter: (fromPath) => {
-    // App demo files stay as-is (but we exclude them anyway)
-    if (fromPath.startsWith("app/")) return fromPath;
-    
-    // Remove lib/comments/ prefix and install directly to lib/comments/
-    // This assumes the target project structure is src/lib/comments/...
+    // Transform source paths to relative paths for shadcn CLI compatibility
+    const mappings = {
+      'lib/comments/': 'lib/',
+    };
+
+    for (const [from, to] of Object.entries(mappings)) {
+      if (fromPath.startsWith(from)) {
+        return fromPath.replace(from, to);
+      }
+    }
+
+    // Fallback: return as-is (shouldn't happen with our current setup)
     return fromPath;
   },
 
