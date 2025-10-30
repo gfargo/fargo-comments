@@ -50,23 +50,32 @@ function buildItemJSON(allFiles, itemCfg, items) {
     matches.add(file);
   }
 
-  // Convert matched files into { from, to } with path rewriting
-  const files = [...matches].sort().map((from) => {
-    const toRaw = config.pathRewriter(from);
+  // Convert matched files with path rewriting and pre-populated content
+  const files = [...matches].sort().map((sourcePath) => {
+    const relativePath = config.pathRewriter(sourcePath);
+
     // Determine file type based on extension and content
     let fileType = "registry:lib";
-    if (from.endsWith(".tsx")) {
-      if (from.includes("/components/")) fileType = "registry:component";
-    } else if (from.endsWith(".ts")) {
-      if (from.includes("/hooks/")) fileType = "registry:hook";
-      else if (from.includes("/types/")) fileType = "registry:lib";
+    if (sourcePath.endsWith(".tsx")) {
+      if (sourcePath.includes("/components/")) fileType = "registry:component";
+    } else if (sourcePath.endsWith(".ts")) {
+      if (sourcePath.includes("/hooks/")) fileType = "registry:hook";
+      else if (sourcePath.includes("/types/")) fileType = "registry:lib";
     }
-    
-    return { 
+
+    // Read the actual file content
+    let content = "";
+    try {
+      const fullPath = path.join(ROOT, sourcePath);
+      content = fs.readFileSync(fullPath, 'utf8');
+    } catch (error) {
+      console.warn(`Warning: Could not read file ${sourcePath}:`, error.message);
+    }
+
+    return {
       type: fileType,
-      path: from, // Point to the actual source file in the repository
-      content: "", // Will be populated dynamically by API
-      target: toRaw // Where it should be installed
+      path: relativePath, // Relative path for installation (shadcn/ui format)
+      content: content    // Actual file content for static registry
     };
   });
 

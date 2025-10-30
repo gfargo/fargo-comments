@@ -47,11 +47,21 @@ export async function GET(
     // Populate actual file content for each file
     let totalBytes = 0
     const populatedFiles = componentData.files.map((file: any) => {
-      // Extract the original source path from the target
-      const sourcePath = file.target.replace('@/', '')
-      const fullSourcePath = path.join(process.cwd(), sourcePath)
+      // If content is already populated in the registry file, use it
+      if (file.content) {
+        totalBytes += Buffer.byteLength(file.content, 'utf-8')
+        return file
+      }
 
+      // Fallback: convert relative path back to source path for reading
+      let sourcePath = file.path
+      if (file.path.startsWith('lib/')) {
+        sourcePath = file.path.replace('lib/', 'lib/comments/')
+      }
+
+      const fullSourcePath = path.join(process.cwd(), sourcePath)
       let content = ''
+
       if (fs.existsSync(fullSourcePath)) {
         content = fs.readFileSync(fullSourcePath, 'utf-8')
         totalBytes += Buffer.byteLength(content, 'utf-8')
